@@ -29,6 +29,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
 * Rest Controller defining the Scene API
