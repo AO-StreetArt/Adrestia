@@ -170,7 +170,7 @@ public class SceneController {
   }
 
   // Save a scene to Crazy Ivan
-  private SceneList save_scene(Scene inpScene, bool sceneExists) {
+  private SceneList save_scene(Scene inpScene, boolean sceneExists) {
     Scene[] base_inp_scns = {inpScene};
     int msg_type = 0;
     if (sceneExists) {
@@ -269,7 +269,7 @@ public class SceneController {
     SceneList ivan_response = retrieve_scene(name);
 
     // If we have a successful response, then the scene exists
-    bool scene_exists = false;
+    boolean scene_exists = false;
     if (ivan_response.getNumRecords() > 0 && ivan_response.getErrorCode() == 100) {
       scene_exists = true;
     }
