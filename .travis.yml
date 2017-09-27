@@ -4,6 +4,7 @@ jdk:
 services:
   - docker
 before_install:
+  - docker network create dvs
   - docker run -d -p 8500:8500 --name=registry --network=dvs consul agent --dev -ui -client=0.0.0.0
   - docker exec -t registry curl -X PUT -d 'cache--6379----2--5--0' http://localhost:8500/v1/kv/ivan/RedisConnectionString
   - docker exec -t registry curl -X PUT -d 'neo4j://database:7687' http://localhost:8500/v1/kv/ivan/DB_ConnectionString
