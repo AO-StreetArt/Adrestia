@@ -1,11 +1,20 @@
 language: java
 jdk:
   - oraclejdk8
+services:
+  - docker
 before_install:
-- wget https://releases.hashicorp.com/consul/0.6.4/consul_0.6.4_linux_amd64.zip
-- unzip consul_0.6.4_linux_amd64.zip
-- "./consul agent -dev -bind=127.0.0.1 &"
+  - docker run -d -p 8500:8500 --name=registry --network=dvs consul agent --dev -ui -client=0.0.0.0
+  - docker exec -t registry curl -X PUT -d 'cache--6379----2--5--0' http://localhost:8500/v1/kv/ivan/RedisConnectionString
+  - docker exec -t registry curl -X PUT -d 'neo4j://database:7687' http://localhost:8500/v1/kv/ivan/DB_ConnectionString
+  - docker exec -t registry curl -X PUT -d 'True' http://localhost:8500/v1/kv/ivan/StampTransactionId
+  - docker exec -t registry curl -X PUT -d 'True' http://localhost:8500/v1/kv/ivan/AtomicTransactions
+  - docker exec -t registry curl -X PUT -d 'Json' http://localhost:8500/v1/kv/ivan/Data_Format_Type
+  - docker run -d --publish=7474:7474 --publish=7687:7687 --env=NEO4J_AUTH=none --volume=/home/abarry/neo4j/data:/data --network=dvs --name=graph-db neo4j
+  - docker run --network=dvs --name=cache -d redis
+  - docker run --name document-db -d --network=dvs mongo
+  - docker run --name crazyivan --network=dvs -p 5555:5555 -d aostreetart/crazyivan:latest -consul-addr=registry:8500 -ip=localhost -port=5555 -log-conf=CrazyIvan/log4cpp.properties
 install:
-- gradle assemble
+  - gradle assemble
 script:
-- gradle check
+  - gradle check

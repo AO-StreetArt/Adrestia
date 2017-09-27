@@ -31,8 +31,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 /**
-* Basic Tests against the Adrestia Server, mostly covering actuator endpoints
-* API-Specific Tests will go in other test files
+* Basic Tests against the Adrestia Server
 */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Adrestia.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -47,6 +46,7 @@ public class BasicServerTest {
   @Autowired
   private TestRestTemplate test_template;
 
+  // Test the Actuator Health Check endpoint, which gets hit by Consul
   @Test
   public void testActuatorHealthCheck() throws Exception {
     ResponseEntity<Map> response = this.test_template.getForEntity(
@@ -55,5 +55,43 @@ public class BasicServerTest {
     System.out.println("HTTP Success Code: ");
     System.out.println(response.getStatusCode());
     assert (response.getStatusCode().is2xxSuccessful());
+  }
+
+  // Test basic CRUD Functions for scenes
+  @Test
+  public void testSceneCrudApi() throws Exception {
+    // Create Test
+    // Build a new scene
+    String[] assets;
+    assets = new String[2];
+    assets[0] = "123";
+    assets[1] = "ABC";
+    String[] tags;
+    tags = new String[2];
+    tags[0] = "1";
+    tags[1] = "2";
+    UserDevice[] devices = new UserDevice[1];
+    double[] translation = {0.0, 0.0, 0.0};
+    double[] rotation = {0.0, 0.0, 0.0, 0.0};
+    Transform transform = new Transform(translation, rotation);
+    UserDevice dev = new UserDevice("DeviceKey", transform);
+    devices[0] = dev;
+    Scene scn = new Scene("A", "B", "C", 1.0, 2.0, 3.0, assets, tags, devices);
+    // Post the Scene to the endpoint
+    ResponseEntity<Map> create_response = this.test_template.postForEntity(
+                      "http://localhost:" + this.port + "/v1/scene/Alexs_Scene", scn, Map.class);
+    // Read the response
+    System.out.println("HTTP Success Code: ");
+    System.out.println(create_response.getStatusCode());
+    assert (create_response.getStatusCode().is2xxSuccessful());
+
+    // Get Test
+    // Issue a get request for the scene just created
+    ResponseEntity<Map> get_response = this.test_template.getForEntity(
+                      "http://localhost:" + this.port + "/v1/scene/Alexs_Scene", Map.class);
+
+    System.out.println("HTTP Success Code: ");
+    System.out.println(get_response.getStatusCode());
+    assert (get_response.getStatusCode().is2xxSuccessful());
   }
 }
