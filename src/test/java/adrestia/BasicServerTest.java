@@ -76,10 +76,10 @@ public class BasicServerTest {
     Transform transform = new Transform(translation, rotation);
     UserDevice dev = new UserDevice("DeviceKey", transform);
     devices[0] = dev;
-    Scene scn = new Scene("A1B2C3", "B", "C", 1.0, 2.0, 3.0, assets, tags, devices);
+    Scene scn = new Scene("A1B2C3D", "", "C", 1.0, 2.0, 3.0, assets, tags, devices);
     // Post the Scene to the endpoint
     ResponseEntity<Map> create_response = this.test_template.postForEntity(
-    "http://localhost:" + this.port + "/v1/scene/AeselTestScene", scn, Map.class);
+    "http://localhost:" + this.port + "/v1/scene/AeselTestScene1", scn, Map.class);
     // Read the response
     System.out.println("HTTP Success Code: ");
     System.out.println(create_response.getStatusCode());
@@ -88,10 +88,20 @@ public class BasicServerTest {
     // Get Test
     // Issue a get request for the scene just created
     ResponseEntity<Map> get_response = this.test_template.getForEntity(
-    "http://localhost:" + this.port + "/v1/scene/Alexs_Scene", Map.class);
+    "http://localhost:" + this.port + "/v1/scene/AeselTestScene1", Map.class);
 
     System.out.println("HTTP Success Code: ");
     System.out.println(get_response.getStatusCode());
     assert (get_response.getStatusCode().is2xxSuccessful());
+
+    // Update Test
+    Scene scn2 = new Scene("", "", "NewRegion", 110.0, 210.0, 3.0, assets, tags, devices);
+    // Post the Scene to the endpoint
+    ResponseEntity<Map> update_response = this.test_template.postForEntity(
+    "http://localhost:" + this.port + "/v1/scene/AeselTestScene1", scn2, Map.class);
+    // Read the response
+    System.out.println("HTTP Success Code: ");
+    System.out.println(update_response.getStatusCode());
+    assert (update_response.getStatusCode().is2xxSuccessful());
   }
 }
