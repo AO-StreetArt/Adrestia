@@ -31,3 +31,7 @@ Configutation:
       Logger:
         - name: adrestia.SceneController
           level: debug
+
+      Logger:
+        - name: adrestia.DvsManager
+          level: debug

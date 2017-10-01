@@ -6,7 +6,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -45,187 +45,187 @@ public class Scene {
   private UserDevice[] device_list;
 
   /**
-	* Default empty Scene constructor
-	*/
-	public Scene() {
-		super();
-	}
+  * Default empty Scene constructor
+  */
+  public Scene() {
+    super();
+  }
 
-	/**
-	* Complete Scene constructor
-	*/
-	public Scene(String key, String name, String region, double latitude,
-    double longitude, double distance, String[] assets, String[] tags, UserDevice[] devices) {
-      this.key = key;
-      this.name = name;
-      this.region = region;
-      this.latitude = latitude;
-      this.longitude = longitude;
-      this.distance = distance;
-      this.assets = assets;
-      this.tags = tags;
-      this.device_list = devices;
-	}
+  /**
+  * Complete Scene constructor
+  */
+  public Scene(String key, String name, String region, double latitude,
+  double longitude, double distance, String[] assets, String[] tags, UserDevice[] devices) {
+    this.key = key;
+    this.name = name;
+    this.region = region;
+    this.latitude = latitude;
+    this.longitude = longitude;
+    this.distance = distance;
+    this.assets = assets;
+    this.tags = tags;
+    this.device_list = devices;
+  }
 
-	/**
-	* Returns value of key
-	* @return
-	*/
+  /**
+  * Returns value of key
+  * @return
+  */
   @JsonGetter("key")
-	public String getKey() {
-		return this.key;
-	}
+  public String getKey() {
+    return this.key;
+  }
 
   /**
-	* Set value of key
-	* @return
-	*/
+  * Set value of key
+  * @return
+  */
   @JsonSetter("key")
-	public void setKey(String newKey) {
-		this.key = newKey;
-	}
+  public void setKey(String newKey) {
+    this.key = newKey;
+  }
 
-	/**
-	* Returns value of name
-	* @return
-	*/
+  /**
+  * Returns value of name
+  * @return
+  */
   @JsonGetter("name")
-	public String getName() {
-		return this.name;
-	}
+  public String getName() {
+    return this.name;
+  }
 
   /**
-	* Set value of name
-	* @return
-	*/
+  * Set value of name
+  * @return
+  */
   @JsonSetter("name")
-	public void setName(String newName) {
-		this.name = newName;
-	}
+  public void setName(String newName) {
+    this.name = newName;
+  }
 
-	/**
-	* Returns value of region
-	* @return
-	*/
+  /**
+  * Returns value of region
+  * @return
+  */
   @JsonGetter("region")
-	public String getRegion() {
-		return this.region;
-	}
+  public String getRegion() {
+    return this.region;
+  }
 
   /**
-	* Set value of region
-	* @return
-	*/
+  * Set value of region
+  * @return
+  */
   @JsonSetter("region")
-	public void setRegion(String newRegion) {
-		this.region = newRegion;
-	}
+  public void setRegion(String newRegion) {
+    this.region = newRegion;
+  }
 
-	/**
-	* Returns value of latitude
-	* @return
-	*/
+  /**
+  * Returns value of latitude
+  * @return
+  */
   @JsonGetter("latitude")
-	public double getLatitude() {
-		return this.latitude;
-	}
+  public double getLatitude() {
+    return this.latitude;
+  }
 
   /**
-	* Set value of latitude
-	* @return
-	*/
+  * Set value of latitude
+  * @return
+  */
   @JsonSetter("latitude")
-	public void setLatitude(double newLatitude) {
-		this.latitude = newLatitude;
-	}
+  public void setLatitude(double newLatitude) {
+    this.latitude = newLatitude;
+  }
 
-	/**
-	* Returns value of longitude
-	* @return
-	*/
+  /**
+  * Returns value of longitude
+  * @return
+  */
   @JsonGetter("longitude")
-	public double getLongitude() {
-		return this.longitude;
-	}
+  public double getLongitude() {
+    return this.longitude;
+  }
 
   /**
-	* Set value of longitude
-	* @return
-	*/
+  * Set value of longitude
+  * @return
+  */
   @JsonSetter("longitude")
-	public void setLongitude(double newLongitude) {
-		this.longitude = newLongitude;
-	}
+  public void setLongitude(double newLongitude) {
+    this.longitude = newLongitude;
+  }
 
-	/**
-	* Returns value of distance
-	* @return
-	*/
+  /**
+  * Returns value of distance
+  * @return
+  */
   @JsonGetter("distance")
-	public double getDistance() {
-		return this.distance;
-	}
+  public double getDistance() {
+    return this.distance;
+  }
 
   /**
-	* Set value of distance
-	* @return
-	*/
+  * Set value of distance
+  * @return
+  */
   @JsonSetter("distance")
-	public void setDistance(double newDistance) {
-		this.distance = newDistance;
-	}
+  public void setDistance(double newDistance) {
+    this.distance = newDistance;
+  }
 
-	/**
-	* Returns the assets of the scene
-	* @return
-	*/
+  /**
+  * Returns the assets of the scene
+  * @return
+  */
   @JsonGetter("asset_ids")
-	public String[] getAssets() {
-		return this.assets;
-	}
+  public String[] getAssets() {
+    return this.assets;
+  }
 
   /**
-	* Set the assets of the scene
-	* @return
-	*/
+  * Set the assets of the scene
+  * @return
+  */
   @JsonSetter("asset_ids")
-	public void setAssets(String[] newAssets) {
-		this.assets = newAssets;
-	}
+  public void setAssets(String[] newAssets) {
+    this.assets = newAssets;
+  }
 
-	/**
-	* Returns the tags of the Scene
-	* @return
-	*/
+  /**
+  * Returns the tags of the Scene
+  * @return
+  */
   @JsonGetter("tags")
-	public String[] getTags() {
-		return this.tags;
-	}
+  public String[] getTags() {
+    return this.tags;
+  }
 
   /**
-	* Set the tags of the Scene
-	* @return
-	*/
+  * Set the tags of the Scene
+  * @return
+  */
   @JsonSetter("tags")
-	public void setTags(String[] newTags) {
-		this.tags = newTags;
-	}
+  public void setTags(String[] newTags) {
+    this.tags = newTags;
+  }
 
   /**
-	* Returns the devices of the Scene
-	* @return
-	*/
+  * Returns the devices of the Scene
+  * @return
+  */
   @JsonGetter("devices")
-	public UserDevice[] getDevices() {
-		return this.device_list;
-	}
+  public UserDevice[] getDevices() {
+    return this.device_list;
+  }
 
   /**
-	* Set the devices of the Scene
-	* @return
-	*/
+  * Set the devices of the Scene
+  * @return
+  */
   @JsonSetter("devices")
-	public void getTags(UserDevice[] newDevices) {
-		this.device_list = newDevices;
-	}
+  public void getTags(UserDevice[] newDevices) {
+    this.device_list = newDevices;
+  }
 }

@@ -6,7 +6,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -31,55 +31,55 @@ public class UserDevice {
   private Transform transform;
 
 
-	/**
-	* Default empty UserDevice constructor
-	*/
-	public UserDevice() {
-		super();
-	}
+  /**
+  * Default empty UserDevice constructor
+  */
+  public UserDevice() {
+    super();
+  }
 
-	/**
-	* Default UserDevice constructor
-	*/
-	public UserDevice(String key, Transform transform) {
-		super();
-		this.key = key;
-		this.transform = transform;
-	}
+  /**
+  * Default UserDevice constructor
+  */
+  public UserDevice(String key, Transform transform) {
+    super();
+    this.key = key;
+    this.transform = transform;
+  }
 
-	/**
-	* Returns value of key
-	* @return
-	*/
+  /**
+  * Returns value of key
+  * @return
+  */
   @JsonGetter("key")
-	public String getKey() {
-		return this.key;
-	}
+  public String getKey() {
+    return this.key;
+  }
 
-	/**
-	* Returns value of transform
-	* @return
-	*/
+  /**
+  * Returns value of transform
+  * @return
+  */
   @JsonGetter("transform")
-	public Transform getTransform() {
-		return this.transform;
-	}
+  public Transform getTransform() {
+    return this.transform;
+  }
 
-	/**
-	* Sets new value of key
-	* @param
-	*/
+  /**
+  * Sets new value of key
+  * @param
+  */
   @JsonSetter("key")
-	public void setKey(String key) {
-		this.key = key;
-	}
+  public void setKey(String key) {
+    this.key = key;
+  }
 
-	/**
-	* Sets new value of transform
-	* @param
-	*/
+  /**
+  * Sets new value of transform
+  * @param
+  */
   @JsonSetter("transform")
-	public void setTransform(Transform transform) {
-		this.transform = transform;
-	}
+  public void setTransform(Transform transform) {
+    this.transform = transform;
+  }
 }

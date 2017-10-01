@@ -6,7 +6,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -41,7 +41,7 @@ public class BasicServerTest {
   private int port;
 
   @Value("${local.management.port}")
-	private int mgt_port;
+  private int mgt_port;
 
   @Autowired
   private TestRestTemplate test_template;
@@ -50,7 +50,7 @@ public class BasicServerTest {
   @Test
   public void testActuatorHealthCheck() throws Exception {
     ResponseEntity<Map> response = this.test_template.getForEntity(
-                      "http://localhost:" + this.mgt_port + "/info", Map.class);
+    "http://localhost:" + this.mgt_port + "/info", Map.class);
 
     System.out.println("HTTP Success Code: ");
     System.out.println(response.getStatusCode());
@@ -76,10 +76,10 @@ public class BasicServerTest {
     Transform transform = new Transform(translation, rotation);
     UserDevice dev = new UserDevice("DeviceKey", transform);
     devices[0] = dev;
-    Scene scn = new Scene("A", "B", "C", 1.0, 2.0, 3.0, assets, tags, devices);
+    Scene scn = new Scene("A1B2C3", "B", "C", 1.0, 2.0, 3.0, assets, tags, devices);
     // Post the Scene to the endpoint
     ResponseEntity<Map> create_response = this.test_template.postForEntity(
-                      "http://localhost:" + this.port + "/v1/scene/Alexs_Scene", scn, Map.class);
+    "http://localhost:" + this.port + "/v1/scene/AeselTestScene", scn, Map.class);
     // Read the response
     System.out.println("HTTP Success Code: ");
     System.out.println(create_response.getStatusCode());
@@ -88,7 +88,7 @@ public class BasicServerTest {
     // Get Test
     // Issue a get request for the scene just created
     ResponseEntity<Map> get_response = this.test_template.getForEntity(
-                      "http://localhost:" + this.port + "/v1/scene/Alexs_Scene", Map.class);
+    "http://localhost:" + this.port + "/v1/scene/Alexs_Scene", Map.class);
 
     System.out.println("HTTP Success Code: ");
     System.out.println(get_response.getStatusCode());

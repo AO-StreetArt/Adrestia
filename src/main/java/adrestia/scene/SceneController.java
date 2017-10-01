@@ -6,7 +6,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -52,78 +52,21 @@ import org.apache.logging.log4j.Logger;
 @RequestMapping(path = "/v1/scene")
 public class SceneController {
 
-  // Consul Client for executing Service Discovery
-  @Autowired
-  org.springframework.cloud.client.discovery.DiscoveryClient consul_client;
-
-  // Crazy Ivan Service Instance
-  private org.springframework.cloud.client.ServiceInstance serviceInstance;
+  // How many retries should we attempt prior to reporting a failure
+  private final static int REQUEST_RETRIES = 3;
+  // How many milliseconds to wait for a reply
+  private final static int REQUEST_TIMEOUT = 5000;
 
   // ZMQ Context
   @Autowired
-  ZmqContext zmq_context;
-
-  // Crazy Ivan ZMQ Socket
-  ZMQ.Socket socket = null;
-
-  // Mutex to ensure that one thread is accessing the ZMQ Socket at a time
-  static Semaphore zmq_mutex = new Semaphore(1);
+  DvsManager serviceManager;
 
   // Scene Controller Logger
   private static final Logger logger = LogManager.getLogger("adrestia.SceneController");
 
-  // Destroy the Scene Controller
-  @PreDestroy
-  public void destroy() {
-    if (socket != null) {
-      socket.close();
-    }
-  }
-
-  // Setup method to find and connect to an instance of Crazy Ivan
-  private void find_ivan() {
-    // Find an instance of CrazyIvan
-    List<org.springframework.cloud.client.ServiceInstance> serviceInstances =
-	                                     consul_client.getInstances("Ivan");
-    if (serviceInstances != null && serviceInstances.size() > 0 ) {
-        serviceInstance = serviceInstances.get(0);
-        try {
-          zmq_mutex.acquire();
-        } catch (InterruptedException e) {
-          logger.error("Error Establishing Mutex Lock on ZMQ Socket");
-          logger.error(e.getMessage());
-        }
-        try {
-          // Crazy Ivan ZMQ Context & Socket
-          // Close any existing socket and context before creating a new one
-          if (socket != null) {
-            socket.close();
-            socket = null;
-          }
-          socket = zmq_context.context.socket(ZMQ.REQ);
-
-          // Connect to the new socket
-          // The chars 'https://' are added onto the address of the service,
-          // which is wrong because we are using ZMQ.  We also assume tcp
-          // Communications between this class and Crazy Ivan
-          String zmq_addr = String.format("tcp://%s:%d",
-                                          serviceInstance.getUri().getHost(),
-                                          serviceInstance.getPort());
-          logger.debug("New Crazy Ivan Address: " + serviceInstance.getUri());
-          socket.connect(zmq_addr);
-        } catch (Exception e) {
-          logger.error("Error connecting to Crazy Ivan instance");
-          logger.error(e.getMessage());
-        } finally {
-          zmq_mutex.release();
-        }
-    } else {
-      logger.error("Unable to find Crazy Ivan instance");
-    }
-  }
-
   // Get a Scene from Crazy Ivan
   private SceneList retrieve_scene(String name) {
+    // Set up default values
     String[] assets = new String[0];
     String[] tags = new String[0];
     UserDevice[] devices = new UserDevice[0];
@@ -132,12 +75,6 @@ public class SceneController {
     SceneList return_scn = new SceneList(2, 1, base_return_scns, 120, "Error in Processing Request", "");
 
     // Retrieve the needed information from Crazy Ivan
-    try {
-      zmq_mutex.acquire();
-    } catch (InterruptedException e) {
-      logger.error("Error Establishing Mutex Lock on ZMQ Socket");
-      logger.error(e.getMessage());
-    }
     try {
       // Construct a Scene List, which we will then convert to JSON
       Scene scn = new Scene("", name, "", -9999.0, -9999.0, 0.0, assets, tags, devices);
@@ -151,20 +88,16 @@ public class SceneController {
       logger.debug(ivan_msg);
 
       // Send the message to Crazy Ivan
-      socket.send(ivan_msg.getBytes(ZMQ.CHARSET), 0);
-
-      // Get a response from Crazy Ivan
-      byte[] reply = socket.recv(0);
-      String reply_string = new String(reply, ZMQ.CHARSET);
+      String reply_string = serviceManager.send_to_ivan(ivan_msg, REQUEST_TIMEOUT, REQUEST_RETRIES);
 
       // Convert the Response back to a Scene List
-      return_scn = mapper.readValue(reply_string, SceneList.class);
+      if (reply_string != null) {
+        return_scn = mapper.readValue(reply_string, SceneList.class);
+      }
 
     } catch(Exception e) {
       logger.error("Error Retrieving Value from Crazy Ivan");
       logger.error(e.getMessage());
-    } finally {
-      zmq_mutex.release();
     }
     return return_scn;
   }
@@ -182,39 +115,29 @@ public class SceneController {
 
     // Save the information to Crazy Ivan
     try {
-      zmq_mutex.acquire();
-    } catch (InterruptedException e) {
-      logger.error("Error Establishing Mutex Lock on ZMQ Socket");
-      logger.error(e.getMessage());
-    }
-    try {
       // Construct our JSON from the Scene List
       ObjectMapper mapper = new ObjectMapper();
       String ivan_msg = mapper.writeValueAsString(inp_scene_list);
       logger.debug(ivan_msg);
 
       // Send the message to Crazy Ivan
-      socket.send(ivan_msg.getBytes(ZMQ.CHARSET), 0);
-
-      // Get a response from Crazy Ivan
-      byte[] reply = socket.recv(0);
-      String reply_string = new String(reply, ZMQ.CHARSET);
+      String reply_string = serviceManager.send_to_ivan(ivan_msg, REQUEST_TIMEOUT, REQUEST_RETRIES);
 
       // Convert the Response back to a Scene List
-      return_scene_list = mapper.readValue(reply_string, SceneList.class);
+      if (reply_string != null) {
+        return_scene_list = mapper.readValue(reply_string, SceneList.class);
+      }
     } catch(Exception e) {
       logger.error("Error Retrieving Value from Crazy Ivan");
       logger.error(e.getMessage());
-    } finally {
-      zmq_mutex.release();
     }
     return return_scene_list;
   }
 
   /**
-	* Scene Retrieval
+  * Scene Retrieval
   * Scene name input as path variable, no Request Parameters accepted
-	*/
+  */
   @RequestMapping(path = "/{name}", method = RequestMethod.GET)
   public ResponseEntity<Scene> get_scene(@PathVariable("name") String name) {
     logger.debug("Responding to Scene Get Request");
@@ -223,11 +146,6 @@ public class SceneController {
     UserDevice[] devices = new UserDevice[0];
     Scene return_scn = new Scene("", "", "", -9999.0, -9999.0, 0.0, assets, tags, devices);
     HttpStatus return_code = HttpStatus.OK;
-
-    // See if we need to find a Crazy Ivan instance
-    if (socket == null) {
-      find_ivan();
-    }
 
     SceneList ivan_response = retrieve_scene(name);
 
@@ -247,10 +165,10 @@ public class SceneController {
   }
 
   /**
-	* Scene Create/Update
+  * Scene Create/Update
   * Scene name input as path variable, no Request Parameters accepted
   * POST Data read in with scene data
-	*/
+  */
   @RequestMapping(path = "/{name}", headers="Content-Type=application/json", method = RequestMethod.POST)
   public ResponseEntity<Scene> update_scene(@PathVariable("name") String name, @RequestBody Scene inp_scene) {
     logger.debug("Responding to Scene Get Request");
@@ -259,11 +177,6 @@ public class SceneController {
     UserDevice[] devices = new UserDevice[0];
     Scene return_scn = new Scene("", "", "", -9999.0, -9999.0, 0.0, assets, tags, devices);
     HttpStatus return_code = HttpStatus.OK;
-
-    // See if we need to find a Crazy Ivan instance
-    if (socket == null) {
-      find_ivan();
-    }
 
     // See if we can find the scene requested
     SceneList ivan_response = retrieve_scene(name);
@@ -294,9 +207,9 @@ public class SceneController {
   }
 
   /**
-	* Scene Delete
+  * Scene Delete
   * Scene name input as path variable, no Request Parameters accepted
-	*/
+  */
   @RequestMapping(path = "/{name}", method = RequestMethod.DELETE)
   public ResponseEntity<Scene> delete_scene(@PathVariable("name") String name) {
     // Build a new scene
@@ -318,10 +231,10 @@ public class SceneController {
   }
 
   /**
-	* Scene Query
+  * Scene Query
   * No Request Parameters accepted
   * POST Data read in with scene data
-	*/
+  */
   @RequestMapping(path = "/data", headers="Content-Type=application/json", method = RequestMethod.POST)
   public ResponseEntity<SceneList> query_scene(@RequestBody Scene inp_scene) {
     String region = "Bad";

@@ -6,7 +6,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -29,55 +29,55 @@ public class Transform {
   @JsonProperty("rotation")
   private double[] rotation;
 
-	/**
-	* Default empty Transform constructor
-	*/
-	public Transform() {
-		super();
-	}
+  /**
+  * Default empty Transform constructor
+  */
+  public Transform() {
+    super();
+  }
 
-	/**
-	* Default Transform constructor
-	*/
-	public Transform(double[] newTranslation, double[] newRotation) {
-		super();
-		this.translation = newTranslation;
-		this.rotation = newRotation;
-	}
+  /**
+  * Default Transform constructor
+  */
+  public Transform(double[] newTranslation, double[] newRotation) {
+    super();
+    this.translation = newTranslation;
+    this.rotation = newRotation;
+  }
 
-	/**
-	* Returns value of translation
-	* @return
-	*/
+  /**
+  * Returns value of translation
+  * @return
+  */
   @JsonGetter("translation")
-	public double[] getTranslation() {
-		return this.translation;
-	}
+  public double[] getTranslation() {
+    return this.translation;
+  }
 
-	/**
-	* Returns value of rotation
-	* @return
-	*/
+  /**
+  * Returns value of rotation
+  * @return
+  */
   @JsonGetter("rotation")
-	public double[] getRotation() {
-		return this.rotation;
-	}
+  public double[] getRotation() {
+    return this.rotation;
+  }
 
-	/**
-	* Sets new value of translation
-	* @param
-	*/
+  /**
+  * Sets new value of translation
+  * @param
+  */
   @JsonSetter("translation")
-	public void setTranslation(double[] newTranslation) {
-		this.translation = newTranslation;
-	}
+  public void setTranslation(double[] newTranslation) {
+    this.translation = newTranslation;
+  }
 
-	/**
-	* Sets new value of rotation
-	* @param
-	*/
+  /**
+  * Sets new value of rotation
+  * @param
+  */
   @JsonSetter("rotation")
-	public void setRotation(double[] newRotation) {
-		this.rotation = newRotation;
-	}
+  public void setRotation(double[] newRotation) {
+    this.rotation = newRotation;
+  }
 }
