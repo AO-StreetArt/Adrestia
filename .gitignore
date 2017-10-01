@@ -4,3 +4,5 @@ build/*
 *.jar
 *.war
 *.class
+*.txt
+logs/*

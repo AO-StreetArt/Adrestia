@@ -185,6 +185,11 @@ public class SceneController {
     boolean scene_exists = false;
     if (ivan_response.getNumRecords() > 0 && ivan_response.getErrorCode() == 100) {
       scene_exists = true;
+      // Set the key on the input scene to the key from the response
+      String ivan_resp_key = ivan_response.getSceneList()[0].getKey();
+      if (ivan_resp_key != null && !ivan_resp_key.isEmpty()) {
+        inp_scene.setKey(ivan_resp_key);
+      }
     }
 
     // Update the scene
