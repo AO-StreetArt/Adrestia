@@ -60,9 +60,9 @@ public class BasicServerTest {
   // Test basic CRUD Functions for scenes
   @Test
   public void testSceneCrudApi() throws Exception {
-    String test_scene_name = "AeselTestScene9";
+    String test_scene_name = "AeselTestScene11";
     String test_scene_url = "/v1/scene/" + test_scene_name;
-    String test_scene_key = "A1B2C3E1";
+    String test_scene_key = "A1B2C3E3";
     double TOLERANCE = 0.00001;
     // Open up a file that we can write some test results to
     // Obviously shouldn't be relied on for automated testing but good for debugging
@@ -134,9 +134,8 @@ public class BasicServerTest {
       test_logger.println("Update Response: " + upd_resp_body.toString());
 
       // Run a secondary get test to validate the update
-      // Get Test
       test_logger.println("Get Test");
-      // Issue a get request for the scene just created
+      // Issue a get request for the scene just updated
       ResponseEntity<Map> get_response2 = this.test_template.getForEntity(
       "http://localhost:" + this.port + test_scene_url, Map.class);
       // Read the response
@@ -158,6 +157,19 @@ public class BasicServerTest {
       assert (long_dbl2.doubleValue() - 210.0 < TOLERANCE);
 
       // Delete Test
+      test_logger.println("Delete Test");
+      // Issue a get request for the scene just created
+      this.test_template.delete("http://localhost:" + this.port + test_scene_url, Map.class);
+
+      // Run a tertiary get test to validate the update
+      test_logger.println("Get Test");
+      // Issue a get request for the scene just updated
+      ResponseEntity<Map> get_response3 = this.test_template.getForEntity(
+      "http://localhost:" + this.port + test_scene_url, Map.class);
+      // Read the response
+      test_logger.println("Delete Test Response Code");
+      test_logger.println(get_response3.getStatusCode());
+      assert (get_response3.getStatusCode().is4xxClientError());
     } catch (Exception e) {
       test_logger.println(e.getStackTrace());
     } finally  {
