@@ -266,31 +266,30 @@ public class SceneController {
   */
   @RequestMapping(path = "/data", headers="Content-Type=application/json", method = RequestMethod.POST)
   public ResponseEntity<SceneList> query_scene(@RequestBody Scene inp_scene) {
-    String region = "Bad";
-    if (inp_scene != null) {
-      region = inp_scene.getRegion();
-    }
-    // Build a new scene
-    String[] assets;
-    assets = new String[2];
-    assets[0] = "1";
-    assets[1] = "2";
-    String[] tags;
-    tags = new String[2];
-    tags[0] = "1";
-    tags[1] = "2";
+    logger.debug("Responding to Scene Get Request");
+    String[] assets = new String[0];
+    String[] tags = new String[0];
     UserDevice[] devices = new UserDevice[0];
-    Scene scn = new Scene("A", "B", region, 1.0, 2.0, 3.0, assets, tags, devices);
-    Scene[] scn_array = new Scene[1];
-    scn_array[0] = scn;
+    Scene return_scn = new Scene("", "", "", -9999.0, -9999.0, 0.0, assets, tags, devices);
+    HttpStatus return_code = HttpStatus.OK;
 
-    // Build a Scene List
-    SceneList list = new SceneList(0, 1, scn_array, 100, "", "");
+    // Construct a Scene List, which we will then convert to JSON
+    Scene[] scn_array = new Scene[1];
+    scn_array[0] = inp_scene;
+    SceneList inp_scene_list = new SceneList(2, 1, scn_array, 100, "", "");
+    // Send the Scene List to Crazy Ivan and get the response
+    SceneList ivan_response = ivan_transaction(inp_scene_list);
+
+    // If we have a failure response, then return a failure error code
+    if (ivan_response.getNumRecords() == 0 || ivan_response.getErrorCode() > 100) {
+      return_code = HttpStatus.REQUESTED_RANGE_NOT_SATISFIABLE;
+    }
 
     // Set up a response header to return a valid HTTP Response
     HttpHeaders responseHeaders = new HttpHeaders();
     responseHeaders.set("Content-Type", "application/json");
 
-    return new ResponseEntity<SceneList>(list, responseHeaders, HttpStatus.OK);
+    // Create and return the new HTTP Response
+    return new ResponseEntity<SceneList>(ivan_response, responseHeaders, return_code);
   }
 }
