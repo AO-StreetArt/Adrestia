@@ -178,7 +178,9 @@ public class BasicServerTest {
     }
   }
 
-  private void populateQueryData(String test_scene_url) {
+  private void populateQueryData() {
+    String test_scene_url = "/v1/scene/MyFirstQueryScene";
+    String test_scene_url2 = "/v1/scene/MySecondQueryScene";
     // Build a new scene
     String[] assets;
     assets = new String[2];
@@ -194,16 +196,16 @@ public class BasicServerTest {
     Transform transform = new Transform(translation, rotation);
     UserDevice dev = new UserDevice("DeviceKey", transform);
     devices[0] = dev;
-    Scene scn = new Scene("A4B8C12D0", "FirstRegion", "MyRegion", 1.0, 2.0, 3.0, assets, tags, devices);
+    Scene scn = new Scene("A4B8C12D0", "MyFirstQueryScene", "MyRegion", 1.0, 2.0, 3.0, assets, tags, devices);
     // Post the Scene to the endpoint
     ResponseEntity<Map> create_response = this.test_template.postForEntity(
     "http://localhost:" + this.port + test_scene_url, scn, Map.class);
     // Read the response
     assert (create_response.getStatusCode().is2xxSuccessful());
-    Scene scn2 = new Scene("A6B8C12D0", "SecondRegion", "MyRegion", 12.0, 23.0, 34.0, assets, tags, devices);
+    Scene scn2 = new Scene("A6B8C12D0", "MySecondQueryScene", "MyRegion", 12.0, 23.0, 34.0, assets, tags, devices);
     // Post the Scene to the endpoint
     ResponseEntity<Map> create_response2 = this.test_template.postForEntity(
-    "http://localhost:" + this.port + test_scene_url, scn2, Map.class);
+    "http://localhost:" + this.port + test_scene_url2, scn2, Map.class);
     // Read the response
     assert (create_response2.getStatusCode().is2xxSuccessful());
   }
@@ -218,7 +220,7 @@ public class BasicServerTest {
     PrintWriter test_logger = new PrintWriter("testSceneQueryApi.txt", "UTF-8");
     try {
       test_logger.println("Populating Data for Query Tests");
-      populateQueryData(test_scene_url);
+      populateQueryData();
       // Run Query Tests
       test_logger.println("Starting Scene Query Tests");
       // Build a new scene
