@@ -14,6 +14,12 @@ architecture designed to synchronize 3D objects across different client
 programs. It is highly scalable, and many instances can run in parallel
 to support increasing load.
 
+Full Documentation for Adrestia is available `here <http://adrestia.readthedocs.io/en/latest/>`__.
+Repository for Adrestia is available at `here <https://github.com/AO-StreetArt/Adrestia>`__.
+
+Full Documentation for the Aesel Distributed Visualization Platform, including the HTTP API
+for Adrestia, can be found `here <http://aesel.readthedocs.io/en/latest/>`__.
+
 Features
 --------
 
