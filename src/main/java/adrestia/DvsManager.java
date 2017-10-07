@@ -302,7 +302,7 @@ public class DvsManager {
       // Find a service Instance not on the blacklist
       for (int i = 0; i < serviceInstances.size(); i++) {
         Object cacheResp = null;
-        // Pull the service instance from the list, and the value from the greylist
+        // Pull the service instance, and the value from the greylist
         if (serviceType == ivanType) {
           crazyIvanInstance = serviceInstances.get(i);
           logger.debug("Found Crazy Ivan Instance: "
