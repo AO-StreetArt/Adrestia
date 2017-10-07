@@ -17,150 +17,160 @@ limitations under the License.
 
 package adrestia;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonGetter;
-import com.fasterxml.jackson.annotation.JsonSetter;
 import adrestia.Scene;
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSetter;
 
+/**
+* Represents a List of Scenes, Required for communication with Crazy Ivan.
+*/
 public class SceneList {
 
   @JsonProperty("msg_type")
-  private int msg_type;
+  private int msgType;
   @JsonProperty("num_records")
-  private long num_records;
+  private long numRecords;
   @JsonProperty("scenes")
-  private Scene[] scene_list;
+  private Scene[] sceneList;
   @JsonProperty("err_code")
-  private int error_code;
+  private int errorCode;
   @JsonProperty("err_msg")
-  private String error_message;
+  private String errorMessage;
   @JsonProperty("transaction_id")
-  private String transaction_id;
+  private String transactionId;
 
   /**
-  * Default empty SceneList constructor
+  * Default empty SceneList constructor.
   */
   public SceneList() {
     super();
   }
 
   /**
-  * Complete SceneList constructor
+  * Complete SceneList constructor.
+  * @param msgType Integer Value representing the Type of Message.
+  * @param numRecords The Number of Records in the Scene List.
+  * @param sceneList The list of Scenes stored in the Scene List.
+  * @param errCode The Integer Error Code for the message.
+  * @param errMsg The Human-Readable Error Code in the message.
+  * @param transactionId The Unique Identifier for a particular transaction
   */
-  public SceneList(int msg_type, long num_records, Scene[] scene_list, int err_code, String err_msg, String transaction_id) {
-    this.msg_type = msg_type;
-    this.num_records = num_records;
-    this.scene_list = scene_list;
-    this.error_code = err_code;
-    this.error_message = err_msg;
-    this.transaction_id = transaction_id;
+  public SceneList(int msgType, long numRecords, Scene[] sceneList,
+      int errCode, String errMsg, String transactionId) {
+    this.msgType = msgType;
+    this.numRecords = numRecords;
+    this.sceneList = sceneList;
+    this.errorCode = errCode;
+    this.errorMessage = errMsg;
+    this.transactionId = transactionId;
   }
 
   /**
-  * Returns value of msg_type
-  * @return
+  * Returns value of msgType.
+  * @return Integer Value representing the Type of Message.
   */
-  @JsonGetter("msg_type")
+  @JsonGetter("msgType")
   public int getMsgType() {
-    return this.msg_type;
+    return this.msgType;
   }
 
   /**
-  * Set value of msg_type
-  * @return
+  * Set value of msgType.
+  * @param newMsgType Integer Value representing the Type of Message.
   */
-  @JsonSetter("msg_type")
+  @JsonSetter("msgType")
   public void setMsgType(int newMsgType) {
-    this.msg_type = newMsgType;
+    this.msgType = newMsgType;
   }
 
   /**
-  * Returns value of num_records
-  * @return
+  * Returns value of numRecords.
+  * @return The Number of Records in the Scene List.
   */
-  @JsonGetter("num_records")
+  @JsonGetter("numRecords")
   public long getNumRecords() {
-    return this.num_records;
+    return this.numRecords;
   }
 
   /**
-  * Set value of num_records
-  * @return
+  * Set value of numRecords.
+  * @param newNumRecords The Number of Records in the Scene List.
   */
-  @JsonSetter("num_records")
+  @JsonSetter("numRecords")
   public void setNumRecords(long newNumRecords) {
-    this.num_records = newNumRecords;
+    this.numRecords = newNumRecords;
   }
 
   /**
-  * Returns the Scene list
-  * @return
+  * Returns the Scene list.
+  * @return The list of Scenes stored in the Scene List.
   */
   @JsonGetter("scenes")
   public Scene[] getSceneList() {
-    return this.scene_list;
+    return this.sceneList;
   }
 
   /**
-  * Set the Scene list
-  * @return
+  * Set the Scene list.
+  * @param newSceneList The list of Scenes stored in the Scene List.
   */
   @JsonSetter("scenes")
   public void setSceneList(Scene[] newSceneList) {
-    this.scene_list = newSceneList;
+    this.sceneList = newSceneList;
   }
 
   /**
-  * Returns value of error_code
-  * @return
+  * Returns value of errorCode.
+  * @return The Integer Error Code for the message.
   */
   @JsonGetter("err_code")
   public int getErrorCode() {
-    return this.error_code;
+    return this.errorCode;
   }
 
   /**
-  * Set value of error_code
-  * @return
+  * Set value of errorCode.
+  * @param newErrorCode The Integer Error Code for the message.
   */
   @JsonSetter("err_code")
   public void setErrorCode(int newErrorCode) {
-    this.error_code = newErrorCode;
+    this.errorCode = newErrorCode;
   }
 
   /**
-  * Returns value of error_message
-  * @return
+  * Returns value of errorMessage.
+  * @return The Human-Readable Error Code in the message.
   */
   @JsonGetter("err_msg")
   public String getErrorMessage() {
-    return this.error_message;
+    return this.errorMessage;
   }
 
   /**
-  * Set value of error_message
-  * @return
+  * Set value of errorMessage.
+  * @param newErrorMessage The Human-Readable Error Code in the message.
   */
   @JsonSetter("err_msg")
   public void setErrorMessage(String newErrorMessage) {
-    this.error_message = newErrorMessage;
+    this.errorMessage = newErrorMessage;
   }
 
   /**
-  * Returns value of error_message
-  * @return
+  * Returns value of errorMessage.
+  * @return The Unique Identifier for a particular transaction.
   */
-  @JsonGetter("transaction_id")
+  @JsonGetter("transactionId")
   public String getTransactionId() {
-    return this.transaction_id;
+    return this.transactionId;
   }
 
   /**
-  * Set value of error_message
-  * @return
+  * Set value of errorMessage.
+  * @param newTransactionId The Unique Identifier for a particular transaction.
   */
-  @JsonSetter("transaction_id")
+  @JsonSetter("transactionId")
   public void setTransactionId(String newTransactionId) {
-    this.transaction_id = newTransactionId;
+    this.transactionId = newTransactionId;
   }
 }

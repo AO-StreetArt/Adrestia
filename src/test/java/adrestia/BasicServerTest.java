@@ -17,9 +17,9 @@ limitations under the License.
 
 package adrestia;
 
-import java.util.Map;
 import java.io.PrintWriter;
 import java.lang.Double;
+import java.util.Map;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,26 +33,27 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 /**
-* Basic Tests against the Adrestia Server
+* Basic Tests against the Adrestia Server.
 */
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = Adrestia.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = Adrestia.class,
+    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource(properties = {"management.port=5889"})
 public class BasicServerTest {
   @LocalServerPort
   private int port;
 
   @Value("${local.management.port}")
-  private int mgt_port;
+  private int mgtPort;
 
   @Autowired
-  private TestRestTemplate test_template;
+  private TestRestTemplate testTemplate;
 
   // Test the Actuator Health Check endpoint, which gets hit by Consul
   @Test
   public void testActuatorHealthCheck() throws Exception {
-    ResponseEntity<Map> response = this.test_template.getForEntity(
-    "http://localhost:" + this.mgt_port + "/info", Map.class);
+    ResponseEntity<Map> response = this.testTemplate.getForEntity(
+        "http://localhost:" + this.mgtPort + "/info", Map.class);
 
     assert (response.getStatusCode().is2xxSuccessful());
   }
@@ -60,18 +61,18 @@ public class BasicServerTest {
   // Test basic CRUD Functions for scenes
   @Test
   public void testSceneCrudApi() throws Exception {
-    String test_scene_name = "AeselTestScene11";
-    String test_scene_url = "/v1/scene/" + test_scene_name;
-    String test_scene_key = "A1B2C3E3";
-    double TOLERANCE = 0.00001;
+    String testSceneName = "AeselTestScene11";
+    String testSceneUrl = "/v1/scene/" + testSceneName;
+    String testSceneKey = "A1B2C3E3";
+    double tolerance = 0.00001;
     // Open up a file that we can write some test results to
-    // Obviously shouldn't be relied on for automated testing but good for debugging
-    PrintWriter test_logger = new PrintWriter("testSceneCrudApi.txt", "UTF-8");
+    // Shouldn't be relied on for automated testing but good for debugging
+    PrintWriter testLogger = new PrintWriter("testSceneCrudApi.txt", "UTF-8");
     try {
-      test_logger.println("Starting Test for Scene CRUD API");
+      testLogger.println("Starting Test for Scene CRUD API");
       // Create Test
       // Build a new scene
-      test_logger.println("Create Test");
+      testLogger.println("Create Test");
       String[] assets;
       assets = new String[2];
       assets[0] = "123";
@@ -86,101 +87,105 @@ public class BasicServerTest {
       Transform transform = new Transform(translation, rotation);
       UserDevice dev = new UserDevice("DeviceKey", transform);
       devices[0] = dev;
-      Scene scn = new Scene(test_scene_key, "", "C", 1.0, 2.0, 3.0, assets, tags, devices);
+      Scene scn = new Scene(
+          testSceneKey, "", "C", 1.0, 2.0, 3.0, assets, tags, devices);
       // Post the Scene to the endpoint
-      ResponseEntity<Map> create_response = this.test_template.postForEntity(
-      "http://localhost:" + this.port + test_scene_url, scn, Map.class);
+      ResponseEntity<Map> createResponse = this.testTemplate.postForEntity(
+          "http://localhost:" + this.port + testSceneUrl, scn, Map.class);
+      testLogger.println(createResponse.getStatusCode());
       // Read the response
-      assert (create_response.getStatusCode().is2xxSuccessful());
+      assert (createResponse.getStatusCode().is2xxSuccessful());
       // Validate the response
-      Map crt_resp_body = create_response.getBody();
-      test_logger.println("Create Response: " + crt_resp_body.toString());
-      test_logger.println("Key: " + crt_resp_body.get("key"));
-      assert (crt_resp_body.get("key").equals(test_scene_key));
+      Map crtRespBody = createResponse.getBody();
+      testLogger.println("Create Response: " + crtRespBody.toString());
+      testLogger.println("Key: " + crtRespBody.get("key"));
+      assert (crtRespBody.get("key").equals(testSceneKey));
 
       // Get Test
-      test_logger.println("Get Test");
+      testLogger.println("Get Test");
       // Issue a get request for the scene just created
-      ResponseEntity<Map> get_response = this.test_template.getForEntity(
-      "http://localhost:" + this.port + test_scene_url, Map.class);
+      ResponseEntity<Map> getResponse = this.testTemplate.getForEntity(
+          "http://localhost:" + this.port + testSceneUrl, Map.class);
       // Read the response
-      assert (get_response.getStatusCode().is2xxSuccessful());
+      assert (getResponse.getStatusCode().is2xxSuccessful());
       // Validate the response
-      Map get_resp_body = get_response.getBody();
-      test_logger.println("Get Response: " + get_resp_body.toString());
-      test_logger.println("Key: " + get_resp_body.get("key"));
-      test_logger.println("Name: " + get_resp_body.get("name"));
-      test_logger.println("Region: " + get_resp_body.get("region"));
-      test_logger.println("Latitude: " + get_resp_body.get("latitude"));
-      test_logger.println("Longitude: " + get_resp_body.get("longitude"));
-      assert (get_resp_body.get("key").equals(test_scene_key));
-      assert (get_resp_body.get("name").equals(test_scene_name));
-      assert (get_resp_body.get("region").equals("C"));
-      Double lat_dbl = new Double(get_resp_body.get("latitude").toString());
-      assert (lat_dbl.doubleValue() - 1.0 < TOLERANCE);
-      Double long_dbl = new Double(get_resp_body.get("longitude").toString());
-      assert (long_dbl.doubleValue() - 2.0 < TOLERANCE);
+      Map getRespBody = getResponse.getBody();
+      testLogger.println("Get Response: " + getRespBody.toString());
+      testLogger.println("Key: " + getRespBody.get("key"));
+      testLogger.println("Name: " + getRespBody.get("name"));
+      testLogger.println("Region: " + getRespBody.get("region"));
+      testLogger.println("Latitude: " + getRespBody.get("latitude"));
+      testLogger.println("Longitude: " + getRespBody.get("longitude"));
+      assert (getRespBody.get("key").equals(testSceneKey));
+      assert (getRespBody.get("name").equals(testSceneName));
+      assert (getRespBody.get("region").equals("C"));
+      Double latDbl = Double.valueOf(getRespBody.get("latitude").toString());
+      assert (latDbl.doubleValue() - 1.0 < tolerance);
+      Double longDbl = Double.valueOf(getRespBody.get("longitude").toString());
+      assert (longDbl.doubleValue() - 2.0 < tolerance);
 
       // Update Test
-      test_logger.println("Update Test");
-      Scene scn2 = new Scene("", "", "NewRegion", 110.0, 210.0, 3.0, assets, tags, devices);
+      testLogger.println("Update Test");
+      Scene scn2 = new Scene(
+          "", "", "NewRegion", 110.0, 210.0, 3.0, assets, tags, devices);
       // Post the Scene to the endpoint
-      ResponseEntity<Map> update_response = this.test_template.postForEntity(
-      "http://localhost:" + this.port + test_scene_url, scn2, Map.class);
+      ResponseEntity<Map> updateResponse = this.testTemplate.postForEntity(
+          "http://localhost:" + this.port + testSceneUrl, scn2, Map.class);
       // Read the response
-      assert (update_response.getStatusCode().is2xxSuccessful());
+      assert (updateResponse.getStatusCode().is2xxSuccessful());
       // Validate the response
-      Map upd_resp_body = update_response.getBody();
-      test_logger.println("Update Response: " + upd_resp_body.toString());
+      Map updRespBody = updateResponse.getBody();
+      testLogger.println("Update Response: " + updRespBody.toString());
 
       // Run a secondary get test to validate the update
-      test_logger.println("Get Test");
+      testLogger.println("Get Test");
       // Issue a get request for the scene just updated
-      ResponseEntity<Map> get_response2 = this.test_template.getForEntity(
-      "http://localhost:" + this.port + test_scene_url, Map.class);
+      ResponseEntity<Map> getResponse2 = this.testTemplate.getForEntity(
+          "http://localhost:" + this.port + testSceneUrl, Map.class);
       // Read the response
-      assert (get_response2.getStatusCode().is2xxSuccessful());
+      assert (getResponse2.getStatusCode().is2xxSuccessful());
       // Validate the response
-      Map get_resp_body2 = get_response2.getBody();
-      test_logger.println("Get Response: " + get_resp_body2.toString());
-      test_logger.println("Key: " + get_resp_body2.get("key"));
-      test_logger.println("Name: " + get_resp_body2.get("name"));
-      test_logger.println("Region: " + get_resp_body2.get("region"));
-      test_logger.println("Latitude: " + get_resp_body2.get("latitude"));
-      test_logger.println("Longitude: " + get_resp_body2.get("longitude"));
-      assert (get_resp_body2.get("key").equals(test_scene_key));
-      assert (get_resp_body2.get("name").equals(test_scene_name));
-      assert (get_resp_body2.get("region").equals("NewRegion"));
-      Double lat_dbl2 = new Double(get_resp_body2.get("latitude").toString());
-      assert (lat_dbl2.doubleValue() - 110.0 < TOLERANCE);
-      Double long_dbl2 = new Double(get_resp_body2.get("longitude").toString());
-      assert (long_dbl2.doubleValue() - 210.0 < TOLERANCE);
+      Map getRespBody2 = getResponse2.getBody();
+      testLogger.println("Get Response: " + getRespBody2.toString());
+      testLogger.println("Key: " + getRespBody2.get("key"));
+      testLogger.println("Name: " + getRespBody2.get("name"));
+      testLogger.println("Region: " + getRespBody2.get("region"));
+      testLogger.println("Latitude: " + getRespBody2.get("latitude"));
+      testLogger.println("Longitude: " + getRespBody2.get("longitude"));
+      assert (getRespBody2.get("key").equals(testSceneKey));
+      assert (getRespBody2.get("name").equals(testSceneName));
+      assert (getRespBody2.get("region").equals("NewRegion"));
+      Double latDbl2 = Double.valueOf(getRespBody2.get("latitude").toString());
+      assert (latDbl2.doubleValue() - 110.0 < tolerance);
+      Double longDbl2 = Double.valueOf(getRespBody2.get("longitude").toString());
+      assert (longDbl2.doubleValue() - 210.0 < tolerance);
 
       // Delete Test
-      test_logger.println("Delete Test");
+      testLogger.println("Delete Test");
       // Issue a get request for the scene just created
-      this.test_template.delete("http://localhost:" + this.port + test_scene_url, Map.class);
+      this.testTemplate.delete(
+          "http://localhost:" + this.port + testSceneUrl, Map.class);
 
       // Run a tertiary get test to validate the update
-      test_logger.println("Get Test");
+      testLogger.println("Get Test");
       // Issue a get request for the scene just updated
-      ResponseEntity<Map> get_response3 = this.test_template.getForEntity(
-      "http://localhost:" + this.port + test_scene_url, Map.class);
+      ResponseEntity<Map> getResponse3 = this.testTemplate.getForEntity(
+          "http://localhost:" + this.port + testSceneUrl, Map.class);
       // Read the response
-      test_logger.println("Delete Test Response Code");
-      test_logger.println(get_response3.getStatusCode());
-      assert (get_response3.getStatusCode().is4xxClientError());
+      testLogger.println("Delete Test Response Code");
+      testLogger.println(getResponse3.getStatusCode());
+      assert (getResponse3.getStatusCode().is4xxClientError());
     } catch (Exception e) {
-      test_logger.println(e.getStackTrace());
+      testLogger.println(e.getStackTrace());
     } finally  {
       // Close the output text file
-      test_logger.close();
+      testLogger.close();
     }
   }
 
   private void populateQueryData() {
-    String test_scene_url = "/v1/scene/MyFirstQueryScene";
-    String test_scene_url2 = "/v1/scene/MySecondQueryScene";
+    final String testSceneUrl = "/v1/scene/MyFirstQueryScene";
+    final String testSceneUrl2 = "/v1/scene/MySecondQueryScene";
     // Build a new scene
     String[] assets;
     assets = new String[2];
@@ -196,49 +201,52 @@ public class BasicServerTest {
     Transform transform = new Transform(translation, rotation);
     UserDevice dev = new UserDevice("DeviceKey", transform);
     devices[0] = dev;
-    Scene scn = new Scene("A4B8C12D0", "MyFirstQueryScene", "MyRegion", 1.0, 2.0, 3.0, assets, tags, devices);
+    Scene scn = new Scene("A4B8C12D0",
+        "MyFirstQueryScene", "MyRegion", 1.0, 2.0, 3.0, assets, tags, devices);
     // Post the Scene to the endpoint
-    ResponseEntity<Map> create_response = this.test_template.postForEntity(
-    "http://localhost:" + this.port + test_scene_url, scn, Map.class);
+    ResponseEntity<Map> createResponse = this.testTemplate.postForEntity(
+        "http://localhost:" + this.port + testSceneUrl, scn, Map.class);
     // Read the response
-    assert (create_response.getStatusCode().is2xxSuccessful());
-    Scene scn2 = new Scene("A6B8C12D0", "MySecondQueryScene", "MyRegion", 12.0, 23.0, 34.0, assets, tags, devices);
+    assert (createResponse.getStatusCode().is2xxSuccessful());
+    Scene scn2 = new Scene("A6B8C12D0", "MySecondQueryScene",
+        "MyRegion", 12.0, 23.0, 34.0, assets, tags, devices);
     // Post the Scene to the endpoint
-    ResponseEntity<Map> create_response2 = this.test_template.postForEntity(
-    "http://localhost:" + this.port + test_scene_url2, scn2, Map.class);
+    ResponseEntity<Map> createResponse2 = this.testTemplate.postForEntity(
+        "http://localhost:" + this.port + testSceneUrl2, scn2, Map.class);
     // Read the response
-    assert (create_response2.getStatusCode().is2xxSuccessful());
+    assert (createResponse2.getStatusCode().is2xxSuccessful());
   }
 
   // Test Query Functions for scenes
   @Test
   public void testSceneQueryApi() throws Exception {
-    String test_scene_url = "/v1/scene/data";
-    double TOLERANCE = 0.00001;
+    String testSceneUrl = "/v1/scene/data";
+    double tolerance = 0.00001;
     // Open up a file that we can write some test results to
-    // Obviously shouldn't be relied on for automated testing but good for debugging
-    PrintWriter test_logger = new PrintWriter("testSceneQueryApi.txt", "UTF-8");
+    // Shouldn't be relied on for automated testing but good for debugging
+    PrintWriter testLogger = new PrintWriter("testSceneQueryApi.txt", "UTF-8");
     try {
-      test_logger.println("Populating Data for Query Tests");
+      testLogger.println("Populating Data for Query Tests");
       populateQueryData();
       // Run Query Tests
-      test_logger.println("Starting Scene Query Tests");
+      testLogger.println("Starting Scene Query Tests");
       // Build a new scene
-      test_logger.println("Create Test");
+      testLogger.println("Create Test");
       String[] assets = new String[0];
       String[] tags = new String[0];
       UserDevice[] devices = new UserDevice[0];
-      Scene scn = new Scene("", "", "MyRegion", -9999.0, -9999.0, -9999.0, assets, tags, devices);
+      Scene scn = new Scene(
+          "", "", "MyRegion", -9999.0, -9999.0, -9999.0, assets, tags, devices);
       // Post the Scene to the endpoint
-      ResponseEntity<Map> query_response = this.test_template.postForEntity(
-      "http://localhost:" + this.port + test_scene_url, scn, Map.class);
+      ResponseEntity<Map> queryResponse = this.testTemplate.postForEntity(
+          "http://localhost:" + this.port + testSceneUrl, scn, Map.class);
       // Read the response
-      assert (query_response.getStatusCode().is2xxSuccessful());
+      assert (queryResponse.getStatusCode().is2xxSuccessful());
     } catch (Exception e) {
-      test_logger.println(e.getStackTrace());
+      testLogger.println(e.getStackTrace());
     } finally  {
       // Close the output text file
-      test_logger.close();
+      testLogger.close();
     }
   }
 }

@@ -23,9 +23,9 @@ import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 /**
-* Central Application
+* Central Application.
 * EnableDiscoveryClient - Turns on automated registration with Consul Agent
-* on startup
+* on startup.
 */
 @EnableDiscoveryClient
 @SpringBootApplication

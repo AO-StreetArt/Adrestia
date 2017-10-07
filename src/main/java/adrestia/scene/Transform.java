@@ -17,10 +17,13 @@ limitations under the License.
 
 package adrestia;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 
+/**
+* Represents a Transformation between coordinate systems.
+*/
 public class Transform {
 
   @JsonProperty("translation")
@@ -30,14 +33,16 @@ public class Transform {
   private double[] rotation;
 
   /**
-  * Default empty Transform constructor
+  * Default empty Transform constructor.
   */
   public Transform() {
     super();
   }
 
   /**
-  * Default Transform constructor
+  * Default Transform constructor.
+  * @param newTranslation A Double Array with 3 values (x, y, z).
+  * @param newRotation A Double Array with 4 values (theta, x, y, z).
   */
   public Transform(double[] newTranslation, double[] newRotation) {
     super();
@@ -46,8 +51,8 @@ public class Transform {
   }
 
   /**
-  * Returns value of translation
-  * @return
+  * Returns value of translation.
+  * @return A Double Array with 3 values (x, y, z).
   */
   @JsonGetter("translation")
   public double[] getTranslation() {
@@ -55,8 +60,8 @@ public class Transform {
   }
 
   /**
-  * Returns value of rotation
-  * @return
+  * Returns value of rotation.
+  * @return A Double Array with 4 values (theta, x, y, z).
   */
   @JsonGetter("rotation")
   public double[] getRotation() {
@@ -64,8 +69,8 @@ public class Transform {
   }
 
   /**
-  * Sets new value of translation
-  * @param
+  * Sets new value of translation.
+  * @param newTranslation A Double Array with 3 values (x, y, z).
   */
   @JsonSetter("translation")
   public void setTranslation(double[] newTranslation) {
@@ -73,8 +78,8 @@ public class Transform {
   }
 
   /**
-  * Sets new value of rotation
-  * @param
+  * Sets new value of rotation.
+  * @param newRotation A Double Array with 4 values (theta, x, y, z).
   */
   @JsonSetter("rotation")
   public void setRotation(double[] newRotation) {
