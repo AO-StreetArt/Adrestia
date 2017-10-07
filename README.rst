@@ -7,7 +7,7 @@ Adrestia
 Overview
 --------
 
-Adrestia is the Gateway Service for the Aesel Distributed Visualization platoform.
+Adrestia is the Gateway Service for the Aesel Distributed Visualization platform.
 
 This service is intended to fill a small role within a larger
 architecture designed to synchronize 3D objects across different client
@@ -18,14 +18,12 @@ Features
 --------
 
 - Expose HTTP API to devices and translate between underlying programs
-- Connect to other services over Zero MQ using JSON or Google Protocol Buffers.
-- Configurable Logic
+- Connect to other services over Zero MQ using JSON.
 - Scalable microservice design
 
 Adrestia is a part of the AO Aesel Project, along with
 `Crazy Ivan <https://github.com/AO-StreetArt/CrazyIvan>`__
-& `CLyman <https://github.com/AO-StreetArt/CrazyIvan>`__.  It therefore
+& `CLyman <https://github.com/AO-StreetArt/CLyman>`__.  It therefore
 utilizes the `DVS Interface
 library <https://github.com/AO-StreetArt/DvsInterface>`__, also
-available on github. It utilizes the Obj3.proto file for inbound
-communications when configured to read protocol buffers.
+available on github.

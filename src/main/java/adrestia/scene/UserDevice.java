@@ -19,10 +19,13 @@ package adrestia;
 
 import adrestia.Transform;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 
+/**
+* Represents a Device viewing objects (ie. a mobile phone).
+*/
 public class UserDevice {
 
   @JsonProperty("key")
@@ -32,14 +35,16 @@ public class UserDevice {
 
 
   /**
-  * Default empty UserDevice constructor
+  * Default empty UserDevice constructor.
   */
   public UserDevice() {
     super();
   }
 
   /**
-  * Default UserDevice constructor
+  * Default UserDevice constructor.
+  * @param key       The Unique String Key of the Device.
+  * @param transform A Transformation Object for the device to store.
   */
   public UserDevice(String key, Transform transform) {
     super();
@@ -48,8 +53,8 @@ public class UserDevice {
   }
 
   /**
-  * Returns value of key
-  * @return
+  * Returns value of key.
+  * @return The Unique String Key of the Device.
   */
   @JsonGetter("key")
   public String getKey() {
@@ -57,8 +62,8 @@ public class UserDevice {
   }
 
   /**
-  * Returns value of transform
-  * @return
+  * Returns value of transform.
+  * @return The Transformation Object stored in the User Device.
   */
   @JsonGetter("transform")
   public Transform getTransform() {
@@ -66,8 +71,8 @@ public class UserDevice {
   }
 
   /**
-  * Sets new value of key
-  * @param
+  * Sets new value of key.
+  * @param key A Unique String key for the device.
   */
   @JsonSetter("key")
   public void setKey(String key) {
@@ -75,8 +80,8 @@ public class UserDevice {
   }
 
   /**
-  * Sets new value of transform
-  * @param
+  * Sets new value of transform.
+  * @param transform A Transformation Object for the device to store.
   */
   @JsonSetter("transform")
   public void setTransform(Transform transform) {

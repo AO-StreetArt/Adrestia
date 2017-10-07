@@ -17,61 +17,64 @@ limitations under the License.
 
 package adrestia;
 
-import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.concurrent.Semaphore;
-import java.util.concurrent.TimeUnit;
-
-import javax.annotation.PreDestroy;
-
-import org.zeromq.ZContext;
-import org.zeromq.ZPoller;
-import org.zeromq.ZMQ;
-import org.zeromq.ZMQ.PollItem;
-import org.zeromq.ZMQ.Poller;
-import org.zeromq.ZMQ.Socket;
-
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import com.google.common.cache.*;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
-import org.springframework.cloud.client.discovery.DiscoveryClient;
-import org.springframework.cloud.client.ServiceInstance;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
+
+import javax.annotation.PreDestroy;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import org.zeromq.ZContext;
+import org.zeromq.ZMQ.PollItem;
+import org.zeromq.ZMQ.Poller;
+import org.zeromq.ZMQ.Socket;
+import org.zeromq.ZMQ;
+import org.zeromq.ZPoller;
 
 /**
-* A Manager for Dvs Service Instances
-* Serves up instances of CLyman, Crazy Ivan, and Ceph
+* A Manager for Dvs Service Instances.
+* Serves up instances of CLyman, Crazy Ivan, and Ceph.
 */
 @Component
 public class DvsManager {
   // Constant integers so that we can unify internal method calls for
   // CLyman and CrazyIvan
-  private static int CLYMAN_TYPE = 0;
-  private static int IVAN_TYPE = 1;
+  private static int clymanType = 0;
+  private static int ivanType = 1;
   // Consul Client for executing Service Discovery
   @Autowired
-  org.springframework.cloud.client.discovery.DiscoveryClient consul_client;
+  DiscoveryClient consulClient;
 
   // Crazy Ivan Service Instance
-  private static org.springframework.cloud.client.ServiceInstance crazyIvanInstance;
+  private static ServiceInstance crazyIvanInstance;
 
   // CLyman Service Instance
-  private static org.springframework.cloud.client.ServiceInstance clymanInstance;
+  private static ServiceInstance clymanInstance;
 
   // ZMQ Context
   public static final ZContext context = new ZContext();
@@ -92,80 +95,80 @@ public class DvsManager {
   private static Semaphore clymanMutex = new Semaphore(1);
 
   // DVS Manager Logger
-  private static final Logger logger = LogManager.getLogger("adrestia.DvsManager");
+  private static final Logger logger =
+      LogManager.getLogger("adrestia.DvsManager");
 
   // Loading cache to hold blacklisted CLyman hosts
   // Keys will expire after 5 minutes, at which point Consul should be able
   // to determine if the service is active or inactive.
-  LoadingCache<String, Object> clyman_host_blacklist = CacheBuilder.newBuilder()
-  .expireAfterAccess(300, TimeUnit.SECONDS)
-  .maximumSize(50)
-  .weakKeys()
-  .build(new CacheLoader<String, Object>() {
-    @Override
-    public Object load(String key) throws Exception {
-      return "new-value-loaded-" + key;
-    }
-  });
+  LoadingCache<String, Object> clymanBlacklist = CacheBuilder.newBuilder()
+      .expireAfterAccess(300, TimeUnit.SECONDS)
+      .maximumSize(50)
+      .weakKeys()
+      .build(new CacheLoader<String, Object>() {
+        @Override
+        public Object load(String key) throws Exception {
+          return "new-value-loaded-" + key;
+        }
+      });
 
   // Loading Cache to hold greylisted CLyman hosts
   // Keys will expire after 30 seconds, if we report another failure in this
   // time then the service will be blacklisted
-  LoadingCache<String, Object> clyman_host_greylist = CacheBuilder.newBuilder()
-  .expireAfterAccess(30, TimeUnit.SECONDS)
-  .maximumSize(30)
-  .weakKeys()
-  .build(new CacheLoader<String, Object>() {
-    @Override
-    public Object load(String key) throws Exception {
-      return "new-value-loaded-" + key;
-    }
-  });
+  LoadingCache<String, Object> clymanGreylist = CacheBuilder.newBuilder()
+      .expireAfterAccess(30, TimeUnit.SECONDS)
+      .maximumSize(30)
+      .weakKeys()
+      .build(new CacheLoader<String, Object>() {
+        @Override
+        public Object load(String key) throws Exception {
+          return "new-value-loaded-" + key;
+        }
+      });
 
   // Loading cache to hold blacklisted CrazyIvan hosts
   // Keys will expire after 5 minutes, at which point Consul should be able
   // to determine if the service is active or inactive.
-  LoadingCache<String, Object> ivan_host_blacklist = CacheBuilder.newBuilder()
-  .expireAfterAccess(300, TimeUnit.SECONDS)
-  .maximumSize(50)
-  .weakKeys()
-  .build(new CacheLoader<String, Object>() {
-    @Override
-    public Object load(String key) throws Exception {
-      return "new-value-loaded-" + key;
-    }
-  });
+  LoadingCache<String, Object> ivanBlacklist = CacheBuilder.newBuilder()
+      .expireAfterAccess(300, TimeUnit.SECONDS)
+      .maximumSize(50)
+      .weakKeys()
+      .build(new CacheLoader<String, Object>() {
+        @Override
+        public Object load(String key) throws Exception {
+          return "new-value-loaded-" + key;
+        }
+      });
 
   // Loading Cache to hold greylisted CrazyIvan hosts
   // Keys will expire after 30 seconds, if we report another failure in this
   // time then the service will be blacklisted
-  LoadingCache<String, Object> ivan_host_greylist = CacheBuilder.newBuilder()
-  .expireAfterAccess(30, TimeUnit.SECONDS)
-  .maximumSize(30)
-  .weakKeys()
-  .build(new CacheLoader<String, Object>() {
-    @Override
-    public Object load(String key) throws Exception {
-      return "new-value-loaded-" + key;
-    }
-  });
+  LoadingCache<String, Object> ivanGreylist = CacheBuilder.newBuilder()
+      .expireAfterAccess(30, TimeUnit.SECONDS)
+      .maximumSize(30)
+      .weakKeys()
+      .build(new CacheLoader<String, Object>() {
+        @Override
+        public Object load(String key) throws Exception {
+          return "new-value-loaded-" + key;
+        }
+      });
 
   /**
-  * Default empty DvsManager constructor
+  * Default empty DvsManager constructor.
   */
   public DvsManager() {
     super();
   }
 
   // Check if a service is active
-  private static boolean is_socket_active(int service_type) {
-    if (service_type == IVAN_TYPE) {
+  private static boolean is_socket_active(int serviceType) {
+    if (serviceType == ivanType) {
       if (crazyIvanSocket != null) {
         return true;
       }
       return false;
-    }
-    else if (service_type == CLYMAN_TYPE) {
+    } else if (serviceType == clymanType) {
       if (clymanSocket != null) {
         return true;
       }
@@ -175,25 +178,24 @@ public class DvsManager {
   }
 
   // Get the active socket for a service
-  private static ZMQ.Socket get_socket(int service_type) {
-    if (service_type == IVAN_TYPE) {
+  private static ZMQ.Socket get_socket(int serviceType) {
+    if (serviceType == ivanType) {
       return crazyIvanSocket;
-    }
-    else if (service_type == CLYMAN_TYPE) {
+    } else if (serviceType == clymanType) {
       return clymanSocket;
     }
     return null;
   }
 
   // Destroy the active socket for a service
-  private void destroy_socket(int service_type) {
-    if (service_type == IVAN_TYPE) {
+  private void destroy_socket(int serviceType) {
+    if (serviceType == ivanType) {
       if (crazyIvanSocket != null) {
         poller.unregister(crazyIvanSocket);
         context.destroySocket(crazyIvanSocket);
         crazyIvanSocket = null;
       }
-    } else if (service_type == CLYMAN_TYPE) {
+    } else if (serviceType == clymanType) {
       if (clymanSocket != null) {
         poller.unregister(clymanSocket);
         context.destroySocket(clymanSocket);
@@ -203,72 +205,77 @@ public class DvsManager {
   }
 
   // Reset the active socket for a service
-  private void reset_socket(int service_type) {
+  private void reset_socket(int serviceType) {
     // First, destroy the socket
-    destroy_socket(service_type);
+    destroy_socket(serviceType);
     // Then, create a new socket
-    if (service_type == IVAN_TYPE) {
+    if (serviceType == ivanType) {
       crazyIvanSocket = context.createSocket(ZMQ.REQ);
       poller.register(crazyIvanSocket, ZPoller.POLLIN);
-    } else if (service_type == CLYMAN_TYPE) {
+    } else if (serviceType == clymanType) {
       clymanSocket = context.createSocket(ZMQ.REQ);
       poller.register(clymanSocket, ZPoller.POLLIN);
     }
   }
 
-  // Destroy the DvsManager
+  /**
+  * Destroy the DVS Manager, closing any open sockets.
+  */
   @PreDestroy
   public void destroy() {
-    destroy_socket(IVAN_TYPE);
-    destroy_socket(CLYMAN_TYPE);
+    destroy_socket(ivanType);
+    destroy_socket(clymanType);
     context.destroy();
   }
 
   // Connect to the current socket for a service
-  private void connect_to_socket(int service_type) {
+  private void connect_to_socket(int serviceType) {
     // Pull the URL String
-    String UriString = null;
-    if (service_type == IVAN_TYPE) {
-      UriString = crazyIvanInstance.getUri().toString();
-    } else if (service_type == CLYMAN_TYPE) {
-      UriString = clymanInstance.getUri().toString();
+    String uriString = null;
+    if (serviceType == ivanType) {
+      uriString = crazyIvanInstance.getUri().toString();
+    } else if (serviceType == clymanType) {
+      uriString = clymanInstance.getUri().toString();
     }
     // Parse the URL String
-    int port_seperator_index = UriString.lastIndexOf(":");
-    String hostName = UriString.substring(7, port_seperator_index);
-    String portStr = UriString.substring(port_seperator_index + 1, UriString.length());
-    String zmq_addr = String.format("tcp://%s:%s", hostName, portStr);
-    logger.info("Connecting to server: " + zmq_addr);
+    int portSeperatorIndex = uriString.lastIndexOf(":");
+    String hostName = uriString.substring(7, portSeperatorIndex);
+    String portStr =
+        uriString.substring(portSeperatorIndex + 1, uriString.length());
+    String zmqAddr = String.format("tcp://%s:%s", hostName, portStr);
+    logger.info("Connecting to server: " + zmqAddr);
     // Connect to the service
-    get_socket(service_type).connect(zmq_addr);
+    get_socket(serviceType).connect(zmqAddr);
   }
 
   // Report a failure of a service
-  private void report_failure(int service_type) {
+  private void report_failure(int serviceType) {
     // Is the current host already on the greylist?
-    Object cache_resp = null;
-    if (service_type == CLYMAN_TYPE) {
-      cache_resp = clyman_host_greylist.getIfPresent(clymanInstance.getUri().toString());
-    } else if (service_type == IVAN_TYPE) {
-      cache_resp = ivan_host_greylist.getIfPresent(crazyIvanInstance.getUri().toString());
+    Object cacheResp = null;
+    if (serviceType == clymanType) {
+      cacheResp =
+          clymanGreylist.getIfPresent(clymanInstance.getUri().toString());
+    } else if (serviceType == ivanType) {
+      cacheResp =
+          ivanGreylist.getIfPresent(crazyIvanInstance.getUri().toString());
     }
     // Grab the mutex so we ensure we operate atomically on connections
     try {
       // Eliminate the socket
-      destroy_socket(service_type);
-      if (cache_resp != null) {
+      destroy_socket(serviceType);
+      if (cacheResp != null) {
         // We have found an entry in the greylist, add the host to the blacklist
-        if (service_type == CLYMAN_TYPE) {
-          cache_resp = clyman_host_blacklist.get(clymanInstance.getUri().toString());
-        } else if (service_type == IVAN_TYPE) {
-          cache_resp = ivan_host_blacklist.get(crazyIvanInstance.getUri().toString());
+        if (serviceType == clymanType) {
+          cacheResp = clymanBlacklist.get(clymanInstance.getUri().toString());
+        } else if (serviceType == ivanType) {
+          cacheResp = ivanBlacklist.get(crazyIvanInstance.getUri().toString());
         }
       } else {
         // We have no entry in the greylist, add the hostname to the greylist
-        if (service_type == CLYMAN_TYPE) {
-          cache_resp = clyman_host_greylist.get(clymanInstance.getUri().toString());
-        } else if (service_type == IVAN_TYPE) {
-          cache_resp = ivan_host_greylist.get(crazyIvanInstance.getUri().toString());
+        if (serviceType == clymanType) {
+          cacheResp = clymanGreylist.get(clymanInstance.getUri().toString());
+        } else if (serviceType == ivanType) {
+          cacheResp = ivanGreylist.get(crazyIvanInstance.getUri().toString());
         }
       }
     } catch (Exception e) {
@@ -278,57 +285,61 @@ public class DvsManager {
   }
 
   // Setup method to find and connect to an instance of Crazy Ivan
-  private void find_service(int service_type) {
+  private void find_service(int serviceType) {
     logger.info("Finding a new Crazy Ivan instance");
     // Find an instance of CrazyIvan
-    List<org.springframework.cloud.client.ServiceInstance> serviceInstances = null;
-    if (service_type == IVAN_TYPE) {
-      serviceInstances = consul_client.getInstances("Ivan");
-    } else if (service_type == CLYMAN_TYPE) {
-      serviceInstances = consul_client.getInstances("Clyman");
+    List<ServiceInstance> serviceInstances = null;
+    if (serviceType == ivanType) {
+      serviceInstances = consulClient.getInstances("Ivan");
+    } else if (serviceType == clymanType) {
+      serviceInstances = consulClient.getInstances("Clyman");
     }
-    if (serviceInstances != null ) {
+    if (serviceInstances != null) {
       //Log if we find no service instances
       if (serviceInstances.size() == 0) {
         logger.error("No Service instances found");
       }
       // Find a service Instance not on the blacklist
       for (int i = 0; i < serviceInstances.size(); i++) {
-        Object cache_resp = null;
-        // Pull the service instance from the list, and the value from the greylist
-        if (service_type == IVAN_TYPE) {
+        Object cacheResp = null;
+        // Pull the service instance, and the value from the greylist
+        if (serviceType == ivanType) {
           crazyIvanInstance = serviceInstances.get(i);
-          logger.debug("Found Crazy Ivan Instance: " + crazyIvanInstance.getUri().toString());
-          cache_resp = ivan_host_blacklist.getIfPresent(crazyIvanInstance.getUri().toString());
-        } else if (service_type == CLYMAN_TYPE) {
+          logger.debug("Found Crazy Ivan Instance: "
+              + crazyIvanInstance.getUri().toString());
+          cacheResp =
+              ivanBlacklist.getIfPresent(crazyIvanInstance.getUri().toString());
+        } else if (serviceType == clymanType) {
           clymanInstance = serviceInstances.get(i);
-          logger.debug("Found CLyman Instance: " + clymanInstance.getUri().toString());
-          cache_resp = clyman_host_blacklist.getIfPresent(clymanInstance.getUri().toString());
+          logger.debug("Found CLyman Instance: "
+              + clymanInstance.getUri().toString());
+          cacheResp =
+              clymanBlacklist.getIfPresent(clymanInstance.getUri().toString());
         }
         // We can go ahead and connect to the instance as long as it isn't
         // on the blacklist
-        if (cache_resp == null) {
+        if (cacheResp == null) {
           try {
             // Crazy Ivan ZMQ Context & Socket
             // Close any existing socket before creating a new one
-            reset_socket(service_type);
+            reset_socket(serviceType);
 
             // Connect to the new socket
-            // First we need to format the address from Consul.  We also assume tcp
-            // Communications between this class and Crazy Ivan
-            connect_to_socket(service_type);
+            // First we need to format the address from Consul.  We also assume
+            // tcp Communications between this class and Crazy Ivan
+            connect_to_socket(serviceType);
           } catch (Exception e) {
             logger.error("Error connecting to Crazy Ivan instance");
             logger.error(e.getMessage());
-            report_failure(service_type);
+            report_failure(serviceType);
           }
           // Exit the loop
           break;
         } else {
           logger.error("Returned host found in blacklist");
-          if (service_type == IVAN_TYPE) {
+          if (serviceType == ivanType) {
             crazyIvanInstance = null;
-          } else if (service_type == CLYMAN_TYPE) {
+          } else if (serviceType == clymanType) {
             clymanInstance = null;
           }
         }
@@ -338,23 +349,26 @@ public class DvsManager {
     }
   }
 
-  private String send_msg_recursive(String msg, int timeout, int retries, int service_type) {
+  private String send_msg_recursive(
+      String msg, int timeout, int retries, int serviceType) {
     logger.info("Attempting to send message to Crazy Ivan");
     // Find a Crazy Ivan instance, if necessary
-    if (!is_socket_active(service_type)) {
-      find_service(service_type);
+    if (!is_socket_active(serviceType)) {
+      find_service(serviceType);
     }
     // Response Processing
     int retriesLeft = retries;
-    while (retriesLeft > 0 && !Thread.currentThread().isInterrupted() && is_socket_active(service_type)) {
+    while (retriesLeft > 0
+        && !Thread.currentThread().isInterrupted()
+        && is_socket_active(serviceType)) {
       //  We send a request, then we work to get a reply
-      get_socket(service_type).send(msg.getBytes(ZMQ.CHARSET), 0);
+      get_socket(serviceType).send(msg.getBytes(ZMQ.CHARSET), 0);
 
       // We are going to use a poller with a timeout to get the value
       // Pattern from ZMQ Guide - Lazy Pirate Client
       // http://zguide.zeromq.org/java:lpclient
-      int expect_reply = 1;
-      while (expect_reply > 0) {
+      int expectReply = 1;
+      while (expectReply > 0) {
         //  Poll socket for a reply, with timeout
         int rc = poller.poll(timeout);
         logger.debug("Poller Checked with Result Code:");
@@ -363,30 +377,34 @@ public class DvsManager {
         //  reply is valid. If we didn't get a reply we close the client
         //  socket and resend the request. We try a number of times
         //  before finally abandoning:
-        if (poller.isReadable(get_socket(service_type))) {
+        if (poller.isReadable(get_socket(serviceType))) {
           //  We got a reply from the server
-          return get_socket(service_type).recvStr();
+          return get_socket(serviceType).recvStr();
         } else if (--retriesLeft == 0) {
           logger.error("Reporting Crazy Ivan Failure");
-          report_failure(service_type);
+          report_failure(serviceType);
           // Keep trying to send the message until we succeed or run out of
           // Crazy Ivan instances
-          return send_msg_recursive(msg, timeout, retries, service_type);
+          return send_msg_recursive(msg, timeout, retries, serviceType);
         } else {
           logger.warn("No response from server, retrying");
           //  Old socket is confused; close it and open a new one
-          reset_socket(service_type);
-          connect_to_socket(service_type);
+          reset_socket(serviceType);
+          connect_to_socket(serviceType);
           //  Send request again, on new socket
-          get_socket(service_type).send(msg.getBytes(ZMQ.CHARSET), 0);
+          get_socket(serviceType).send(msg.getBytes(ZMQ.CHARSET), 0);
         }
-        if (rc < 0) {break;}
+        if (rc < 0) {
+          break;
+        }
       }
     }
     return null;
   }
 
-  // Send a message to Crazy Ivan, return the response
+  /**
+  * Send a message to Crazy Ivan, return the response.
+  */
   public String send_to_ivan(String msg, int timeout, int retries) {
     // Grab the mutex so we ensure we operate atomically on connections
     try {
@@ -397,7 +415,7 @@ public class DvsManager {
     }
     // Actually try to send the message
     try {
-      return send_msg_recursive(msg, timeout, retries, IVAN_TYPE);
+      return send_msg_recursive(msg, timeout, retries, ivanType);
     } catch (Exception e) {
       logger.error("Error Sending message to Crazy Ivan: ", e);
     } finally {
@@ -407,7 +425,9 @@ public class DvsManager {
     return null;
   }
 
-  // Send a message to CLyman, return the response
+  /**
+  * Send a message to CLyman, return the response.
+  */
   public String send_to_clyman(String msg, int timeout, int retries) {
     // Grab the mutex so we ensure we operate atomically on connections
     try {
@@ -418,7 +438,7 @@ public class DvsManager {
     }
     // Actually try to send the message
     try {
-      return send_msg_recursive(msg, timeout, retries, CLYMAN_TYPE);
+      return send_msg_recursive(msg, timeout, retries, clymanType);
     } catch (Exception e) {
       logger.error("Error Sending message to CLyman: ", e);
     } finally {

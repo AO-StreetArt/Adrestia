@@ -19,10 +19,13 @@ package adrestia;
 
 import adrestia.UserDevice;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 
+/**
+* Represents a Scene (A Logical grouping of objects, and a coordinate system).
+*/
 public class Scene {
 
   @JsonProperty("key")
@@ -42,20 +45,30 @@ public class Scene {
   @JsonProperty("tags")
   private String[] tags;
   @JsonProperty("devices")
-  private UserDevice[] device_list;
+  private UserDevice[] deviceList;
 
   /**
-  * Default empty Scene constructor
+  * Default empty Scene constructor.
   */
   public Scene() {
     super();
   }
 
   /**
-  * Complete Scene constructor
+  * Complete Scene constructor.
+  * @param key A Unique String Key for the Scene.
+  * @param name A Name for the scene, by which it is externally identified.
+  * @param region A String Region for the Scene.
+  * @param latitude The latitude of the scene.
+  * @param longitude The longitude of the scene.
+  * @param distance The distance from the provided lat/long, used for queries.
+  * @param assets A String Array of Asset ID's associated to the scene.
+  * @param tags A String Array of Tags for the scene, used for queries.
+  * @param devices An Array of User Devices registered to the scene.
   */
   public Scene(String key, String name, String region, double latitude,
-  double longitude, double distance, String[] assets, String[] tags, UserDevice[] devices) {
+      double longitude, double distance, String[] assets,
+      String[] tags, UserDevice[] devices) {
     this.key = key;
     this.name = name;
     this.region = region;
@@ -64,12 +77,12 @@ public class Scene {
     this.distance = distance;
     this.assets = assets;
     this.tags = tags;
-    this.device_list = devices;
+    this.deviceList = devices;
   }
 
   /**
-  * Returns value of key
-  * @return
+  * Returns value of key.
+  * @return The Unique String Key for the Scene.
   */
   @JsonGetter("key")
   public String getKey() {
@@ -77,8 +90,8 @@ public class Scene {
   }
 
   /**
-  * Set value of key
-  * @return
+  * Set value of key.
+  * @param newKey A Unique String Key for the Scene.
   */
   @JsonSetter("key")
   public void setKey(String newKey) {
@@ -86,8 +99,8 @@ public class Scene {
   }
 
   /**
-  * Returns value of name
-  * @return
+  * Returns value of name.
+  * @return The Name of the scene (external identifier).
   */
   @JsonGetter("name")
   public String getName() {
@@ -95,8 +108,8 @@ public class Scene {
   }
 
   /**
-  * Set value of name
-  * @return
+  * Set value of name.
+  * @param newName A Name for the scene, by which it is externally identified.
   */
   @JsonSetter("name")
   public void setName(String newName) {
@@ -104,8 +117,8 @@ public class Scene {
   }
 
   /**
-  * Returns value of region
-  * @return
+  * Returns value of region.
+  * @return The Region of the Scene.
   */
   @JsonGetter("region")
   public String getRegion() {
@@ -113,8 +126,8 @@ public class Scene {
   }
 
   /**
-  * Set value of region
-  * @return
+  * Set value of region.
+  * @param newRegion A String Region for the Scene.
   */
   @JsonSetter("region")
   public void setRegion(String newRegion) {
@@ -122,8 +135,8 @@ public class Scene {
   }
 
   /**
-  * Returns value of latitude
-  * @return
+  * Returns value of latitude.
+  * @return The latitude of the scene.
   */
   @JsonGetter("latitude")
   public double getLatitude() {
@@ -131,8 +144,8 @@ public class Scene {
   }
 
   /**
-  * Set value of latitude
-  * @return
+  * Set value of latitude.
+  * @param newLatitude The latitude of the scene.
   */
   @JsonSetter("latitude")
   public void setLatitude(double newLatitude) {
@@ -140,8 +153,8 @@ public class Scene {
   }
 
   /**
-  * Returns value of longitude
-  * @return
+  * Returns value of longitude.
+  * @return The longitude of the scene.
   */
   @JsonGetter("longitude")
   public double getLongitude() {
@@ -149,8 +162,8 @@ public class Scene {
   }
 
   /**
-  * Set value of longitude
-  * @return
+  * Set value of longitude.
+  * @param newLongitude The longitude of the scene.
   */
   @JsonSetter("longitude")
   public void setLongitude(double newLongitude) {
@@ -158,8 +171,8 @@ public class Scene {
   }
 
   /**
-  * Returns value of distance
-  * @return
+  * Returns value of distance.
+  * @return The distance from the provided lat/long, used for queries.
   */
   @JsonGetter("distance")
   public double getDistance() {
@@ -167,8 +180,8 @@ public class Scene {
   }
 
   /**
-  * Set value of distance
-  * @return
+  * Set value of distance.
+  * @param newDistance The distance from the provided lat/long, for queries.
   */
   @JsonSetter("distance")
   public void setDistance(double newDistance) {
@@ -176,8 +189,8 @@ public class Scene {
   }
 
   /**
-  * Returns the assets of the scene
-  * @return
+  * Returns the assets of the scene.
+  * @return A String Array of Asset ID's associated to the scene.
   */
   @JsonGetter("asset_ids")
   public String[] getAssets() {
@@ -185,8 +198,8 @@ public class Scene {
   }
 
   /**
-  * Set the assets of the scene
-  * @return
+  * Set the assets of the scene.
+  * @param newAssets A String Array of Asset ID's associated to the scene.
   */
   @JsonSetter("asset_ids")
   public void setAssets(String[] newAssets) {
@@ -194,8 +207,8 @@ public class Scene {
   }
 
   /**
-  * Returns the tags of the Scene
-  * @return
+  * Returns the tags of the Scene.
+  * @return A String Array of Tags for the scene, used for queries.
   */
   @JsonGetter("tags")
   public String[] getTags() {
@@ -203,8 +216,8 @@ public class Scene {
   }
 
   /**
-  * Set the tags of the Scene
-  * @return
+  * Set the tags of the Scene.
+  * @param newTags A String Array of Tags for the scene, used for queries.
   */
   @JsonSetter("tags")
   public void setTags(String[] newTags) {
@@ -212,20 +225,20 @@ public class Scene {
   }
 
   /**
-  * Returns the devices of the Scene
-  * @return
+  * Returns the devices of the Scene.
+  * @return An Array of User Devices registered to the scene.
   */
   @JsonGetter("devices")
   public UserDevice[] getDevices() {
-    return this.device_list;
+    return this.deviceList;
   }
 
   /**
-  * Set the devices of the Scene
-  * @return
+  * Set the devices of the Scene.
+  * @param newDevices An Array of User Devices registered to the scene.
   */
   @JsonSetter("devices")
-  public void getTags(UserDevice[] newDevices) {
-    this.device_list = newDevices;
+  public void setDevices(UserDevice[] newDevices) {
+    this.deviceList = newDevices;
   }
 }
