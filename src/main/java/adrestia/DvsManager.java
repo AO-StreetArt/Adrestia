@@ -162,7 +162,7 @@ public class DvsManager {
   }
 
   // Check if a service is active
-  private static boolean is_socket_active(int serviceType) {
+  private static boolean isSocketActive(int serviceType) {
     if (serviceType == ivanType) {
       if (crazyIvanSocket != null) {
         return true;
@@ -178,7 +178,7 @@ public class DvsManager {
   }
 
   // Get the active socket for a service
-  private static ZMQ.Socket get_socket(int serviceType) {
+  private static ZMQ.Socket getSocket(int serviceType) {
     if (serviceType == ivanType) {
       return crazyIvanSocket;
     } else if (serviceType == clymanType) {
@@ -188,7 +188,7 @@ public class DvsManager {
   }
 
   // Destroy the active socket for a service
-  private void destroy_socket(int serviceType) {
+  private void destroySocket(int serviceType) {
     if (serviceType == ivanType) {
       if (crazyIvanSocket != null) {
         poller.unregister(crazyIvanSocket);
@@ -205,9 +205,9 @@ public class DvsManager {
   }
 
   // Reset the active socket for a service
-  private void reset_socket(int serviceType) {
+  private void resetSocket(int serviceType) {
     // First, destroy the socket
-    destroy_socket(serviceType);
+    destroySocket(serviceType);
     // Then, create a new socket
     if (serviceType == ivanType) {
       crazyIvanSocket = context.createSocket(ZMQ.REQ);
@@ -223,13 +223,13 @@ public class DvsManager {
   */
   @PreDestroy
   public void destroy() {
-    destroy_socket(ivanType);
-    destroy_socket(clymanType);
+    destroySocket(ivanType);
+    destroySocket(clymanType);
     context.destroy();
   }
 
   // Connect to the current socket for a service
-  private void connect_to_socket(int serviceType) {
+  private void connectToSocket(int serviceType) {
     // Pull the URL String
     String uriString = null;
     if (serviceType == ivanType) {
@@ -245,11 +245,11 @@ public class DvsManager {
     String zmqAddr = String.format("tcp://%s:%s", hostName, portStr);
     logger.info("Connecting to server: " + zmqAddr);
     // Connect to the service
-    get_socket(serviceType).connect(zmqAddr);
+    getSocket(serviceType).connect(zmqAddr);
   }
 
   // Report a failure of a service
-  private void report_failure(int serviceType) {
+  private void reportFailure(int serviceType) {
     // Is the current host already on the greylist?
     Object cacheResp = null;
     if (serviceType == clymanType) {
@@ -262,7 +262,7 @@ public class DvsManager {
     // Grab the mutex so we ensure we operate atomically on connections
     try {
       // Eliminate the socket
-      destroy_socket(serviceType);
+      destroySocket(serviceType);
       if (cacheResp != null) {
         // We have found an entry in the greylist, add the host to the blacklist
         if (serviceType == clymanType) {
@@ -285,7 +285,7 @@ public class DvsManager {
   }
 
   // Setup method to find and connect to an instance of Crazy Ivan
-  private void find_service(int serviceType) {
+  private void findService(int serviceType) {
     logger.info("Finding a new Crazy Ivan instance");
     // Find an instance of CrazyIvan
     List<ServiceInstance> serviceInstances = null;
@@ -322,16 +322,16 @@ public class DvsManager {
           try {
             // Crazy Ivan ZMQ Context & Socket
             // Close any existing socket before creating a new one
-            reset_socket(serviceType);
+            resetSocket(serviceType);
 
             // Connect to the new socket
             // First we need to format the address from Consul.  We also assume
             // tcp Communications between this class and Crazy Ivan
-            connect_to_socket(serviceType);
+            connectToSocket(serviceType);
           } catch (Exception e) {
             logger.error("Error connecting to Crazy Ivan instance");
             logger.error(e.getMessage());
-            report_failure(serviceType);
+            reportFailure(serviceType);
           }
           // Exit the loop
           break;
@@ -349,20 +349,20 @@ public class DvsManager {
     }
   }
 
-  private String send_msg_recursive(
+  private String sendMsgRecursive(
       String msg, int timeout, int retries, int serviceType) {
     logger.info("Attempting to send message to Crazy Ivan");
     // Find a Crazy Ivan instance, if necessary
-    if (!is_socket_active(serviceType)) {
-      find_service(serviceType);
+    if (!isSocketActive(serviceType)) {
+      findService(serviceType);
     }
     // Response Processing
     int retriesLeft = retries;
     while (retriesLeft > 0
         && !Thread.currentThread().isInterrupted()
-        && is_socket_active(serviceType)) {
+        && isSocketActive(serviceType)) {
       //  We send a request, then we work to get a reply
-      get_socket(serviceType).send(msg.getBytes(ZMQ.CHARSET), 0);
+      getSocket(serviceType).send(msg.getBytes(ZMQ.CHARSET), 0);
 
       // We are going to use a poller with a timeout to get the value
       // Pattern from ZMQ Guide - Lazy Pirate Client
@@ -377,22 +377,22 @@ public class DvsManager {
         //  reply is valid. If we didn't get a reply we close the client
         //  socket and resend the request. We try a number of times
         //  before finally abandoning:
-        if (poller.isReadable(get_socket(serviceType))) {
+        if (poller.isReadable(getSocket(serviceType))) {
           //  We got a reply from the server
-          return get_socket(serviceType).recvStr();
+          return getSocket(serviceType).recvStr();
         } else if (--retriesLeft == 0) {
           logger.error("Reporting Crazy Ivan Failure");
-          report_failure(serviceType);
+          reportFailure(serviceType);
           // Keep trying to send the message until we succeed or run out of
           // Crazy Ivan instances
-          return send_msg_recursive(msg, timeout, retries, serviceType);
+          return sendMsgRecursive(msg, timeout, retries, serviceType);
         } else {
           logger.warn("No response from server, retrying");
           //  Old socket is confused; close it and open a new one
-          reset_socket(serviceType);
-          connect_to_socket(serviceType);
+          resetSocket(serviceType);
+          connectToSocket(serviceType);
           //  Send request again, on new socket
-          get_socket(serviceType).send(msg.getBytes(ZMQ.CHARSET), 0);
+          getSocket(serviceType).send(msg.getBytes(ZMQ.CHARSET), 0);
         }
         if (rc < 0) {
           break;
@@ -405,7 +405,7 @@ public class DvsManager {
   /**
   * Send a message to Crazy Ivan, return the response.
   */
-  public String send_to_ivan(String msg, int timeout, int retries) {
+  public String sendToIvan(String msg, int timeout, int retries) {
     // Grab the mutex so we ensure we operate atomically on connections
     try {
       crazyIvanMutex.acquire();
@@ -415,7 +415,7 @@ public class DvsManager {
     }
     // Actually try to send the message
     try {
-      return send_msg_recursive(msg, timeout, retries, ivanType);
+      return sendMsgRecursive(msg, timeout, retries, ivanType);
     } catch (Exception e) {
       logger.error("Error Sending message to Crazy Ivan: ", e);
     } finally {
@@ -428,7 +428,7 @@ public class DvsManager {
   /**
   * Send a message to CLyman, return the response.
   */
-  public String send_to_clyman(String msg, int timeout, int retries) {
+  public String sendToClyman(String msg, int timeout, int retries) {
     // Grab the mutex so we ensure we operate atomically on connections
     try {
       clymanMutex.acquire();
@@ -438,7 +438,7 @@ public class DvsManager {
     }
     // Actually try to send the message
     try {
-      return send_msg_recursive(msg, timeout, retries, clymanType);
+      return sendMsgRecursive(msg, timeout, retries, clymanType);
     } catch (Exception e) {
       logger.error("Error Sending message to CLyman: ", e);
     } finally {

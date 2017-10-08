@@ -31,8 +31,7 @@ public class SceneList {
   private int msgType;
   @JsonProperty("num_records")
   private long numRecords;
-  @JsonProperty("scenes")
-  private Scene[] sceneList;
+  private Scene[] scenes;
   @JsonProperty("err_code")
   private int errorCode;
   @JsonProperty("err_msg")
@@ -51,16 +50,16 @@ public class SceneList {
   * Complete SceneList constructor.
   * @param msgType Integer Value representing the Type of Message.
   * @param numRecords The Number of Records in the Scene List.
-  * @param sceneList The list of Scenes stored in the Scene List.
+  * @param scenes The list of Scenes stored in the Scene List.
   * @param errCode The Integer Error Code for the message.
   * @param errMsg The Human-Readable Error Code in the message.
   * @param transactionId The Unique Identifier for a particular transaction
   */
-  public SceneList(int msgType, long numRecords, Scene[] sceneList,
+  public SceneList(int msgType, long numRecords, Scene[] scenes,
       int errCode, String errMsg, String transactionId) {
     this.msgType = msgType;
     this.numRecords = numRecords;
-    this.sceneList = sceneList;
+    this.scenes = scenes;
     this.errorCode = errCode;
     this.errorMessage = errMsg;
     this.transactionId = transactionId;
@@ -108,7 +107,7 @@ public class SceneList {
   */
   @JsonGetter("scenes")
   public Scene[] getSceneList() {
-    return this.sceneList;
+    return this.scenes;
   }
 
   /**
@@ -117,7 +116,7 @@ public class SceneList {
   */
   @JsonSetter("scenes")
   public void setSceneList(Scene[] newSceneList) {
-    this.sceneList = newSceneList;
+    this.scenes = newSceneList;
   }
 
   /**

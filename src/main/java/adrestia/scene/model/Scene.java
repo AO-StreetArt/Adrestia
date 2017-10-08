@@ -28,21 +28,14 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 */
 public class Scene {
 
-  @JsonProperty("key")
   private String key;
-  @JsonProperty("name")
   private String name;
-  @JsonProperty("region")
   private String region;
-  @JsonProperty("latitude")
   private double latitude;
-  @JsonProperty("longitude")
   private double longitude;
-  @JsonProperty("distance")
   private double distance;
   @JsonProperty("asset_ids")
   private String[] assets;
-  @JsonProperty("tags")
   private String[] tags;
   @JsonProperty("devices")
   private UserDevice[] deviceList;

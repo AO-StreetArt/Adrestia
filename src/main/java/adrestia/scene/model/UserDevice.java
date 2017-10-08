@@ -28,9 +28,7 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 */
 public class UserDevice {
 
-  @JsonProperty("key")
   private String key;
-  @JsonProperty("transform")
   private Transform transform;
 
 

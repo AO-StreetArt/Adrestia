@@ -1,7 +1,7 @@
 .. _quickstart:
 
-Getting Started with CLyman
-===========================
+Getting Started with Adrestia
+=============================
 
 :ref:`Go Home <index>`
 

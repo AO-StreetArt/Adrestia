@@ -31,6 +31,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.http.HttpHeaders;
@@ -54,9 +55,11 @@ import org.zeromq.ZMQ;
 public class SceneController {
 
   // How many retries should we attempt prior to reporting a failure
-  private static final int requestRetries = 3;
+  @Value("${server.ivan.retries}")
+  private int requestRetries;
   // How many milliseconds to wait for a reply
-  private static final int requestTimeout = 5000;
+  @Value("${server.ivan.timeout}")
+  private int requestTimeout;
 
   // ZMQ Context
   @Autowired
@@ -67,7 +70,7 @@ public class SceneController {
       LogManager.getLogger("adrestia.SceneController");
 
   // Execute a single Crazy Ivan Transaction
-  private SceneList ivan_transaction(SceneList inpScene) {
+  private SceneList ivanTransaction(SceneList inpScene) {
     // Set up a default return Scene List
     Scene[] baseReturnScns = new Scene[0];
     SceneList returnSceneList = new SceneList(inpScene.getMsgType(),
@@ -82,7 +85,7 @@ public class SceneController {
 
       // Send the message to Crazy Ivan
       String replyString =
-          serviceManager.send_to_ivan(ivanMsg, requestTimeout, requestRetries);
+          serviceManager.sendToIvan(ivanMsg, requestTimeout, requestRetries);
       logger.debug("Crazy Ivan Response: " + replyString);
 
       // Convert the Response back to a Scene List
@@ -96,7 +99,7 @@ public class SceneController {
   }
 
   // Get a Scene from Crazy Ivan
-  private SceneList retrieve_scene(String name) {
+  private SceneList retrieveScene(String name) {
     String[] assets = new String[0];
     String[] tags = new String[0];
     UserDevice[] devices = new UserDevice[0];
@@ -107,11 +110,11 @@ public class SceneController {
     scnArray[0] = scn;
     SceneList inpSceneList = new SceneList(2, 1, scnArray, 100, "", "");
     // Send the Scene List to Crazy Ivan and get the response
-    return ivan_transaction(inpSceneList);
+    return ivanTransaction(inpSceneList);
   }
 
   // Save a scene to Crazy Ivan
-  private SceneList save_scene(Scene inpScene, boolean sceneExists) {
+  private SceneList saveScene(Scene inpScene, boolean sceneExists) {
     // Construct a Scene List, which we will then convert to JSON
     Scene[] baseInpScns = {inpScene};
     int msgType = 0;
@@ -121,11 +124,11 @@ public class SceneController {
     SceneList inpSceneList =
         new SceneList(msgType, 1, baseInpScns, 100, "", "");
     // Send the Scene List to Crazy Ivan and get the response
-    return ivan_transaction(inpSceneList);
+    return ivanTransaction(inpSceneList);
   }
 
   // Delete a scene from Crazy Ivan
-  private SceneList remove_scene(String key) {
+  private SceneList removeScene(String key) {
     String[] assets = new String[0];
     String[] tags = new String[0];
     UserDevice[] devices = new UserDevice[0];
@@ -136,7 +139,7 @@ public class SceneController {
     scnArray[0] = scn;
     SceneList inpSceneList = new SceneList(3, 1, scnArray, 100, "", "");
     // Send the Scene List to Crazy Ivan and get the response
-    return ivan_transaction(inpSceneList);
+    return ivanTransaction(inpSceneList);
   }
 
   /**
@@ -144,7 +147,7 @@ public class SceneController {
   * Scene name input as path variable, no Request Parameters accepted.
   */
   @RequestMapping(path = "/{name}", method = RequestMethod.GET)
-  public ResponseEntity<Scene> get_scene(@PathVariable("name") String name) {
+  public ResponseEntity<Scene> getScene(@PathVariable("name") String name) {
     logger.info("Responding to Scene Get Request");
     String[] assets = new String[0];
     String[] tags = new String[0];
@@ -153,7 +156,7 @@ public class SceneController {
         new Scene("", "", "", -9999.0, -9999.0, 0.0, assets, tags, devices);
     HttpStatus returnCode = HttpStatus.OK;
 
-    SceneList ivanResponse = retrieve_scene(name);
+    SceneList ivanResponse = retrieveScene(name);
 
     // If we have a successful response, then we pull the first value
     if (ivanResponse.getNumRecords() > 0
@@ -182,7 +185,7 @@ public class SceneController {
   @RequestMapping(path = "/{name}",
       headers = "Content-Type=application/json",
       method = RequestMethod.POST)
-  public ResponseEntity<Scene> update_scene(
+  public ResponseEntity<Scene> updateScene(
       @PathVariable("name") String name,
       @RequestBody Scene inpScene) {
     logger.info("Responding to Scene Save Request");
@@ -194,7 +197,7 @@ public class SceneController {
     HttpStatus returnCode = HttpStatus.OK;
 
     // See if we can find the scene requested
-    SceneList ivanResponse = retrieve_scene(name);
+    SceneList ivanResponse = retrieveScene(name);
 
     // If we have a successful response, then the scene exists
     boolean sceneExists = false;
@@ -212,7 +215,7 @@ public class SceneController {
 
     // Update the scene
     inpScene.setName(name);
-    SceneList updateResponse = save_scene(inpScene, sceneExists);
+    SceneList updateResponse = saveScene(inpScene, sceneExists);
 
     // If we have a successful response, then we pull the first value
     if (updateResponse.getNumRecords() > 0
@@ -238,7 +241,7 @@ public class SceneController {
   * Scene name input as path variable, no Request Parameters accepted.
   */
   @RequestMapping(path = "/{name}", method = RequestMethod.DELETE)
-  public ResponseEntity<Scene> delete_scene(@PathVariable("name") String name) {
+  public ResponseEntity<Scene> deleteScene(@PathVariable("name") String name) {
     logger.info("Responding to Scene Delete Request");
     String[] assets = new String[0];
     String[] tags = new String[0];
@@ -248,7 +251,7 @@ public class SceneController {
     HttpStatus returnCode = HttpStatus.OK;
 
     // See if we can find the scene requested
-    SceneList ivanResponse = retrieve_scene(name);
+    SceneList ivanResponse = retrieveScene(name);
 
     // If we have a successful response, then the scene exists
     boolean sceneExists = false;
@@ -267,7 +270,7 @@ public class SceneController {
     // Delete the scene
     SceneList deleteResponse = null;
     if (sceneExists) {
-      deleteResponse = remove_scene(ivanRespKey);
+      deleteResponse = removeScene(ivanRespKey);
     }
 
     // If we have a successful response, then we pull the first value
@@ -299,7 +302,7 @@ public class SceneController {
   @RequestMapping(path = "/data",
       headers = "Content-Type=application/json",
       method = RequestMethod.POST)
-  public ResponseEntity<SceneList> query_scene(@RequestBody Scene inpScene) {
+  public ResponseEntity<SceneList> queryScene(@RequestBody Scene inpScene) {
     logger.info("Responding to Scene Query Request");
     String[] assets = new String[0];
     String[] tags = new String[0];
@@ -313,7 +316,7 @@ public class SceneController {
     scnArray[0] = inpScene;
     SceneList inpSceneList = new SceneList(2, 1, scnArray, 100, "", "");
     // Send the Scene List to Crazy Ivan and get the response
-    SceneList ivanResponse = ivan_transaction(inpSceneList);
+    SceneList ivanResponse = ivanTransaction(inpSceneList);
 
     // If we have a failure response, then return a failure error code
     if (ivanResponse.getNumRecords() == 0
