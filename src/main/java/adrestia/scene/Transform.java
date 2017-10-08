@@ -26,10 +26,7 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 */
 public class Transform {
 
-  @JsonProperty("translation")
   private double[] translation;
-
-  @JsonProperty("rotation")
   private double[] rotation;
 
   /**
