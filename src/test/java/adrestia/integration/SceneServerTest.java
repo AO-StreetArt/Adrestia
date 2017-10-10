@@ -39,7 +39,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest(classes = Adrestia.class,
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource(properties = {"management.port=5889"})
-public class BasicServerTest {
+public class SceneServerTest {
   @LocalServerPort
   private int port;
 
@@ -48,15 +48,6 @@ public class BasicServerTest {
 
   @Autowired
   private TestRestTemplate testTemplate;
-
-  // Test the Actuator Health Check endpoint, which gets hit by Consul
-  @Test
-  public void testActuatorHealthCheck() throws Exception {
-    ResponseEntity<Map> response = this.testTemplate.getForEntity(
-        "http://localhost:" + this.mgtPort + "/info", Map.class);
-
-    assert (response.getStatusCode().is2xxSuccessful());
-  }
 
   // Test basic CRUD Functions for scenes
   @Test

@@ -35,16 +35,21 @@ public class Scene {
   private double longitude;
   private double distance;
   @JsonProperty("asset_ids")
-  private String[] assets;
-  private String[] tags;
+  private String[] assets = new String[0];
+  private String[] tags = new String[0];
   @JsonProperty("devices")
-  private UserDevice[] deviceList;
+  private UserDevice[] deviceList = new UserDevice[0];
 
   /**
   * Default empty Scene constructor.
   */
   public Scene() {
     super();
+    this.latitude = -9999.0;
+    this.longitude = -9999.0;
+    this.key = "";
+    this.name = "";
+    this.region = "";
   }
 
   /**

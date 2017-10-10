@@ -36,18 +36,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
 import org.zeromq.ZContext;
 import org.zeromq.ZMQ.PollItem;
@@ -66,6 +58,14 @@ public class DvsManager {
   // CLyman and CrazyIvan
   private static int clymanType = 0;
   private static int ivanType = 1;
+
+  // How many retries should we attempt prior to reporting a failure
+  @Value("${server.ivan.retries}")
+  private int requestRetries;
+  // How many milliseconds to wait for a reply
+  @Value("${server.ivan.timeout}")
+  private int requestTimeout;
+
   // Consul Client for executing Service Discovery
   @Autowired
   DiscoveryClient consulClient;
@@ -85,7 +85,7 @@ public class DvsManager {
   // CLyman ZMQ Socket
   private static ZMQ.Socket clymanSocket = null;
 
-  // ZMQ Polle used to pull messages to and from ZMQ.
+  // ZMQ Poller used to pull messages from ZMQ.
   ZPoller poller = new ZPoller(context);
 
   // Mutex to ensure that one thread is accessing the ZMQ Socket at a time
@@ -404,6 +404,7 @@ public class DvsManager {
 
   /**
   * Send a message to Crazy Ivan, return the response.
+  * Send and return a string
   */
   public String sendToIvan(String msg, int timeout, int retries) {
     // Grab the mutex so we ensure we operate atomically on connections
@@ -446,6 +447,38 @@ public class DvsManager {
       clymanMutex.release();
     }
     return null;
+  }
+
+  /**
+  * Send a message to Crazy Ivan, return the response.
+  * Send and Receive a Scene List
+  */
+  public SceneList ivanTransaction(SceneList inpScene) {
+    // Set up a default return Scene List
+    Scene[] baseReturnScns = new Scene[0];
+    SceneList returnSceneList = new SceneList(inpScene.getMsgType(),
+        1, baseReturnScns, 120, "Error Processing Request", "");
+
+    // Send the information to Crazy Ivan
+    try {
+      // Construct our JSON from the Scene List
+      ObjectMapper mapper = new ObjectMapper();
+      String ivanMsg = mapper.writeValueAsString(inpScene);
+      logger.debug("Crazy Ivan Message: " + ivanMsg);
+
+      // Send the message to Crazy Ivan
+      String replyString =
+          sendToIvan(ivanMsg, requestTimeout, requestRetries);
+      logger.debug("Crazy Ivan Response: " + replyString);
+
+      // Convert the Response back to a Scene List
+      if (replyString != null) {
+        returnSceneList = mapper.readValue(replyString, SceneList.class);
+      }
+    } catch (Exception e) {
+      logger.error("Error Retrieving Value from Crazy Ivan: ", e);
+    }
+    return returnSceneList;
   }
 
 }

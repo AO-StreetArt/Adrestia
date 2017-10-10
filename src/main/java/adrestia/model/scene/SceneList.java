@@ -44,6 +44,25 @@ public class SceneList {
   */
   public SceneList() {
     super();
+    this.msgType = -1;
+    this.numRecords = 1;
+    this.scenes = new Scene[0];
+    this.errorCode = 100;
+    this.errorMessage = "";
+    this.transactionId = "";
+  }
+
+  /**
+  * SceneList constructor with message type and scene list.
+  */
+  public SceneList(int newMsgType, Scene[] newSceneList) {
+    super();
+    this.msgType = newMsgType;
+    this.numRecords = 1;
+    this.scenes = newSceneList;
+    this.errorCode = 100;
+    this.errorMessage = "";
+    this.transactionId = "";
   }
 
   /**
@@ -69,7 +88,7 @@ public class SceneList {
   * Returns value of msgType.
   * @return Integer Value representing the Type of Message.
   */
-  @JsonGetter("msgType")
+  @JsonGetter("msg_type")
   public int getMsgType() {
     return this.msgType;
   }
@@ -78,7 +97,7 @@ public class SceneList {
   * Set value of msgType.
   * @param newMsgType Integer Value representing the Type of Message.
   */
-  @JsonSetter("msgType")
+  @JsonSetter("msg_type")
   public void setMsgType(int newMsgType) {
     this.msgType = newMsgType;
   }
@@ -87,7 +106,7 @@ public class SceneList {
   * Returns value of numRecords.
   * @return The Number of Records in the Scene List.
   */
-  @JsonGetter("numRecords")
+  @JsonGetter("num_records")
   public long getNumRecords() {
     return this.numRecords;
   }
@@ -96,7 +115,7 @@ public class SceneList {
   * Set value of numRecords.
   * @param newNumRecords The Number of Records in the Scene List.
   */
-  @JsonSetter("numRecords")
+  @JsonSetter("num_records")
   public void setNumRecords(long newNumRecords) {
     this.numRecords = newNumRecords;
   }
@@ -159,7 +178,7 @@ public class SceneList {
   * Returns value of errorMessage.
   * @return The Unique Identifier for a particular transaction.
   */
-  @JsonGetter("transactionId")
+  @JsonGetter("transaction_id")
   public String getTransactionId() {
     return this.transactionId;
   }
@@ -168,7 +187,7 @@ public class SceneList {
   * Set value of errorMessage.
   * @param newTransactionId The Unique Identifier for a particular transaction.
   */
-  @JsonSetter("transactionId")
+  @JsonSetter("transaction_id")
   public void setTransactionId(String newTransactionId) {
     this.transactionId = newTransactionId;
   }
