@@ -27,7 +27,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 /**
-* Testing Scene Data Model Components.
+* Testing the Utility Provider
 */
 @RunWith(SpringRunner.class)
 public class UtilsTest {
