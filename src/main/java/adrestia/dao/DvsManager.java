@@ -162,7 +162,7 @@ public class DvsManager {
   }
 
   // Check if a service is active
-  private static boolean isSocketActive(int serviceType) {
+  private boolean isSocketActive(int serviceType) {
     if (serviceType == ivanType) {
       if (crazyIvanSocket != null) {
         return true;
@@ -178,7 +178,7 @@ public class DvsManager {
   }
 
   // Get the active socket for a service
-  private static ZMQ.Socket getSocket(int serviceType) {
+  private ZMQ.Socket getSocket(int serviceType) {
     if (serviceType == ivanType) {
       return crazyIvanSocket;
     } else if (serviceType == clymanType) {
