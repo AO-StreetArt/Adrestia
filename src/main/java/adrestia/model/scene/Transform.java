@@ -34,6 +34,8 @@ public class Transform {
   */
   public Transform() {
     super();
+    this.translation = new double[3];
+    this.rotation = new double[4];
   }
 
   /**
