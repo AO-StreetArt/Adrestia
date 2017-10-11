@@ -80,10 +80,10 @@ public class DvsManager {
   public static final ZContext context = new ZContext();
 
   // Crazy Ivan ZMQ Socket
-  private static ZMQ.Socket crazyIvanSocket = null;
+  private ZMQ.Socket crazyIvanSocket = null;
 
   // CLyman ZMQ Socket
-  private static ZMQ.Socket clymanSocket = null;
+  private ZMQ.Socket clymanSocket = null;
 
   // ZMQ Poller used to pull messages from ZMQ.
   ZPoller poller = new ZPoller(context);
@@ -108,7 +108,7 @@ public class DvsManager {
       .build(new CacheLoader<String, Object>() {
         @Override
         public Object load(String key) throws Exception {
-          return "new-value-loaded-" + key;
+          return key;
         }
       });
 
@@ -122,7 +122,7 @@ public class DvsManager {
       .build(new CacheLoader<String, Object>() {
         @Override
         public Object load(String key) throws Exception {
-          return "new-value-loaded-" + key;
+          return key;
         }
       });
 
@@ -136,7 +136,7 @@ public class DvsManager {
       .build(new CacheLoader<String, Object>() {
         @Override
         public Object load(String key) throws Exception {
-          return "new-value-loaded-" + key;
+          return key;
         }
       });
 
@@ -150,7 +150,7 @@ public class DvsManager {
       .build(new CacheLoader<String, Object>() {
         @Override
         public Object load(String key) throws Exception {
-          return "new-value-loaded-" + key;
+          return key;
         }
       });
 
