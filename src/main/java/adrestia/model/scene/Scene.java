@@ -47,6 +47,7 @@ public class Scene {
     super();
     this.latitude = -9999.0;
     this.longitude = -9999.0;
+    this.distance = 0.0;
     this.key = "";
     this.name = "";
     this.region = "";

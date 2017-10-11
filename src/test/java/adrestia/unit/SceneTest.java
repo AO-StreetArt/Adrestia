@@ -87,6 +87,20 @@ public class SceneTest {
     assertDeviceElements(scn.getDevices()[0]);
   }
 
+  // Convenience method to build a test scene list
+  private SceneList buildSceneList() {
+    // Full Constructor Test
+    Scene scn = buildScene();
+    Scene[] scnArray = {scn};
+    return new SceneList(0, scnArray);
+  }
+
+  // Convenience method to validate the contents of a scene list
+  private void assertSceneListElements(SceneList scnList) {
+    assert (scnList.getMsgType() == 0);
+    assertSceneElements(scnList.getSceneList()[0]);
+  }
+
   // Test the Transform component of the Scene List
   @Test
   public void testTransform() throws Exception {
@@ -157,7 +171,22 @@ public class SceneTest {
 
       assertSceneElements(scn);
 
-      // TO-DO : Default Constructor Test
+      // Default Constructor Test
+      UserDevice dev = buildDevice();
+      UserDevice[] devList = {dev};
+      String[] tags = {"ABC", "123"};
+      String[] assets = {"FirstAsset", "SecondAsset"};
+      Scene defaultScn = new Scene();
+      defaultScn.setKey("MyKey");
+      defaultScn.setName("MyName");
+      defaultScn.setRegion("MyRegion");
+      defaultScn.setLatitude(100.0);
+      defaultScn.setLongitude(120.0);
+      defaultScn.setTags(tags);
+      defaultScn.setAssets(assets);
+      defaultScn.setDevices(devList);
+
+      assertSceneElements(defaultScn);
     } catch (Exception e) {
       testLogger.println(e.getStackTrace());
     } finally  {
@@ -166,5 +195,30 @@ public class SceneTest {
     }
   }
 
-  // TO-DO : Test the Scene List Data Structure
+  // Test the Scene List Data Structure
+  @Test
+  public void testSceneList() throws Exception {
+    // Open up a file that we can write some test results to
+    // Shouldn't be relied on for automated testing but good for debugging
+    PrintWriter testLogger = new PrintWriter("testModel_sceneList.txt", "UTF-8");
+    testLogger.println("Starting Test for Scene List");
+    try {
+      // Full Constructor Test
+      SceneList scnList = buildSceneList();
+      assertSceneListElements(scnList);
+
+      // Default Constructor Test
+      Scene scn = buildScene();
+      Scene[] scnArray = {scn};
+      SceneList defaultScnList = new SceneList();
+      defaultScnList.setMsgType(0);
+      defaultScnList.setSceneList(scnArray);
+      assertSceneListElements(defaultScnList);
+    } catch (Exception e) {
+      testLogger.println(e.getStackTrace());
+    } finally  {
+      // Close the output text file
+      testLogger.close();
+    }
+  }
 }
