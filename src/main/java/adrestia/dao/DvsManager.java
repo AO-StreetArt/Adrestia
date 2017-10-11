@@ -53,7 +53,7 @@ import org.zeromq.ZPoller;
 * Serves up instances of CLyman, Crazy Ivan, and Ceph.
 */
 @Component
-public class DvsManager {
+public class DvsManager implements DvsDao {
   // Constant integers so that we can unify internal method calls for
   // CLyman and CrazyIvan
   private static int clymanType = 0;
@@ -406,7 +406,7 @@ public class DvsManager {
   * Send a message to Crazy Ivan, return the response.
   * Send and return a string
   */
-  public String sendToIvan(String msg, int timeout, int retries) {
+  private String sendToIvan(String msg) {
     // Grab the mutex so we ensure we operate atomically on connections
     try {
       crazyIvanMutex.acquire();
@@ -416,7 +416,7 @@ public class DvsManager {
     }
     // Actually try to send the message
     try {
-      return sendMsgRecursive(msg, timeout, retries, ivanType);
+      return sendMsgRecursive(msg, requestTimeout, requestRetries, ivanType);
     } catch (Exception e) {
       logger.error("Error Sending message to Crazy Ivan: ", e);
     } finally {
@@ -429,7 +429,7 @@ public class DvsManager {
   /**
   * Send a message to CLyman, return the response.
   */
-  public String sendToClyman(String msg, int timeout, int retries) {
+  private String sendToClyman(String msg) {
     // Grab the mutex so we ensure we operate atomically on connections
     try {
       clymanMutex.acquire();
@@ -439,7 +439,7 @@ public class DvsManager {
     }
     // Actually try to send the message
     try {
-      return sendMsgRecursive(msg, timeout, retries, clymanType);
+      return sendMsgRecursive(msg, requestTimeout, requestRetries, clymanType);
     } catch (Exception e) {
       logger.error("Error Sending message to CLyman: ", e);
     } finally {
@@ -453,6 +453,7 @@ public class DvsManager {
   * Send a message to Crazy Ivan, return the response.
   * Send and Receive a Scene List
   */
+  @Override
   public SceneList ivanTransaction(SceneList inpScene) {
     // Set up a default return Scene List
     Scene[] baseReturnScns = new Scene[0];
@@ -468,7 +469,7 @@ public class DvsManager {
 
       // Send the message to Crazy Ivan
       String replyString =
-          sendToIvan(ivanMsg, requestTimeout, requestRetries);
+          sendToIvan(ivanMsg);
       logger.debug("Crazy Ivan Response: " + replyString);
 
       // Convert the Response back to a Scene List
@@ -481,4 +482,11 @@ public class DvsManager {
     return returnSceneList;
   }
 
+  /**
+  * Send a message to CLyman, return the response.
+  */
+  @Override
+  public ObjectDocumentList clymanTransaction(ObjectDocumentList inpObjectList) {
+    return new ObjectDocumentList();
+  }
 }

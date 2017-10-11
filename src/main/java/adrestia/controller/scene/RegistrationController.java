@@ -54,7 +54,7 @@ public class RegistrationController {
 
   // DVS Manager, DAO Object allowing access to dependent services
   @Autowired
-  DvsManager serviceManager;
+  DvsDao serviceManager;
 
   // Utility Provider, providing us with basic utility methods
   @Autowired
