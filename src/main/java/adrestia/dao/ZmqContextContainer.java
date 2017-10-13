@@ -17,22 +17,23 @@ limitations under the License.
 
 package adrestia;
 
-import org.springframework.stereotype.Service;
+import javax.annotation.PreDestroy;
+import org.springframework.stereotype.Component;
+import org.zeromq.ZContext;
 
 /**
-* Data Access for Scenes and Objects.
-* Exposes methods to communicate with Crazy Ivan and CLyman.
+* Container for a ZMQ Context which can be autowired with SpringBoot
 */
-@Service
-public interface DvsDao {
+@Component
+public class ZmqContextContainer {
+  // ZMQ Context
+  public final ZContext context = new ZContext();
 
   /**
-  * Send a message to Crazy Ivan, return the response.
+  * Destroy the Context
   */
-  public SceneList ivanTransaction(SceneList inpScene);
-
-  /**
-  * Send a message to CLyman, return the response.
-  */
-  public ObjectDocumentList clymanTransaction(ObjectDocumentList inpObjectList);
+  @PreDestroy
+  public void destroy() {
+    context.destroy();
+  }
 }

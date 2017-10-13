@@ -41,11 +41,11 @@ public class UtilsTest {
     testLogger.println("Starting Test for Scene List");
     try {
       UtilityProvider utils = new UtilityProvider();
-      assert (utils.translateIvanError(100) == HttpStatus.OK);
-      assert (utils.translateIvanError(102) == HttpStatus.NO_CONTENT);
-      assert (utils.translateIvanError(110) == HttpStatus.BAD_REQUEST);
-      assert (utils.translateIvanError(122) == HttpStatus.NOT_ACCEPTABLE);
-      assert (utils.translateIvanError(101) == HttpStatus.INTERNAL_SERVER_ERROR);
+      assert (utils.translateDvsError(100) == HttpStatus.OK);
+      assert (utils.translateDvsError(102) == HttpStatus.NO_CONTENT);
+      assert (utils.translateDvsError(110) == HttpStatus.BAD_REQUEST);
+      assert (utils.translateDvsError(122) == HttpStatus.NOT_ACCEPTABLE);
+      assert (utils.translateDvsError(101) == HttpStatus.INTERNAL_SERVER_ERROR);
     } catch (Exception e) {
       testLogger.println(e.getStackTrace());
       assert (false);

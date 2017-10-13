@@ -17,17 +17,21 @@ limitations under the License.
 
 package adrestia;
 
-/**
-* Data Access for Scenes and Objects.
-* Exposes methods to communicate with Crazy Ivan and CLyman.
-*/
-public class ObjectDocumentList {
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 
+
+/**
+* Adrestia Utility Provider.
+* Provides access to various utility methods.
+*/
+@Service
+public interface UtilityProviderInterface {
 
   /**
-  * Default empty ObjectDocumentList constructor.
+  * Translate an Error Code from Crazy Ivan into an HTTP Error Code.
   */
-  public ObjectDocumentList() {
-    super();
-  }
+  public HttpStatus translateDvsError(int dvsErrorCode);
+
 }

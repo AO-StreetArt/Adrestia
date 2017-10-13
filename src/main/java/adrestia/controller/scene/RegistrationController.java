@@ -52,43 +52,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(path = "/v1/scene")
 public class RegistrationController {
 
-  // DVS Manager, DAO Object allowing access to dependent services
+  // DAO Object allowing us access to scene data
   @Autowired
-  DvsDao serviceManager;
+  SceneDao scnData;
 
   // Utility Provider, providing us with basic utility methods
   @Autowired
-  UtilityProvider utils;
+  UtilityProviderInterface utils;
 
   // Scene Controller Logger
   private static final Logger logger =
       LogManager.getLogger("adrestia.RegistrationController");
-
-  // Execute a registration transaction with Crazy Ivan
-  private SceneList ivanRegistrationTransaction(String sceneName,
-      String deviceId, Transform inpTransform, int registerMsgType) {
-    logger.debug("Scene Registration Name: " + sceneName);
-    logger.debug("Scene Registration Device " + deviceId);
-
-    // Construct a User Device array
-    UserDevice ud = new UserDevice();
-    ud.setKey(deviceId);
-    // Pass the transform to the user device, if one is passed in
-    if (inpTransform != null) {
-      logger.debug("Input Transform detected");
-      ud.setTransform(inpTransform);
-    }
-    UserDevice[] devices = {ud};
-    // Construct a scene array
-    Scene scn = new Scene();
-    scn.setName(sceneName);
-    scn.setDevices(devices);
-    Scene[] scnArray = {scn};
-    // Construct a Scene List, which we will then convert to JSON
-    SceneList inpSceneList = new SceneList(registerMsgType, scnArray);
-    // Send the Scene List to Crazy Ivan and get the response
-    return serviceManager.ivanTransaction(inpSceneList);
-  }
 
   // Process a registration request
   private ResponseEntity<Scene> processRegistration(String name,
@@ -96,14 +70,23 @@ public class RegistrationController {
     Scene returnScn = new Scene();
     HttpStatus returnCode = HttpStatus.OK;
 
-    SceneList ivanResponse = ivanRegistrationTransaction(
-        name, device, inpTransform, registrationMsgType);
+    // Get a response based on the msg type we've been passed in
+    SceneList ivanResponse = null;
+    switch (registrationMsgType) {
+      case 4: ivanResponse = scnData.register(name, device, inpTransform);
+              break;
+      case 5: ivanResponse = scnData.deregister(name, device);
+              break;
+      case 6: ivanResponse = scnData.synchronize(name, device, inpTransform);
+              break;
+      default: ivanResponse = null;
+    }
 
     // If we have a successful response, then we pull the first value
     if (ivanResponse.getNumRecords() > 0
         && ivanResponse.getErrorCode() == 100) {
       returnScn = ivanResponse.getSceneList()[0];
-      returnCode = utils.translateIvanError(ivanResponse.getErrorCode());
+      returnCode = utils.translateDvsError(ivanResponse.getErrorCode());
     } else {
       returnCode = HttpStatus.INTERNAL_SERVER_ERROR;
       logger.debug("Failure Registered.  Ivan Response Error Code and Length:");
