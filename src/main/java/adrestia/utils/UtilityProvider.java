@@ -43,7 +43,7 @@ import org.springframework.stereotype.Component;
 * Provides access to various utility methods.
 */
 @Component
-public class UtilityProvider {
+public class UtilityProvider implements UtilityProviderInterface {
 
 
   /**
@@ -64,9 +64,10 @@ public class UtilityProvider {
   /**
   * Translate an Error Code from Crazy Ivan into an HTTP Error Code.
   */
-  public HttpStatus translateIvanError(int ivanErrorCode) {
+  @Override
+  public HttpStatus translateDvsError(int dvsErrorCode) {
     HttpStatus returnCode;
-    switch (ivanErrorCode) {
+    switch (dvsErrorCode) {
       // Success Return Code
       case 100: returnCode = HttpStatus.OK;
       break;

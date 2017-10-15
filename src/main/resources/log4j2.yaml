@@ -33,5 +33,9 @@ Configutation:
           level: debug
 
       Logger:
-        - name: adrestia.DvsManager
+        - name: adrestia.ZMQ
+          level: debug
+
+      Logger:
+        - name: adrestia.IvanConnector
           level: debug

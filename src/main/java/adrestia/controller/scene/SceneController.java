@@ -54,50 +54,22 @@ public class SceneController {
 
   // DVS Manager, DAO Object allowing access to dependent services
   @Autowired
-  DvsManager serviceManager;
+  SceneDao scnData;
 
   // Utility Provider, providing us with basic utility methods
   @Autowired
-  UtilityProvider utils;
+  UtilityProviderInterface utils;
 
   // Scene Controller Logger
   private static final Logger logger =
       LogManager.getLogger("adrestia.SceneController");
 
-  // Get a Scene from Crazy Ivan
-  private SceneList retrieveScene(String name) {
-    // Construct a Scene List, which we will then convert to JSON
-    Scene scn = new Scene();
-    scn.setName(name);
-    Scene[] scnArray = {scn};
-    SceneList inpSceneList = new SceneList(2, scnArray);
-    // Send the Scene List to Crazy Ivan and get the response
-    return serviceManager.ivanTransaction(inpSceneList);
-  }
-
   // Save a scene to Crazy Ivan
   private SceneList saveScene(Scene inpScene, boolean sceneExists) {
-    // Construct a Scene List, which we will then convert to JSON
-    Scene[] baseInpScns = {inpScene};
-    int msgType = 0;
     if (sceneExists) {
-      msgType = 1;
+      return scnData.update(inpScene);
     }
-    SceneList inpSceneList = new SceneList(msgType, baseInpScns);
-    // Send the Scene List to Crazy Ivan and get the response
-    return serviceManager.ivanTransaction(inpSceneList);
-  }
-
-  // Delete a scene from Crazy Ivan
-  private SceneList removeScene(String key) {
-    // Construct a Scene List, which we will then convert to JSON
-    Scene scn = new Scene();
-    scn.setKey(key);
-    Scene[] scnArray = new Scene[1];
-    scnArray[0] = scn;
-    SceneList inpSceneList = new SceneList(3, scnArray);
-    // Send the Scene List to Crazy Ivan and get the response
-    return serviceManager.ivanTransaction(inpSceneList);
+    return scnData.create(inpScene);
   }
 
   /**
@@ -110,14 +82,14 @@ public class SceneController {
     Scene returnScn = new Scene();
     HttpStatus returnCode = HttpStatus.OK;
 
-    SceneList ivanResponse = retrieveScene(name);
+    SceneList ivanResponse = scnData.get(name);
 
     // If we have a successful response, then we pull the first value and
     // the error code
     if (ivanResponse.getNumRecords() > 0
         && ivanResponse.getErrorCode() == 100) {
       returnScn = ivanResponse.getSceneList()[0];
-      returnCode = utils.translateIvanError(ivanResponse.getErrorCode());
+      returnCode = utils.translateDvsError(ivanResponse.getErrorCode());
     } else {
       returnCode = HttpStatus.REQUESTED_RANGE_NOT_SATISFIABLE;
       logger.debug("Failure Registered.  Ivan Response Error Code and Length:");
@@ -149,7 +121,7 @@ public class SceneController {
     HttpStatus returnCode = HttpStatus.OK;
 
     // See if we can find the scene requested
-    SceneList ivanResponse = retrieveScene(name);
+    SceneList ivanResponse = scnData.get(name);
 
     // If we have a successful response, then the scene exists
     boolean sceneExists = false;
@@ -173,7 +145,7 @@ public class SceneController {
     if (updateResponse.getNumRecords() > 0
         && updateResponse.getErrorCode() == 100) {
       returnScn = updateResponse.getSceneList()[0];
-      returnCode = utils.translateIvanError(updateResponse.getErrorCode());
+      returnCode = utils.translateDvsError(updateResponse.getErrorCode());
     } else {
       returnCode = HttpStatus.REQUESTED_RANGE_NOT_SATISFIABLE;
       logger.debug("Failure Registered.  Ivan Response Error Code and Length:");
@@ -200,7 +172,8 @@ public class SceneController {
     HttpStatus returnCode = HttpStatus.OK;
 
     // See if we can find the scene requested
-    SceneList ivanResponse = retrieveScene(name);
+    // We need to find the key in order to delete the scene
+    SceneList ivanResponse = scnData.get(name);
 
     // If we have a successful response, then the scene exists
     boolean sceneExists = false;
@@ -210,7 +183,7 @@ public class SceneController {
       sceneExists = true;
       // Set the key on the input scene to the key from the response
       ivanRespKey = ivanResponse.getSceneList()[0].getKey();
-      returnCode = utils.translateIvanError(ivanResponse.getErrorCode());
+      returnCode = utils.translateDvsError(ivanResponse.getErrorCode());
       if (ivanRespKey != null && !ivanRespKey.isEmpty()) {
         sceneExists = true;
         logger.debug("Existing Scene found in Crazy Ivan");
@@ -220,7 +193,7 @@ public class SceneController {
     // Delete the scene
     SceneList deleteResponse = null;
     if (sceneExists) {
-      deleteResponse = removeScene(ivanRespKey);
+      deleteResponse = scnData.destroy(ivanRespKey);
     }
 
     // If we have a successful response, then we pull the first value
@@ -257,21 +230,18 @@ public class SceneController {
     Scene returnScn = new Scene();
     HttpStatus returnCode = HttpStatus.OK;
 
-    // Construct a Scene List, which we will then convert to JSON
-    Scene[] scnArray = {inpScene};
-    SceneList inpSceneList = new SceneList(2, scnArray);
-    // Send the Scene List to Crazy Ivan and get the response
-    SceneList ivanResponse = serviceManager.ivanTransaction(inpSceneList);
+    // Send the Scene to Crazy Ivan and get the response
+    SceneList ivanResponse = scnData.query(inpScene);
 
     // If we have a failure response, then return a failure error code
     if (ivanResponse.getNumRecords() == 0
         || ivanResponse.getErrorCode() > 100) {
       returnCode = HttpStatus.REQUESTED_RANGE_NOT_SATISFIABLE;
-      logger.debug("Failure Registered.  Ivan Response Error Code and Length:");
+      logger.debug("Failure Registered.  Response Error Code and Length:");
       logger.debug(ivanResponse.getNumRecords());
       logger.debug(ivanResponse.getErrorCode());
     } else {
-      returnCode = utils.translateIvanError(ivanResponse.getErrorCode());
+      returnCode = utils.translateDvsError(ivanResponse.getErrorCode());
     }
 
     // Set up a response header to return a valid HTTP Response
