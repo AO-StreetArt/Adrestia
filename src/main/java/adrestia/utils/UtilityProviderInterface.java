@@ -31,6 +31,8 @@ public interface UtilityProviderInterface {
 
   /**
   * Translate an Error Code from Crazy Ivan into an HTTP Error Code.
+  * @param dvsErrorCode An Error Code from a DVS Service (Crazy Ivan, CLyman)
+  * @return An HTTP Status which can be returned by Adrestia
   */
   public HttpStatus translateDvsError(int dvsErrorCode);
 

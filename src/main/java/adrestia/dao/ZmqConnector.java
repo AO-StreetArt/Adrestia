@@ -138,7 +138,7 @@ public class ZmqConnector {
   }
 
   /**
-  * Destroy the DVS Manager, closing any open sockets.
+  * Destroy the ZMQ Connector, closing any open sockets.
   */
   @PreDestroy
   public void destroy() {
@@ -285,6 +285,11 @@ public class ZmqConnector {
   /**
   * Send a message to the ZMQ Socket, return the response.
   * Send and return a string
+  * @param msg The String message to send on the ZMQ Socket
+  * @param timeout How many milliseconds to wait before retrying
+  * @param retries How many times to retry before reporting a failure
+  * @param serviceName The Name of the Service we are sending to, in Consul
+  * @return The String response message from a matching service
   */
   public String send(String msg, int timeout, int retries, String serviceName) {
     // Grab the mutex so we ensure we operate atomically on connections
@@ -293,6 +298,7 @@ public class ZmqConnector {
     } catch (InterruptedException e) {
       logger.error("Error Establishing Mutex Lock on ZMQ Socket");
       logger.error(e.getMessage());
+      return "";
     }
     // Actually try to send the message
     try {
