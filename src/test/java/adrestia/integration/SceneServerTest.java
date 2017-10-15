@@ -153,7 +153,7 @@ public class SceneServerTest {
 
       // Delete Test
       testLogger.println("Delete Test");
-      // Issue a get request for the scene just created
+      // Delete the scene
       this.testTemplate.delete(
           "http://localhost:" + this.port + testSceneUrl, Map.class);
 

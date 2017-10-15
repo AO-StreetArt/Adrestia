@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
 import org.zeromq.ZContext;
 
 /**
-* Container for a ZMQ Context which can be autowired with SpringBoot
+* Container for a ZMQ Context which can be autowired with SpringBoot.
 */
 @Component
 public class ZmqContextContainer {
@@ -30,7 +30,7 @@ public class ZmqContextContainer {
   public static final ZContext context = new ZContext();
 
   /**
-  * Destroy the Context
+  * Destroy the Context.
   */
   @PreDestroy
   public void destroy() {
@@ -38,7 +38,7 @@ public class ZmqContextContainer {
   }
 
   /**
-  * Default empty ZmqContextContainer constructor
+  * Default empty ZmqContextContainer constructor.
   */
   public ZmqContextContainer() {
     super();

@@ -49,7 +49,7 @@ import org.zeromq.ZMQ;
 import org.zeromq.ZPoller;
 
 /**
-* A Service which connects to an external ZMQ Service
+* A Service which connects to an external ZMQ Service.
 */
 public class ZmqConnector {
 

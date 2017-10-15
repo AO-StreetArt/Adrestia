@@ -31,7 +31,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
-* Dao Implementation for Scene Objects using Crazy Ivan
+* Dao Implementation for Scene Objects using Crazy Ivan.
 */
 @Component
 public class CrazyIvanConnector extends ZmqConnector implements SceneDao {
@@ -89,6 +89,7 @@ public class CrazyIvanConnector extends ZmqConnector implements SceneDao {
     return new SceneList(msgType, baseInpScns);
   }
 
+  // Execute a CRUD Transaction with Crazy Ivan
   private SceneList crudTransaction(Scene inpScene, int msgType) {
     // Construct a Scene List, which we will then convert to JSON
     SceneList inpSceneList = buildSceneList(inpScene, msgType);
@@ -96,7 +97,7 @@ public class CrazyIvanConnector extends ZmqConnector implements SceneDao {
     return transaction(inpSceneList);
   }
 
-  // Execute a registration transaction with Crazy Ivan
+  // Execute a Registration Transaction with Crazy Ivan
   private SceneList registrationTransaction(String sceneName,
       String deviceId, Transform inpTransform, int registerMsgType) {
     logger.debug("Scene Registration Name: " + sceneName);
@@ -152,9 +153,9 @@ public class CrazyIvanConnector extends ZmqConnector implements SceneDao {
   * Remove a Scene.
   */
   @Override
-  public SceneList destroy(String sceneName) {
+  public SceneList destroy(String sceneKey) {
     Scene scn = new Scene();
-    scn.setName(sceneName);
+    scn.setKey(sceneKey);
     return crudTransaction(scn, 3);
   }
 

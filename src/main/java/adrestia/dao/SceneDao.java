@@ -43,7 +43,7 @@ public interface SceneDao {
   /**
   * Remove a Scene.
   */
-  public SceneList destroy(String sceneName);
+  public SceneList destroy(String sceneKey);
 
   /**
   * Query for one or more Scenes.
