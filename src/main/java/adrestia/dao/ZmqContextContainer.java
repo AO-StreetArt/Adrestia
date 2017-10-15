@@ -27,7 +27,7 @@ import org.zeromq.ZContext;
 @Component
 public class ZmqContextContainer {
   // ZMQ Context
-  public final ZContext context = new ZContext();
+  public static final ZContext context = new ZContext();
 
   /**
   * Destroy the Context
@@ -35,5 +35,12 @@ public class ZmqContextContainer {
   @PreDestroy
   public void destroy() {
     context.destroy();
+  }
+
+  /**
+  * Default empty ZmqContextContainer constructor
+  */
+  public ZmqContextContainer() {
+    super();
   }
 }

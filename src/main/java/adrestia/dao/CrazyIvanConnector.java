@@ -43,12 +43,12 @@ public class CrazyIvanConnector extends ZmqConnector implements SceneDao {
   @Value("${server.ivan.timeout}")
   private int requestTimeout;
 
-  // DVS Manager Logger
+  // Crazy Ivan Connection Logger
   private static final Logger logger =
       LogManager.getLogger("adrestia.IvanConnector");
 
   /**
-  * Default empty DvsManager constructor.
+  * Default empty CrazyIvanConnector constructor.
   */
   public CrazyIvanConnector() {
     super();
@@ -70,7 +70,7 @@ public class CrazyIvanConnector extends ZmqConnector implements SceneDao {
 
       // Send the message to Crazy Ivan
       String replyString =
-          send(ivanMsg, requestRetries, requestTimeout, "Ivan");
+          send(ivanMsg, requestTimeout, requestRetries, "Ivan");
       logger.debug("Crazy Ivan Response: " + replyString);
 
       // Convert the Response back to a Scene List

@@ -222,16 +222,19 @@ public class SceneServerTest {
       // Run Query Tests
       testLogger.println("Starting Scene Query Tests");
       // Build a new scene
-      testLogger.println("Create Test");
+      testLogger.println("Query Test");
       String[] assets = new String[0];
       String[] tags = new String[0];
       UserDevice[] devices = new UserDevice[0];
       Scene scn = new Scene(
           "", "", "MyRegion", -9999.0, -9999.0, -9999.0, assets, tags, devices);
       // Post the Scene to the endpoint
+      testLogger.println("Executing Query HTTP Request");
       ResponseEntity<Map> queryResponse = this.testTemplate.postForEntity(
           "http://localhost:" + this.port + testSceneUrl, scn, Map.class);
       // Read the response
+      testLogger.println("Query Response Code:");
+      testLogger.println(queryResponse.getStatusCode());
       assert (queryResponse.getStatusCode().is2xxSuccessful());
     } catch (Exception e) {
       testLogger.println(e.getStackTrace());
