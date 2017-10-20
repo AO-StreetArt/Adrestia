@@ -21,14 +21,14 @@ import adrestia.CrazyIvanConnector;
 import adrestia.SceneDao;
 import java.io.PrintWriter;
 import java.util.Properties;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.BeforeClass;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.DefaultServiceInstance;
+import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -120,7 +120,7 @@ public class SceneDaoTest {
   }
 
   /**
-   * Test the Scene Data Access Object - Creation Method
+   * Test the Scene Data Access Object - Creation Method.
    */
   @Test
   public void testSceneCreation() throws Exception {
@@ -148,7 +148,7 @@ public class SceneDaoTest {
   }
 
   /**
-   * Test the Scene Data Access Object - Get Method
+   * Test the Scene Data Access Object - Get Method.
    */
   @Test
   public void testSceneGet() throws Exception {
@@ -192,7 +192,7 @@ public class SceneDaoTest {
   }
 
   /**
-   * Test the Scene Data Access Object - Update Method
+   * Test the Scene Data Access Object - Update Method.
    */
   @Test
   public void testSceneUpdate() throws Exception {
@@ -231,7 +231,7 @@ public class SceneDaoTest {
   }
 
   /**
-   * Test the Scene Data Access Object - Delete Method
+   * Test the Scene Data Access Object - Delete Method.
    */
   @Test
   public void testSceneDestroy() throws Exception {
