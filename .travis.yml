@@ -36,6 +36,10 @@ after_failure:
 - cat testModel_device.txt
 - cat testModel_scene.txt
 - cat testModel_sceneList.txt
+- cat testDao_sceneCrt.txt
+- cat testDao_sceneUpd.txt
+- cat testDao_sceneGet.txt
+- cat testDao_sceneDel.txt
 - cat testSceneCrudApi.txt
 - cat testSceneQueryApi.txt
 - tail logs/adrestia.log
