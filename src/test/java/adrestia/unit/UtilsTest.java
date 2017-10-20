@@ -47,7 +47,7 @@ public class UtilsTest {
       assert (utils.translateDvsError(122) == HttpStatus.NOT_ACCEPTABLE);
       assert (utils.translateDvsError(101) == HttpStatus.INTERNAL_SERVER_ERROR);
     } catch (Exception e) {
-      testLogger.println(e.getStackTrace());
+      e.printStackTrace(testLogger);
       assert (false);
     } finally  {
       // Close the output text file

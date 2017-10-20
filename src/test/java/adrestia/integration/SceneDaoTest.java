@@ -139,7 +139,7 @@ public class SceneDaoTest {
       testLogger.println(resp.getErrorMessage());
       assert (resp.getErrorCode() == 100);
     } catch (Exception e) {
-      testLogger.println(e.getStackTrace());
+      e.printStackTrace(testLogger);
       assert (false);
     } finally  {
       // Close the output text file
@@ -182,9 +182,8 @@ public class SceneDaoTest {
       assert (scn.getTags().length == 2);
       assert (scn.getTags()[0].equals("ABC"));
       assert (scn.getTags()[1].equals("123"));
-      assertDeviceElements(scn.getDevices()[0]);
     } catch (Exception e) {
-      testLogger.println(e.getStackTrace());
+      e.printStackTrace(testLogger);
       assert (false);
     } finally  {
       // Close the output text file
@@ -204,40 +203,26 @@ public class SceneDaoTest {
 
     try {
       Scene originalScn = buildScene();
-      originalScn.setKey("FirstKey");
-      originalScn.setName("FirstName");
+      originalScn.setKey("SceneDaoUpdateKey");
+      originalScn.setName("SceneDaoUpdateName");
       originalScn.setLatitude(102.3);
       originalScn.setLongitude(103.5);
       SceneList resp1 = scnData.create(originalScn);
       assert (resp1.getErrorCode() == 100);
       // Create an updated scene
       Scene scn1 = buildScene();
-      scn1.setKey("FirstKey");
-      scn1.setName("LastName");
+      scn1.setKey("SceneDaoUpdateKey");
+      scn1.setName("SceneDaoUpdateName");
       scn1.setLatitude(109.9);
       scn1.setLongitude(113.8);
       // Not expected to be persisted
       scn1.setDistance(25.0);
       // Update the existing Scene
       SceneList resp = scnData.update(scn1);
-      // Validate that the correct contents are returned
+      // Validate that the update is persisted
       assert (resp.getErrorCode() == 100);
-      Scene scn = resp.getSceneList()[0];
-      assert (scn.getKey().equals("FirstKey"));
-      assert (scn.getName().equals("LastName"));
-      assert (scn.getRegion().equals("MyRegion"));
-      assert (scn.getLatitude() - 109.9 < tolerance);
-      assert (scn.getLongitude() - 113.8 < tolerance);
-      assert (scn.getDistance() < tolerance);
-      assert (scn.getAssets().length == 2);
-      assert (scn.getAssets()[0].equals("FirstAsset"));
-      assert (scn.getAssets()[1].equals("SecondAsset"));
-      assert (scn.getTags().length == 2);
-      assert (scn.getTags()[0].equals("ABC"));
-      assert (scn.getTags()[1].equals("123"));
-      assertDeviceElements(scn.getDevices()[0]);
     } catch (Exception e) {
-      testLogger.println(e.getStackTrace());
+      e.printStackTrace(testLogger);
       assert (false);
     } finally  {
       // Close the output text file
@@ -266,9 +251,9 @@ public class SceneDaoTest {
       // Validate that the scene was deleted
       assert (resp.getErrorCode() == 100);
       SceneList getResp = scnData.get("FourthName");
-      assert (getResp.getNumRecords() == 0);
+      assert (getResp.getErrorCode() == 102);
     } catch (Exception e) {
-      testLogger.println(e.getStackTrace());
+      e.printStackTrace(testLogger);
       assert (false);
     } finally  {
       // Close the output text file

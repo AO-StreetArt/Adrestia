@@ -123,7 +123,7 @@ public class SceneTest {
 
       assertTransformElements(defaultTrans);
     } catch (Exception e) {
-      testLogger.println(e.getStackTrace());
+      e.printStackTrace(testLogger);
       assert (false);
     } finally  {
       // Close the output text file
@@ -152,7 +152,7 @@ public class SceneTest {
 
       assertDeviceElements(defaultDev);
     } catch (Exception e) {
-      testLogger.println(e.getStackTrace());
+      e.printStackTrace(testLogger);
       assert (false);
     } finally  {
       // Close the output text file
@@ -190,7 +190,7 @@ public class SceneTest {
 
       assertSceneElements(defaultScn);
     } catch (Exception e) {
-      testLogger.println(e.getStackTrace());
+      e.printStackTrace(testLogger);
       assert (false);
     } finally  {
       // Close the output text file
@@ -218,7 +218,7 @@ public class SceneTest {
       defaultScnList.setSceneList(scnArray);
       assertSceneListElements(defaultScnList);
     } catch (Exception e) {
-      testLogger.println(e.getStackTrace());
+      e.printStackTrace(testLogger);
       assert (false);
     } finally  {
       // Close the output text file
