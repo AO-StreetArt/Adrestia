@@ -97,32 +97,6 @@ public class CrazyIvanConnector extends ZmqConnector implements SceneDao {
     return transaction(inpSceneList);
   }
 
-  // Execute a Registration Transaction with Crazy Ivan
-  private SceneList registrationTransaction(String sceneName,
-      String deviceId, Transform inpTransform, int registerMsgType) {
-    logger.debug("Scene Registration Name: " + sceneName);
-    logger.debug("Scene Registration Device " + deviceId);
-
-    // Construct a User Device array
-    UserDevice ud = new UserDevice();
-    ud.setKey(deviceId);
-    // Pass the transform to the user device, if one is passed in
-    if (inpTransform != null) {
-      logger.debug("Input Transform detected");
-      ud.setTransform(inpTransform);
-    }
-    UserDevice[] devices = {ud};
-    // Construct a scene array
-    Scene scn = new Scene();
-    scn.setName(sceneName);
-    scn.setDevices(devices);
-    Scene[] scnArray = {scn};
-    // Construct a Scene List, which we will then convert to JSON
-    SceneList inpSceneList = new SceneList(registerMsgType, scnArray);
-    // Send the Scene List to Crazy Ivan and get the response
-    return transaction(inpSceneList);
-  }
-
   /**
   * Create a Scene.
   */
@@ -165,6 +139,45 @@ public class CrazyIvanConnector extends ZmqConnector implements SceneDao {
   @Override
   public SceneList query(Scene inpScene) {
     return crudTransaction(inpScene, 2);
+  }
+
+  // Execute a Registration Transaction with Crazy Ivan
+  private SceneList registrationTransaction(String sceneName,
+      String deviceId, Transform inpTransform, int registerMsgType) {
+    logger.debug("Scene Registration Name: " + sceneName);
+    logger.debug("Scene Registration Device " + deviceId);
+
+    // Construct a User Device array
+    UserDevice ud = new UserDevice();
+    ud.setKey(deviceId);
+    // Pass the transform to the user device, if one is passed in
+    if (inpTransform != null) {
+      logger.debug("Input Transform detected");
+      ud.setTransform(inpTransform);
+    } else {
+      // We can't pass a null value to Crazy Ivan due to a bug
+      double[] translation = {0.0, 0.0, 0.0};
+      double[] rotation = {0.0, 0.0, 0.0};
+      Transform newTransform = new Transform(translation, rotation);
+      ud.setTransform(newTransform);
+    }
+    UserDevice[] devices = {ud};
+    // Construct a scene
+    Scene scn = new Scene();
+    scn.setName(sceneName);
+    scn.setDevices(devices);
+    // Get any existing scenes
+    SceneList existingScenes = get(sceneName);
+    if (existingScenes.getErrorCode() == 100) {
+      // We have an existing scene, use the key for it
+      scn.setKey(existingScenes.getSceneList()[0].getKey());
+    }
+
+    // Construct a Scene List, which we will then convert to JSON
+    Scene[] scnArray = {scn};
+    SceneList inpSceneList = new SceneList(registerMsgType, scnArray);
+    // Send the Scene List to Crazy Ivan and get the response
+    return transaction(inpSceneList);
   }
 
   /**

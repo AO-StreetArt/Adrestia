@@ -126,7 +126,7 @@ public class SceneDaoTest {
   public void testSceneCreation() throws Exception {
     // Open up a file that we can write some test results to
     // Shouldn't be relied on for automated testing but good for debugging
-    PrintWriter testLogger = new PrintWriter("testDao_sceneCrt.txt", "UTF-8");
+    PrintWriter testLogger = new PrintWriter("logs/testDao_sceneCrt.txt", "UTF-8");
     testLogger.println("Starting Test for Scene Dao");
 
     try {
@@ -134,7 +134,7 @@ public class SceneDaoTest {
       Scene scn = buildScene();
       assertSceneElements(scn);
       SceneList resp = scnData.create(scn);
-      testLogger.println("Create Test Response Code: ");
+      testLogger.println("Test Response: ");
       testLogger.println(resp.getErrorCode());
       testLogger.println(resp.getErrorMessage());
       assert (resp.getErrorCode() == 100);
@@ -154,7 +154,7 @@ public class SceneDaoTest {
   public void testSceneGet() throws Exception {
     // Open up a file that we can write some test results to
     // Shouldn't be relied on for automated testing but good for debugging
-    PrintWriter testLogger = new PrintWriter("testDao_sceneGet.txt", "UTF-8");
+    PrintWriter testLogger = new PrintWriter("logs/testDao_sceneGet.txt", "UTF-8");
     testLogger.println("Starting Test for Scene Dao");
 
     try {
@@ -167,6 +167,9 @@ public class SceneDaoTest {
       assert (resp3.getErrorCode() == 100);
       // Retrieve a scene
       SceneList resp = scnData.get("ThirdName");
+      testLogger.println("Test Response: ");
+      testLogger.println(resp.getErrorCode());
+      testLogger.println(resp.getErrorMessage());
       // Validate that the correct contents are returned
       assert (resp.getErrorCode() == 100);
       Scene scn = resp.getSceneList()[0];
@@ -198,7 +201,7 @@ public class SceneDaoTest {
   public void testSceneUpdate() throws Exception {
     // Open up a file that we can write some test results to
     // Shouldn't be relied on for automated testing but good for debugging
-    PrintWriter testLogger = new PrintWriter("testDao_sceneUpd.txt", "UTF-8");
+    PrintWriter testLogger = new PrintWriter("logs/testDao_sceneUpd.txt", "UTF-8");
     testLogger.println("Starting Test for Scene Dao");
 
     try {
@@ -219,6 +222,9 @@ public class SceneDaoTest {
       scn1.setDistance(25.0);
       // Update the existing Scene
       SceneList resp = scnData.update(scn1);
+      testLogger.println("Test Response: ");
+      testLogger.println(resp.getErrorCode());
+      testLogger.println(resp.getErrorMessage());
       // Validate that the update is persisted
       assert (resp.getErrorCode() == 100);
     } catch (Exception e) {
@@ -237,7 +243,7 @@ public class SceneDaoTest {
   public void testSceneDestroy() throws Exception {
     // Open up a file that we can write some test results to
     // Shouldn't be relied on for automated testing but good for debugging
-    PrintWriter testLogger = new PrintWriter("testDao_sceneDel.txt", "UTF-8");
+    PrintWriter testLogger = new PrintWriter("logs/testDao_sceneDel.txt", "UTF-8");
     testLogger.println("Starting Test for Scene Dao");
     try {
       // Create the scene
@@ -248,10 +254,107 @@ public class SceneDaoTest {
       assert (resp4.getErrorCode() == 100);
       // Delete the scene
       SceneList resp = scnData.destroy("FourthKey");
+      testLogger.println("Test Response: ");
+      testLogger.println(resp.getErrorCode());
+      testLogger.println(resp.getErrorMessage());
       // Validate that the scene was deleted
       assert (resp.getErrorCode() == 100);
       SceneList getResp = scnData.get("FourthName");
+      testLogger.println("Get Response: ");
+      testLogger.println(getResp.getErrorCode());
+      testLogger.println(getResp.getErrorMessage());
       assert (getResp.getErrorCode() == 102);
+    } catch (Exception e) {
+      e.printStackTrace(testLogger);
+      assert (false);
+    } finally  {
+      // Close the output text file
+      testLogger.close();
+    }
+  }
+
+  /**
+   * Test the Scene Data Access Object - Registration Method.
+   */
+  @Test
+  public void testSceneRegistration() throws Exception {
+    // Open up a file that we can write some test results to
+    // Shouldn't be relied on for automated testing but good for debugging
+    PrintWriter testLogger = new PrintWriter("logs/testDao_sceneReg.txt", "UTF-8");
+    testLogger.println("Starting Test for Scene Dao");
+    try {
+      // Create the scene & Register the device to it
+      SceneList resp = scnData.register("RegDaoTestSceneKey", "RegDaoTestDeviceKey", null);
+      testLogger.println("Test Response: ");
+      testLogger.println(resp.getErrorCode());
+      testLogger.println(resp.getErrorMessage());
+      // Validate that the device was registered
+      assert (resp.getErrorCode() == 100);
+    } catch (Exception e) {
+      e.printStackTrace(testLogger);
+      assert (false);
+    } finally  {
+      // Close the output text file
+      testLogger.close();
+    }
+  }
+
+  /**
+   * Test the Scene Data Access Object - Synchronization Method.
+   */
+  @Test
+  public void testSceneSynchronization() throws Exception {
+    // Open up a file that we can write some test results to
+    // Shouldn't be relied on for automated testing but good for debugging
+    PrintWriter testLogger = new PrintWriter("logs/testDao_sceneSync.txt", "UTF-8");
+    testLogger.println("Starting Test for Scene Dao");
+    try {
+      // Create the scene & Register the device to it
+      SceneList resp = scnData.register("RegDaoTestSceneKey2", "RegDaoTestDeviceKey2", null);
+      // Validate that the device was registered
+      assert (resp.getErrorCode() == 100);
+      // Create a transform to update the server with
+      double[] translation = {1.0, 2.0, 3.0};
+      double[] rotation = {30.0, 15.0, 5.0};
+      Transform transform = new Transform(translation, rotation);
+      // Synchronize the device-scene transformation
+      SceneList syncResp =
+          scnData.synchronize("RegDaoTestSceneKey2", "RegDaoTestDeviceKey2", transform);
+      testLogger.println("Test Response: ");
+      testLogger.println(syncResp.getErrorCode());
+      testLogger.println(syncResp.getErrorMessage());
+      // Validate that the device was synchronized
+      assert (syncResp.getErrorCode() == 100);
+    } catch (Exception e) {
+      e.printStackTrace(testLogger);
+      assert (false);
+    } finally  {
+      // Close the output text file
+      testLogger.close();
+    }
+  }
+
+  /**
+   * Test the Scene Data Access Object - Deregistration Method.
+   */
+  @Test
+  public void testSceneDeregistration() throws Exception {
+    // Open up a file that we can write some test results to
+    // Shouldn't be relied on for automated testing but good for debugging
+    PrintWriter testLogger = new PrintWriter("logs/testDao_sceneDereg.txt", "UTF-8");
+    testLogger.println("Starting Test for Scene Dao");
+    try {
+      // Create the scene & Register the device to it
+      SceneList resp = scnData.register("RegDaoTestSceneKey3", "RegDaoTestDeviceKey3", null);
+      // Validate that the device was registered
+      assert (resp.getErrorCode() == 100);
+      // De-register the device from the scene
+      SceneList deregResp = scnData.deregister("RegDaoTestSceneKey3", "RegDaoTestDeviceKey3");
+      testLogger.println("Test Response: ");
+      testLogger.println(deregResp.getErrorCode());
+      testLogger.println(deregResp.getErrorMessage());
+      // Validate that the device was registered
+      assert (deregResp.getErrorCode() == 100);
     } catch (Exception e) {
       e.printStackTrace(testLogger);
       assert (false);

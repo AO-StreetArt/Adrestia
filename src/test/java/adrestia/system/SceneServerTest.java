@@ -33,7 +33,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 /**
-* Basic Tests against the Adrestia Server.
+* Basic Scene Tests against the Adrestia Server.
 */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Adrestia.class,
@@ -58,7 +58,7 @@ public class SceneServerTest {
     double tolerance = 0.00001;
     // Open up a file that we can write some test results to
     // Shouldn't be relied on for automated testing but good for debugging
-    PrintWriter testLogger = new PrintWriter("testSceneCrudApi.txt", "UTF-8");
+    PrintWriter testLogger = new PrintWriter("logs/testSceneCrudApi.txt", "UTF-8");
     try {
       testLogger.println("Starting Test for Scene CRUD API");
       // Create Test
@@ -215,7 +215,7 @@ public class SceneServerTest {
     double tolerance = 0.00001;
     // Open up a file that we can write some test results to
     // Shouldn't be relied on for automated testing but good for debugging
-    PrintWriter testLogger = new PrintWriter("testSceneQueryApi.txt", "UTF-8");
+    PrintWriter testLogger = new PrintWriter("logs/testSceneQueryApi.txt", "UTF-8");
     try {
       testLogger.println("Populating Data for Query Tests");
       populateQueryData();
