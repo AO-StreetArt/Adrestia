@@ -21,10 +21,12 @@ import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.lang.system;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.Random;
 
 import javax.annotation.PreDestroy;
 
@@ -45,12 +47,15 @@ import org.springframework.stereotype.Component;
 @Component
 public class UtilityProvider implements UtilityProviderInterface {
 
+  Random r = null;
 
   /**
   * Default empty UtilityProvider constructor.
   */
   public UtilityProvider() {
     super();
+    // Start the random number generator with a seed of the current time
+    r = new Random(System.currentTimeMillis());
   }
 
   /**
@@ -83,6 +88,11 @@ public class UtilityProvider implements UtilityProviderInterface {
       default: returnCode = HttpStatus.INTERNAL_SERVER_ERROR;
     }
     return returnCode;
+  }
+
+  @Override
+  public int getRandomInt(int max) {
+    return r.nextInt(max);
   }
 
 }
