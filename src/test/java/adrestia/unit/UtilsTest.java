@@ -37,7 +37,7 @@ public class UtilsTest {
   public void testSceneList() throws Exception {
     // Open up a file that we can write some test results to
     // Shouldn't be relied on for automated testing but good for debugging
-    PrintWriter testLogger = new PrintWriter("testUtils.txt", "UTF-8");
+    PrintWriter testLogger = new PrintWriter("logs/testUtils.txt", "UTF-8");
     testLogger.println("Starting Test for Scene List");
     try {
       UtilityProvider utils = new UtilityProvider();
@@ -47,7 +47,7 @@ public class UtilsTest {
       assert (utils.translateDvsError(122) == HttpStatus.NOT_ACCEPTABLE);
       assert (utils.translateDvsError(101) == HttpStatus.INTERNAL_SERVER_ERROR);
     } catch (Exception e) {
-      testLogger.println(e.getStackTrace());
+      e.printStackTrace(testLogger);
       assert (false);
     } finally  {
       // Close the output text file

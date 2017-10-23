@@ -106,7 +106,7 @@ public class SceneTest {
   public void testTransform() throws Exception {
     // Open up a file that we can write some test results to
     // Shouldn't be relied on for automated testing but good for debugging
-    PrintWriter testLogger = new PrintWriter("testModel_transform.txt", "UTF-8");
+    PrintWriter testLogger = new PrintWriter("logs/testModel_transform.txt", "UTF-8");
     testLogger.println("Starting Test for Transform");
     try {
       // Full Constructor Test
@@ -123,7 +123,7 @@ public class SceneTest {
 
       assertTransformElements(defaultTrans);
     } catch (Exception e) {
-      testLogger.println(e.getStackTrace());
+      e.printStackTrace(testLogger);
       assert (false);
     } finally  {
       // Close the output text file
@@ -136,7 +136,7 @@ public class SceneTest {
   public void testUserDevice() throws Exception {
     // Open up a file that we can write some test results to
     // Shouldn't be relied on for automated testing but good for debugging
-    PrintWriter testLogger = new PrintWriter("testModel_device.txt", "UTF-8");
+    PrintWriter testLogger = new PrintWriter("logs/testModel_device.txt", "UTF-8");
     testLogger.println("Starting Test for User Device");
     try {
       // Full Constructor Test
@@ -152,7 +152,7 @@ public class SceneTest {
 
       assertDeviceElements(defaultDev);
     } catch (Exception e) {
-      testLogger.println(e.getStackTrace());
+      e.printStackTrace(testLogger);
       assert (false);
     } finally  {
       // Close the output text file
@@ -165,7 +165,7 @@ public class SceneTest {
   public void testScene() throws Exception {
     // Open up a file that we can write some test results to
     // Shouldn't be relied on for automated testing but good for debugging
-    PrintWriter testLogger = new PrintWriter("testModel_scene.txt", "UTF-8");
+    PrintWriter testLogger = new PrintWriter("logs/testModel_scene.txt", "UTF-8");
     testLogger.println("Starting Test for Scene");
     try {
       // Full Constructor Test
@@ -190,7 +190,7 @@ public class SceneTest {
 
       assertSceneElements(defaultScn);
     } catch (Exception e) {
-      testLogger.println(e.getStackTrace());
+      e.printStackTrace(testLogger);
       assert (false);
     } finally  {
       // Close the output text file
@@ -203,7 +203,7 @@ public class SceneTest {
   public void testSceneList() throws Exception {
     // Open up a file that we can write some test results to
     // Shouldn't be relied on for automated testing but good for debugging
-    PrintWriter testLogger = new PrintWriter("testModel_sceneList.txt", "UTF-8");
+    PrintWriter testLogger = new PrintWriter("logs/testModel_sceneList.txt", "UTF-8");
     testLogger.println("Starting Test for Scene List");
     try {
       // Full Constructor Test
@@ -218,7 +218,7 @@ public class SceneTest {
       defaultScnList.setSceneList(scnArray);
       assertSceneListElements(defaultScnList);
     } catch (Exception e) {
-      testLogger.println(e.getStackTrace());
+      e.printStackTrace(testLogger);
       assert (false);
     } finally  {
       // Close the output text file
