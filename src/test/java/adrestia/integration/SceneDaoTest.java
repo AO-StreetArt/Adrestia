@@ -309,8 +309,13 @@ public class SceneDaoTest {
     PrintWriter testLogger = new PrintWriter("logs/testDao_sceneSync.txt", "UTF-8");
     testLogger.println("Starting Test for Scene Dao");
     try {
-      // Create the scene & Register the device to it
-      SceneList resp = scnData.register("RegDaoTestSceneKey2", "RegDaoTestDeviceKey2", null);
+      // Create the Scene
+      Scene baseScn = buildScene();
+      baseScn.setName("RegDaoTestSceneName2");
+      SceneList crtResp = scnData.create(baseScn);
+      assert (crtResp.getErrorCode() == 100);
+      // Register the device to it
+      SceneList resp = scnData.register("RegDaoTestSceneName2", "RegDaoTestDeviceKey2", null);
       // Validate that the device was registered
       assert (resp.getErrorCode() == 100);
       // Create a transform to update the server with
@@ -319,7 +324,7 @@ public class SceneDaoTest {
       Transform transform = new Transform(translation, rotation);
       // Synchronize the device-scene transformation
       SceneList syncResp =
-          scnData.synchronize("RegDaoTestSceneKey2", "RegDaoTestDeviceKey2", transform);
+          scnData.synchronize("RegDaoTestSceneName2", "RegDaoTestDeviceKey2", transform);
       testLogger.println("Test Response: ");
       testLogger.println(syncResp.getErrorCode());
       testLogger.println(syncResp.getErrorMessage());

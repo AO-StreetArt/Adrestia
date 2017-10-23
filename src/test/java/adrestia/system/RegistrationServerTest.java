@@ -49,15 +49,44 @@ public class RegistrationServerTest {
   @Autowired
   private TestRestTemplate testTemplate;
 
+  // Convenience method to build a test scene
+  private Scene buildTestScene(String sceneKey, String sceneName) {
+    // Build a new scene
+    String[] assets;
+    assets = new String[2];
+    assets[0] = "123";
+    assets[1] = "ABC";
+    String[] tags;
+    tags = new String[2];
+    tags[0] = "1";
+    tags[1] = "2";
+    UserDevice[] devices = new UserDevice[1];
+    double[] translation = {0.0, 0.0, 0.0};
+    double[] rotation = {0.0, 0.0, 0.0, 0.0};
+    Transform transform = new Transform(translation, rotation);
+    UserDevice dev = new UserDevice("DeviceKey", transform);
+    devices[0] = dev;
+    return new Scene(
+        sceneKey, sceneName, "C", 1.0, 2.0, 3.0, assets, tags, devices);
+  }
+
   // Test Registration Function for devices
   @Test
   public void testRegistrationApi() throws Exception {
-    String testSceneUrl = "/v1/scene/myscene/registration";
+    String testSceneBaseUrl = "/v1/scene/myscene";
+    String testSceneUrl = testSceneBaseUrl + "/registration";
     // Open up a file that we can write some test results to
     // Shouldn't be relied on for automated testing but good for debugging
     PrintWriter testLogger = new PrintWriter("logs/testRegistrationApi.txt", "UTF-8");
     try {
-      // Run Registration Tests
+      // Run Registration Test
+      // Build a base scene
+      testLogger.println("Building Base data");
+      ResponseEntity<Map> createResponse = this.testTemplate.postForEntity(
+          "http://localhost:" + this.port + testSceneBaseUrl, buildTestScene("firstRegTest", "myscene"), Map.class);
+      testLogger.println(createResponse.getStatusCode());
+      // Read the response
+      assert (createResponse.getStatusCode().is2xxSuccessful());
       testLogger.println("Starting Scene Registration Tests");
       // Build a new Transform
       double[] translation = {0.0, 0.0, 0.0};
@@ -78,12 +107,20 @@ public class RegistrationServerTest {
   // Test Registration Function for devices
   @Test
   public void testSyncApi() throws Exception {
-    String testSceneUrl = "/v1/scene/synctest/registration";
+    String testSceneBaseUrl = "/v1/scene/synctest";
+    String testSceneUrl = testSceneBaseUrl + "/registration";
     // Open up a file that we can write some test results to
     // Shouldn't be relied on for automated testing but good for debugging
     PrintWriter testLogger = new PrintWriter("logs/testSyncApi.txt", "UTF-8");
     try {
       // Run Sync Tests
+      // Build a base scene
+      testLogger.println("Building Base data");
+      ResponseEntity<Map> createResponse = this.testTemplate.postForEntity(
+          "http://localhost:" + this.port + testSceneBaseUrl, buildTestScene("secondRegTest", "synctest"), Map.class);
+      testLogger.println(createResponse.getStatusCode());
+      // Read the response
+      assert (createResponse.getStatusCode().is2xxSuccessful());
       // Start by building some base data
       testLogger.println("Starting Scene Sync Tests");
       // Build a new Transform
@@ -119,12 +156,20 @@ public class RegistrationServerTest {
   // Test Registration Function for devices
   @Test
   public void testDegistrationApi() throws Exception {
-    String testSceneUrl = "/v1/scene/deregtest/registration";
+    String testSceneBaseUrl = "/v1/scene/deregtest";
+    String testSceneUrl = testSceneBaseUrl + "/registration";
     // Open up a file that we can write some test results to
     // Shouldn't be relied on for automated testing but good for debugging
     PrintWriter testLogger = new PrintWriter("logs/testDeregistrationApi.txt", "UTF-8");
     try {
       // Run Deregistration Tests
+      // Build a base scene
+      testLogger.println("Building Base data");
+      ResponseEntity<Map> createResponse = this.testTemplate.postForEntity(
+          "http://localhost:" + this.port + testSceneBaseUrl, buildTestScene("secondRegTest", "synctest"), Map.class);
+      testLogger.println(createResponse.getStatusCode());
+      // Read the response
+      assert (createResponse.getStatusCode().is2xxSuccessful());
       // Build some data
       testLogger.println("Starting Scene Deregistration Tests");
       // Build a new Transform

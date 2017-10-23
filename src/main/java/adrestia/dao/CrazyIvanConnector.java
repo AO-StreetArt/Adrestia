@@ -171,6 +171,9 @@ public class CrazyIvanConnector extends ZmqConnector implements SceneDao {
     if (existingScenes.getErrorCode() == 100) {
       // We have an existing scene, use the key for it
       scn.setKey(existingScenes.getSceneList()[0].getKey());
+      logger.debug("Found existing scene: " + existingScenes.getSceneList()[0].getKey());
+    } else {
+      logger.debug("Processing Registration without existing scene");
     }
 
     // Construct a Scene List, which we will then convert to JSON
