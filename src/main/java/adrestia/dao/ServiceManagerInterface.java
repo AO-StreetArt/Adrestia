@@ -18,25 +18,25 @@ import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.stereotype.Service;
 
 /**
-* Finds Service Instances
+* Finds Service Instances.
 */
 @Service
 public interface ServiceManagerInterface {
 
   /**
-  * Find an instance of Crazy Ivan
+  * Find an instance of Crazy Ivan.
   * @return A ServiceInstance object with the instance details found
   */
   public ServiceInstance findCrazyIvan();
 
   /**
-  * Find an instance of CLyman
+  * Find an instance of CLyman.
   * @return A ServiceInstance object with the instance details found
   */
   public ServiceInstance findClyman();
 
   /**
-  * Report a Service Failure
+  * Report a Service Failure.
   * @param connectedInstance A ServiceInstance object with failed instance info
   */
   public void reportFailure(ServiceInstance connectedInstance);

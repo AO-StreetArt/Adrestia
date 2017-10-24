@@ -37,7 +37,7 @@ public interface UtilityProviderInterface {
   public HttpStatus translateDvsError(int dvsErrorCode);
 
   /**
-  * Return a psuedo-random integer
+  * Return a psuedo-random integer.
   */
   public int getRandomInt(int max);
 

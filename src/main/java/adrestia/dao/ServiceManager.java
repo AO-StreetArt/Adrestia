@@ -47,7 +47,7 @@ import org.zeromq.ZMQ;
 import org.zeromq.ZPoller;
 
 /**
-* Uses the Consul Discovery Client to find Service Instances
+* Uses the Consul Discovery Client to find Service Instances.
 */
 @Component
 public class ServiceManager implements ServiceManagerInterface {
@@ -136,15 +136,15 @@ public class ServiceManager implements ServiceManagerInterface {
       }
       // Find a service Instance
       // Start by getting a random start index
-      int start_index = utils.getRandomInt(serviceInstances.size());
+      int startIndex = utils.getRandomInt(serviceInstances.size());
       for (int i = 0; i < serviceInstances.size(); i++) {
         // Correct our compare index for the start index
-        current_index = i + start_index;
-        if (current_index >= serviceInstances.size()) {
-          current_index = current_index - serviceInstances.size();
+        int currentIndex = i + startIndex;
+        if (currentIndex >= serviceInstances.size()) {
+          currentIndex = currentIndex - serviceInstances.size();
         }
         // Pull the service instance, and the value from the blacklist
-        returnService = serviceInstances.get(current_index);
+        returnService = serviceInstances.get(currentIndex);
         logger.debug("Found Service Instance: "
             + returnService.getUri().toString());
         Object blacklistResp =
@@ -167,7 +167,7 @@ public class ServiceManager implements ServiceManagerInterface {
   }
 
   /**
-  * Report a Service Failure
+  * Report a Service Failure.
   * @param connectedInstance A ServiceInstance object with failed instance info
   */
   @Override
@@ -191,7 +191,7 @@ public class ServiceManager implements ServiceManagerInterface {
   }
 
   /**
-  * Find an instance of Crazy Ivan
+  * Find an instance of Crazy Ivan.
   * @return A ServiceInstance object with the instance details found
   */
   @Override
@@ -206,7 +206,7 @@ public class ServiceManager implements ServiceManagerInterface {
   }
 
   /**
-  * Find an instance of CLyman
+  * Find an instance of CLyman.
   * @return A ServiceInstance object with the instance details found
   */
   @Override

@@ -57,21 +57,16 @@ public class ZmqConnector {
   @Autowired
   DiscoveryClient consulClient;
 
-  // The Currently Connected Service Instance
-  private static ServiceInstance connectedInstance;
-
   // ZMQ Context
   @Autowired
   ZmqContextContainer context;
 
+  // ZMQ Socket Pool
+  @Autowired
+  ZmqSocketPool socketPool;
+
   // Crazy Ivan ZMQ Socket
   private ZMQ.Socket socket = null;
-
-  // ZMQ Poller used to pull messages from ZMQ.
-  private ZPoller poller = new ZPoller(context.context);
-
-  // Mutex to ensure that one thread is accessing the ZMQ Socket at a time
-  private Semaphore socketMutex = new Semaphore(1);
 
   // ZMQ Connector Logger
   private final Logger logger = LogManager.getLogger("adrestia.ZMQ");
@@ -111,63 +106,24 @@ public class ZmqConnector {
     super();
   }
 
-  // Check if a service is active
-  private boolean isSocketActive() {
-    if (socket != null) {
-      return true;
-    }
-    return false;
-  }
-
-  // Destroy the active socket for a service
-  private void destroySocket() {
-    if (isSocketActive()) {
-      poller.unregister(socket);
-      context.context.destroySocket(socket);
-      socket = null;
-    }
-  }
-
-  // Reset the active socket for a service
-  private void resetSocket() {
-    // First, destroy the socket
-    destroySocket();
-    // Then, create a new socket
-    socket = context.context.createSocket(ZMQ.REQ);
-    poller.register(socket, ZPoller.POLLIN);
-  }
-
-  /**
-  * Destroy the ZMQ Connector, closing any open sockets.
-  */
-  @PreDestroy
-  public void destroy() {
-    destroySocket();
-  }
-
-  // Connect to the current socket for a service
-  private void connectToSocket() {
+  private String getZmqAddr(ServiceInstance service) {
     // Pull the URL String
-    String uriString = connectedInstance.getUri().toString();
+    String uriString = service.getUri().toString();
     // Parse the URL String
     int portSeperatorIndex = uriString.lastIndexOf(":");
     String hostName = uriString.substring(7, portSeperatorIndex);
     String portStr =
         uriString.substring(portSeperatorIndex + 1, uriString.length());
-    String zmqAddr = String.format("tcp://%s:%s", hostName, portStr);
-    logger.info("Connecting to server: " + zmqAddr);
-    // Connect to the service
-    socket.connect(zmqAddr);
+    return String.format("tcp://%s:%s", hostName, portStr);
   }
 
+  // TO-DO: Accept the failed service as an input
   // Report a failure of a service
-  private void reportFailure() {
+  private void reportFailure(ServiceInstance connectedInstance) {
     // Is the current host already on the greylist?
     Object cacheResp =
         greylist.getIfPresent(connectedInstance.getUri().toString());
     try {
-      // Eliminate the socket
-      destroySocket();
       if (cacheResp != null) {
         // We have found an entry in the greylist, add the host to the blacklist
         cacheResp = blacklist.get(connectedInstance.getUri().toString());
@@ -176,14 +132,21 @@ public class ZmqConnector {
         cacheResp = greylist.get(connectedInstance.getUri().toString());
       }
     } catch (Exception e) {
-      logger.error("Error Resetting Crazy Ivan connection");
+      logger.error("Error Reporting failure");
       logger.error(e.getMessage());
     }
   }
 
   // Setup method to find and connect to an instance of a specified service name
-  private void findService(String serviceName) {
+  private ZmqSocketContainer findService(String serviceName) {
+    int serviceType = -1;
+    if (serviceName.equals("Ivan")) {
+      serviceType = ZmqSocketContainer.ivanType;
+    } else if (serviceName.equals("Clyman")) {
+      serviceType = ZmqSocketContainer.clymanType;
+    }
     logger.info("Finding a new Service instance");
+    ZmqSocketContainer transactionSocket = null;
     // Find an instance of CrazyIvan
     List<ServiceInstance> serviceInstances =
         consulClient.getInstances(serviceName);
@@ -195,7 +158,7 @@ public class ZmqConnector {
       // Find a service Instance not on the blacklist
       for (int i = 0; i < serviceInstances.size(); i++) {
         // Pull the service instance, and the value from the blacklist
-        connectedInstance = serviceInstances.get(i);
+        ServiceInstance connectedInstance = serviceInstances.get(i);
         logger.debug("Found Service Instance: "
             + connectedInstance.getUri().toString());
         Object cacheResp =
@@ -204,21 +167,16 @@ public class ZmqConnector {
         // on the blacklist
         if (cacheResp == null) {
           try {
-            // Crazy Ivan ZMQ Context & Socket
-            // Close any existing socket before creating a new one
-            resetSocket();
-
-            // Connect to the new socket
-            // First we need to format the address from Consul.  We also assume
-            // tcp Communications between this class and Crazy Ivan
-            connectToSocket();
+            // Get a socket from the socket pool
+            transactionSocket = socketPool.getSocket(getZmqAddr(connectedInstance), serviceType);
           } catch (Exception e) {
             logger.error("Error connecting to Crazy Ivan instance");
             logger.error(e.getMessage());
-            reportFailure();
+            reportFailure(connectedInstance);
           }
           // Exit the loop
-          break;
+          transactionSocket.setService(connectedInstance);
+          return transactionSocket;
         } else {
           logger.error("Returned host found in blacklist");
           connectedInstance = null;
@@ -227,20 +185,19 @@ public class ZmqConnector {
     } else {
       logger.error("Unable to find Service instance");
     }
+    return null;
   }
 
-  private String sendMsgRecursive(
-      String msg, int timeout, int retries, String serviceName) {
+  private String sendMsgWithRetry(String msg, int timeout,
+      int retries, String serviceName, ZmqSocketContainer socketContainer) {
     logger.info("Attempting to send message to ZMQ Service");
-    // Find a Service instance, if necessary
-    if (!isSocketActive()) {
-      findService(serviceName);
-    }
+    // ZMQ Poller used to pull messages from ZMQ.
+    ZPoller poller = new ZPoller(context.context);
+    ZMQ.Socket socket = socketContainer.getSocket();
+    poller.register(socket, ZPoller.POLLIN);
     // Response Processing
     int retriesLeft = retries;
-    while (retriesLeft > 0
-        && !Thread.currentThread().isInterrupted()
-        && isSocketActive()) {
+    while (retriesLeft > 0 && !Thread.currentThread().isInterrupted()) {
       //  We send a request, then we work to get a reply
       socket.send(msg.getBytes(ZMQ.CHARSET), 0);
 
@@ -250,9 +207,9 @@ public class ZmqConnector {
       int expectReply = 1;
       while (expectReply > 0) {
         //  Poll socket for a reply, with timeout
-        int rc = poller.poll(timeout);
+        expectReply = poller.poll(timeout);
         logger.debug("Poller Checked with Result Code:");
-        logger.debug(rc);
+        logger.debug(expectReply);
         //  Here we process a server reply and exit our loop if the
         //  reply is valid. If we didn't get a reply we close the client
         //  socket and resend the request. We try a number of times
@@ -262,20 +219,16 @@ public class ZmqConnector {
           return socket.recvStr();
         } else if (--retriesLeft == 0) {
           logger.error("Reporting Crazy Ivan Failure");
-          reportFailure();
-          // Keep trying to send the message until we succeed or run out of
-          // Crazy Ivan instances
-          return sendMsgRecursive(msg, timeout, retries, serviceName);
+          reportFailure(socketContainer.getService());
+          return null;
         } else {
           logger.warn("No response from server, retrying");
           //  Old socket is confused; close it and open a new one
-          resetSocket();
-          connectToSocket();
+          socketContainer = socketPool.resetSocket(socketContainer);
+          socket = socketContainer.getSocket();
+          poller.register(socket, ZPoller.POLLIN);
           //  Send request again, on new socket
           socket.send(msg.getBytes(ZMQ.CHARSET), 0);
-        }
-        if (rc < 0) {
-          break;
         }
       }
     }
@@ -292,23 +245,31 @@ public class ZmqConnector {
   * @return The String response message from a matching service
   */
   public String send(String msg, int timeout, int retries, String serviceName) {
-    // Grab the mutex so we ensure we operate atomically on connections
-    try {
-      socketMutex.acquire();
-    } catch (InterruptedException e) {
-      logger.error("Error Establishing Mutex Lock on ZMQ Socket");
-      logger.error(e.getMessage());
-      return "";
+    // Find a ZMQ Socket
+    ZmqSocketContainer transactionSocket = findService(serviceName);
+    if (transactionSocket != null) {
+      ZMQ.Socket socket = transactionSocket.getSocket();
+    } else {
+      return null;
     }
     // Actually try to send the message
+    String response = null;
     try {
-      return sendMsgRecursive(msg, timeout, retries, serviceName);
+      response = sendMsgWithRetry(msg, timeout, retries, serviceName, transactionSocket);
+      // Keep trying to send the message until we succeed or run out of
+      // Crazy Ivan instances
+      while ((response == null) && (transactionSocket != null)) {
+        socketPool.releaseSocket(transactionSocket);
+        socketPool.closeSocket(transactionSocket);
+        transactionSocket = findService(serviceName);
+        response = sendMsgWithRetry(msg, timeout, retries, serviceName, transactionSocket);
+      }
     } catch (Exception e) {
       logger.error("Error Sending message to Service: ", e);
     } finally {
-      // Release the mutex
-      socketMutex.release();
+      // Ensure we release the socket from the pool
+      socketPool.releaseSocket(transactionSocket);
     }
-    return null;
+    return response;
   }
 }

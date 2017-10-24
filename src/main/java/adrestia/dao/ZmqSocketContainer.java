@@ -17,68 +17,86 @@ limitations under the License.
 
 package adrestia;
 
+import org.springframework.cloud.client.ServiceInstance;
 
 import org.zeromq.ZMQ.Socket;
 import org.zeromq.ZMQ;
 
 /**
-* A Container for a single ZMQ Socket
+* A Container for a single ZMQ Socket.
 */
 public class ZmqSocketContainer {
-  private static final int ivanType = 0;
-  private static final int clymanType = 1;
-  private int id = null;
-  private int serviceType = null;
+  public static final int ivanType = 0;
+  public static final int clymanType = 1;
+  private int id;
+  private int serviceType;
   private String hostname = null;
   private ZMQ.Socket socket = null;
+  private ServiceInstance connectedInstance = null;
 
-	/**
-	* Default empty ZmqSocketContainer constructor
-	*/
-	public ZmqSocketContainer() {
-		super();
-	}
+  /**
+  * Default empty ZmqSocketContainer constructor.
+  */
+  public ZmqSocketContainer() {
+    super();
+  }
 
-	/**
-	* Default ZmqSocketContainer constructor
-	*/
-	public ZmqSocketContainer(int id, int serviceType, String hostname, ZMQ.Socket sock) {
-		super();
-		this.id = id;
-		this.serviceType = serviceType;
-		this.hostname = hostname;
-		this.socket = sock;
-	}
+  /**
+  * Default ZmqSocketContainer constructor.
+  */
+  public ZmqSocketContainer(int id, int serviceType, String hostname, ZMQ.Socket sock) {
+    super();
+    this.id = id;
+    this.serviceType = serviceType;
+    this.hostname = hostname;
+    this.socket = sock;
+  }
 
-	/**
-	* Returns value of id
-	* @return The internal ID of the ZMQ Socket
-	*/
-	public int getId() {
-		return this.id;
-	}
+  /**
+  * Returns value of id.
+  * @return The internal ID of the ZMQ Socket
+  */
+  public int getId() {
+    return this.id;
+  }
 
-	/**
-	* Returns value of serviceType
-	* @return An integer code for the service type
-	*/
-	public int getServiceType() {
-		return this.serviceType;
-	}
+  /**
+  * Returns value of serviceType.
+  * @return An integer code for the service type
+  */
+  public int getServiceType() {
+    return this.serviceType;
+  }
 
-	/**
-	* Returns value of hostname
-	* @return The hostname of the socket
-	*/
-	public String getHostname() {
-		return this.hostname;
-	}
+  /**
+  * Returns value of hostname.
+  * @return The hostname of the socket
+  */
+  public String getHostname() {
+    return this.hostname;
+  }
 
-	/**
-	* Returns the ZMQ Socket
-	* @return The ZMQ Socket
-	*/
-	public ZMQ.Socket getSocket() {
-		return this.socket;
-	}
+  /**
+  * Returns the ZMQ Socket.
+  * @return The ZMQ Socket
+  */
+  public ZMQ.Socket getSocket() {
+    return this.socket;
+  }
+
+  /**
+  * Set the Service Instance.
+  * @param newInstance The new ServiceInstance object
+  */
+  public void setService(ServiceInstance newInstance) {
+    this.connectedInstance = newInstance;
+  }
+
+  /**
+  * Returns the Service Instance.
+  * @return The ServiceInstance object
+  */
+  public ServiceInstance getService() {
+    return this.connectedInstance;
+  }
 }
