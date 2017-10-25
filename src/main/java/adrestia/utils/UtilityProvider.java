@@ -22,6 +22,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
@@ -45,12 +46,15 @@ import org.springframework.stereotype.Component;
 @Component
 public class UtilityProvider implements UtilityProviderInterface {
 
+  Random randomGenerator = null;
 
   /**
   * Default empty UtilityProvider constructor.
   */
   public UtilityProvider() {
     super();
+    // Start the random number generator with a seed of the current time
+    randomGenerator = new Random(System.currentTimeMillis());
   }
 
   /**
@@ -83,6 +87,11 @@ public class UtilityProvider implements UtilityProviderInterface {
       default: returnCode = HttpStatus.INTERNAL_SERVER_ERROR;
     }
     return returnCode;
+  }
+
+  @Override
+  public int getRandomInt(int max) {
+    return randomGenerator.nextInt(max);
   }
 
 }
