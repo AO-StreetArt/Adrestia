@@ -53,10 +53,6 @@ import org.zeromq.ZPoller;
 */
 public class ZmqConnector {
 
-  // Consul Client for executing Service Discovery
-  @Autowired
-  DiscoveryClient consulClient;
-
   // ZMQ Context
   @Autowired
   ZmqContextContainer context;
@@ -65,39 +61,12 @@ public class ZmqConnector {
   @Autowired
   ZmqSocketPool socketPool;
 
-  // Crazy Ivan ZMQ Socket
-  private ZMQ.Socket socket = null;
+  // Service Manager
+  @Autowired
+  ServiceManagerInterface serviceManager;
 
   // ZMQ Connector Logger
   private final Logger logger = LogManager.getLogger("adrestia.ZMQ");
-
-  // Loading cache to hold blacklisted CLyman hosts
-  // Keys will expire after 5 minutes, at which point Consul should be able
-  // to determine if the service is active or inactive.
-  LoadingCache<String, Object> blacklist = CacheBuilder.newBuilder()
-      .expireAfterAccess(300, TimeUnit.SECONDS)
-      .maximumSize(50)
-      .weakKeys()
-      .build(new CacheLoader<String, Object>() {
-        @Override
-        public Object load(String key) throws Exception {
-          return key;
-        }
-      });
-
-  // Loading Cache to hold greylisted CLyman hosts
-  // Keys will expire after 30 seconds, if we report another failure in this
-  // time then the service will be blacklisted
-  LoadingCache<String, Object> greylist = CacheBuilder.newBuilder()
-      .expireAfterAccess(30, TimeUnit.SECONDS)
-      .maximumSize(30)
-      .weakKeys()
-      .build(new CacheLoader<String, Object>() {
-        @Override
-        public Object load(String key) throws Exception {
-          return key;
-        }
-      });
 
   /**
   * Default empty DvsManager constructor.
@@ -106,6 +75,8 @@ public class ZmqConnector {
     super();
   }
 
+  // Convenience method for converting from Consul address to ZMQ Address
+  // transform http://hostname:port into tcp://hostname:port
   private String getZmqAddr(ServiceInstance service) {
     // Pull the URL String
     String uriString = service.getUri().toString();
@@ -117,75 +88,40 @@ public class ZmqConnector {
     return String.format("tcp://%s:%s", hostName, portStr);
   }
 
-  // TO-DO: Accept the failed service as an input
+  // Accept the failed service as an input
   // Report a failure of a service
   private void reportFailure(ServiceInstance connectedInstance) {
-    // Is the current host already on the greylist?
-    Object cacheResp =
-        greylist.getIfPresent(connectedInstance.getUri().toString());
-    try {
-      if (cacheResp != null) {
-        // We have found an entry in the greylist, add the host to the blacklist
-        cacheResp = blacklist.get(connectedInstance.getUri().toString());
-      } else {
-        // We have no entry in the greylist, add the hostname to the greylist
-        cacheResp = greylist.get(connectedInstance.getUri().toString());
-      }
-    } catch (Exception e) {
-      logger.error("Error Reporting failure");
-      logger.error(e.getMessage());
-    }
+    serviceManager.reportFailure(connectedInstance);
   }
 
   // Setup method to find and connect to an instance of a specified service name
   private ZmqSocketContainer findService(String serviceName) {
+    ServiceInstance connectedInstance = null;
     int serviceType = -1;
+    logger.info("Finding a new Service instance");
     if (serviceName.equals("Ivan")) {
+      connectedInstance = serviceManager.findCrazyIvan();
       serviceType = ZmqSocketContainer.ivanType;
     } else if (serviceName.equals("Clyman")) {
+      connectedInstance = serviceManager.findClyman();
       serviceType = ZmqSocketContainer.clymanType;
     }
-    logger.info("Finding a new Service instance");
     ZmqSocketContainer transactionSocket = null;
-    // Find an instance of CrazyIvan
-    List<ServiceInstance> serviceInstances =
-        consulClient.getInstances(serviceName);
-    if (serviceInstances != null) {
-      //Log if we find no service instances
-      if (serviceInstances.size() == 0) {
-        logger.error("No Service instances found");
+    logger.info("Connecting to Service instance");
+    if (connectedInstance != null) {
+      try {
+        // Get a socket from the socket pool
+        transactionSocket = socketPool.getSocket(getZmqAddr(connectedInstance), serviceType);
+        transactionSocket.setService(connectedInstance);
+        return transactionSocket;
+      } catch (Exception e) {
+        logger.error("Error connecting to Crazy Ivan instance");
+        logger.error(e.getMessage());
+        reportFailure(connectedInstance);
       }
-      // Find a service Instance not on the blacklist
-      for (int i = 0; i < serviceInstances.size(); i++) {
-        // Pull the service instance, and the value from the blacklist
-        ServiceInstance connectedInstance = serviceInstances.get(i);
-        logger.debug("Found Service Instance: "
-            + connectedInstance.getUri().toString());
-        Object cacheResp =
-            blacklist.getIfPresent(connectedInstance.getUri().toString());
-        // We can go ahead and connect to the instance as long as it isn't
-        // on the blacklist
-        if (cacheResp == null) {
-          try {
-            // Get a socket from the socket pool
-            transactionSocket = socketPool.getSocket(getZmqAddr(connectedInstance), serviceType);
-          } catch (Exception e) {
-            logger.error("Error connecting to Crazy Ivan instance");
-            logger.error(e.getMessage());
-            reportFailure(connectedInstance);
-          }
-          // Exit the loop
-          transactionSocket.setService(connectedInstance);
-          return transactionSocket;
-        } else {
-          logger.error("Returned host found in blacklist");
-          connectedInstance = null;
-        }
-      }
-    } else {
-      logger.error("Unable to find Service instance");
+      transactionSocket.setService(connectedInstance);
     }
-    return null;
+    return transactionSocket;
   }
 
   private String sendMsgWithRetry(String msg, int timeout,
