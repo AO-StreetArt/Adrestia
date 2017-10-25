@@ -30,6 +30,10 @@ install:
 - gradle assemble
 script:
 - gradle check
+after_success:
+- gradle buildDocker
+- docker login -e $DOCKER_MAIL -u $DOCKER_UN -p $DOCKER_PW
+- gradle buildDocker -Ppush
 after_failure:
 - docker logs --tail 150 crazyivan
 - cat logs/testUtils.txt
