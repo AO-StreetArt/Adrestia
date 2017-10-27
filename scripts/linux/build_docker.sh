@@ -7,5 +7,5 @@ BRANCH_NAME=$4
 
 if [ $BRANCH_NAME == "master" ]; then
   docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
-  gradle buildDocker -Ppush
+  cd ../.. && gradle buildDocker -Ppush
 fi
