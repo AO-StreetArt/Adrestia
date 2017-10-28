@@ -31,7 +31,7 @@ install:
 script:
 - gradle check
 after_success:
-- .$TRAVIS_BUILD_DIR/scripts/linux/build_docker.sh $DOCKER_MAIL $DOCKER_UN $DOCKER_PW $TRAVIS_BRANCH
+- cd $TRAVIS_BUILD_DIR/scripts/linux && ./build_docker.sh $DOCKER_MAIL $DOCKER_UN $DOCKER_PW $TRAVIS_BRANCH
 after_failure:
 - docker logs --tail 150 crazyivan
 - cat logs/testUtils.txt
