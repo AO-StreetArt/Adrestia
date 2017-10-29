@@ -34,7 +34,10 @@ import org.springframework.stereotype.Component;
 * Dao Implementation for Scene Objects using Crazy Ivan.
 */
 @Component
-public class CrazyIvanConnector extends ZmqConnector implements SceneDao {
+public class CrazyIvanConnector implements SceneDao {
+
+  @Autowired
+  ZmqConnection zmqConn;
 
   // How many retries should we attempt prior to reporting a failure
   @Value("${server.ivan.retries}")
@@ -70,7 +73,7 @@ public class CrazyIvanConnector extends ZmqConnector implements SceneDao {
 
       // Send the message to Crazy Ivan
       String replyString =
-          send(ivanMsg, requestTimeout, requestRetries, "Ivan");
+          zmqConn.send(ivanMsg, requestTimeout, requestRetries, "Ivan");
       logger.debug("Crazy Ivan Response: " + replyString);
 
       // Convert the Response back to a Scene List

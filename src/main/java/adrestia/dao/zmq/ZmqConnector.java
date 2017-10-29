@@ -17,14 +17,6 @@ limitations under the License.
 
 package adrestia;
 
-import com.fasterxml.jackson.core.JsonGenerationException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
-
 import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
@@ -36,14 +28,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.ServiceInstance;
-import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.stereotype.Component;
 
-import org.zeromq.ZContext;
-import org.zeromq.ZMQ.PollItem;
-import org.zeromq.ZMQ.Poller;
 import org.zeromq.ZMQ.Socket;
 import org.zeromq.ZMQ;
 import org.zeromq.ZPoller;
@@ -51,7 +38,8 @@ import org.zeromq.ZPoller;
 /**
 * A Service which connects to an external ZMQ Service.
 */
-public class ZmqConnector {
+@Component
+public class ZmqConnector implements ZmqConnection {
 
   // ZMQ Context
   @Autowired
@@ -180,6 +168,7 @@ public class ZmqConnector {
   * @param serviceName The Name of the Service we are sending to, in Consul
   * @return The String response message from a matching service
   */
+  @Override
   public String send(String msg, int timeout, int retries, String serviceName) {
     // Find a ZMQ Socket
     ZmqSocketContainer transactionSocket = findService(serviceName);
