@@ -213,7 +213,7 @@ public class ServiceManager implements ServiceManagerInterface {
   public ServiceInstance findClyman() {
     // Actually try to send the message
     try {
-      return findService("clyman");
+      return findService("Clyman");
     } catch (Exception e) {
       logger.error("Error retrieving service: ", e);
     }
