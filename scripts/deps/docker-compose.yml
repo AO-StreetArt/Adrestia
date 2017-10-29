@@ -1,0 +1,53 @@
+version: '3'
+
+services:
+  registry:
+    image: consul
+    container_name: registry
+    ports:
+      - "8500:8500"
+    command: agent --dev -ui -client=0.0.0.0
+  config:
+    image: aostreetart/populateaeselconfig:latest
+    container_name: config
+    command: ./populate_consul.sh registry
+    depends_on:
+      - "registry"
+  cache:
+    image: redis
+    container_name: cache
+  graphdb:
+    image: neo4j
+    container_name: graph-db
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    volumes:
+      - ${HOME}/neo4j/data:/data
+    environment:
+      NEO4J_AUTH: none
+  documentdb:
+    image: mongo
+    container_name: document-db
+  crazyivan:
+    image: aostreetart/crazyivan:latest
+    container_name: crazyivan
+    ports:
+      - "5555:5555"
+    command: -consul-addr=registry:8500 -ip=localhost -port=5555 -log-conf=CrazyIvan/log4cpp.properties -wait=7
+    depends_on:
+      - "graphdb"
+      - "cache"
+      - "registry"
+      - "config"
+  clyman:
+    image: aostreetart/clyman:latest
+    container_name: clyman
+    ports:
+      - "5556:5556"
+    command: -consul-addr=registry:8500 -ip=localhost -port=5556 -log-conf=CLyman/log4cpp.properties -wait=7
+    depends_on:
+      - "documentdb"
+      - "cache"
+      - "registry"
+      - "config"
