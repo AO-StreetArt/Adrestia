@@ -19,8 +19,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
+import com.google.common.cache.Cache;
 
 import java.util.List;
 import java.util.concurrent.Semaphore;
@@ -76,17 +75,17 @@ public class ServiceManager implements ServiceManagerInterface {
   // Loading cache to hold blacklisted CLyman hosts
   // Keys will expire after 5 minutes, at which point Consul should be able
   // to determine if the service is active or inactive.
-  LoadingCache<String, Object> blacklist = null;
+  Cache<String, String> blacklist = null;
 
   // Loading Cache to hold greylisted CLyman hosts
   // Keys will expire after 30 seconds, if we report another failure in this
   // time then the service will be blacklisted
-  LoadingCache<String, Object> greylist = null;
+  Cache<String, String> greylist = null;
 
   // Loading Cache to hold redlisted CLyman hosts
   // Keys will expire after 5 seconds, if we report another failure in this
   // time then the service will be blacklisted
-  LoadingCache<String, Object> redlist = null;
+  Cache<String, String> redlist = null;
 
   /**
   * Default empty ServiceManager constructor.
@@ -100,42 +99,24 @@ public class ServiceManager implements ServiceManagerInterface {
 
   private void initializeCaches() {
     blacklist = CacheBuilder.newBuilder()
-        .expireAfterAccess(blacklistDuration, TimeUnit.SECONDS)
+        .expireAfterWrite(blacklistDuration, TimeUnit.SECONDS)
         .maximumSize(60)
-        .weakKeys()
-        .build(new CacheLoader<String, Object>() {
-          @Override
-          public Object load(String key) throws Exception {
-            return key;
-          }
-        });
+        .build();
 
     greylist = CacheBuilder.newBuilder()
-        .expireAfterAccess(greylistDuration, TimeUnit.SECONDS)
+        .expireAfterWrite(greylistDuration, TimeUnit.SECONDS)
         .maximumSize(50)
-        .weakKeys()
-        .build(new CacheLoader<String, Object>() {
-          @Override
-          public Object load(String key) throws Exception {
-            return key;
-          }
-        });
+        .build();
 
     redlist = CacheBuilder.newBuilder()
-        .expireAfterAccess(redlistDuration, TimeUnit.SECONDS)
+        .expireAfterWrite(redlistDuration, TimeUnit.SECONDS)
         .maximumSize(40)
-        .weakKeys()
-        .build(new CacheLoader<String, Object>() {
-          @Override
-          public Object load(String key) throws Exception {
-            return key;
-          }
-        });
+        .build();
   }
 
   // Setup method to find and connect to an instance of a specified service name
   private ServiceInstance findService(String serviceName) {
-    if (redlist == null) initializeCaches();
+    if (redlist == null) {initializeCaches();}
     ServiceInstance returnService = null;
     logger.info("Finding a new Service instance");
     logger.debug("RedList Size: " + redlist.size());
@@ -161,21 +142,18 @@ public class ServiceManager implements ServiceManagerInterface {
         }
         // Pull the service instance, and the value from the blacklist
         returnService = serviceInstances.get(currentIndex);
-        logger.debug("Found Service Instance: "
-            + returnService.getUri().toString());
-        logger.debug("Blacklist: " + blacklist.asMap().toString());
-        logger.debug("Redlist: " + redlist.asMap().toString());
-        Object blacklistResp =
-            blacklist.getIfPresent(returnService.getUri().toString());
-        Object redlistResp =
-            redlist.getIfPresent(returnService.getUri().toString());
+        String instanceString = returnService.getUri().toString().trim();
+        logger.debug("Found Service Instance: " + instanceString);
+        logger.debug("Blacklist: " + blacklist.asMap().keySet().toString());
+        logger.debug("Redlist: " + redlist.asMap().keySet().toString());
         // We can go ahead and connect to the instance as long as it isn't
         // on the blacklist
-        if (blacklistResp == null && redlistResp == null) {
-          return returnService;
-        } else {
+        if (blacklist.asMap().containsKey(instanceString) ||
+            redlist.asMap().containsKey(instanceString)) {
           logger.error("Invalid host found");
           returnService = null;
+        } else {
+          return returnService;
         }
       }
     } else {
@@ -192,17 +170,15 @@ public class ServiceManager implements ServiceManagerInterface {
   public void reportFailure(ServiceInstance connectedInstance) {
     logger.info("Reporting Service Instance Failure");
     // Is the current host already on the greylist?
-    Object cacheResp =
-        greylist.getIfPresent(connectedInstance.getUri().toString());
     try {
-      Object cacheValue = new Object();
-      if (cacheResp != null) {
+      String instanceString = connectedInstance.getUri().toString().trim();
+      if (greylist.asMap().containsKey(instanceString)) {
         // We have found an entry in the greylist, add the host to the blacklist
-        blacklist.put(connectedInstance.getUri().toString(), cacheValue);
+        blacklist.put(instanceString, instanceString);
       } else {
         // We have no entry in the greylist, add the hostname to the greylist and redlist
-        greylist.put(connectedInstance.getUri().toString(), cacheValue);
-        redlist.put(connectedInstance.getUri().toString(), cacheValue);
+        greylist.put(instanceString, instanceString);
+        redlist.put(instanceString, instanceString);
       }
     } catch (Exception e) {
       logger.error("Error reporting service failure");
