@@ -18,8 +18,8 @@ import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 
 import java.util.List;
 import java.util.concurrent.Semaphore;
@@ -116,7 +116,9 @@ public class ServiceManager implements ServiceManagerInterface {
 
   // Setup method to find and connect to an instance of a specified service name
   private ServiceInstance findService(String serviceName) {
-    if (redlist == null) {initializeCaches();}
+    if (redlist == null) {
+      initializeCaches();
+    }
     ServiceInstance returnService = null;
     logger.info("Finding a new Service instance");
     logger.debug("RedList Size: " + redlist.size());
@@ -148,8 +150,8 @@ public class ServiceManager implements ServiceManagerInterface {
         logger.debug("Redlist: " + redlist.asMap().keySet().toString());
         // We can go ahead and connect to the instance as long as it isn't
         // on the blacklist
-        if (blacklist.asMap().containsKey(instanceString) ||
-            redlist.asMap().containsKey(instanceString)) {
+        if (blacklist.asMap().containsKey(instanceString)
+            || redlist.asMap().containsKey(instanceString)) {
           logger.error("Invalid host found");
           returnService = null;
         } else {

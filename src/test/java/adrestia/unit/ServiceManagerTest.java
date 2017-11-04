@@ -18,9 +18,10 @@ limitations under the License.
 package adrestia;
 
 import java.io.PrintWriter;
-import java.util.Properties;
+
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Properties;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -39,6 +40,9 @@ import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.test.util.ReflectionTestUtils;
 
+/**
+* Testing the Service Manager Component (communicates with Service Discovery).
+*/
 @RunWith(MockitoJUnitRunner.class)
 public class ServiceManagerTest {
 
