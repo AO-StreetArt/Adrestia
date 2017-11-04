@@ -72,17 +72,17 @@ public class ServiceManager implements ServiceManagerInterface {
   // Service Manager Logger
   private final Logger logger = LogManager.getLogger("adrestia.ServiceManager");
 
-  // Loading cache to hold blacklisted CLyman hosts
+  // cache to hold blacklisted CLyman hosts
   // Keys will expire after 5 minutes, at which point Consul should be able
   // to determine if the service is active or inactive.
   Cache<String, String> blacklist = null;
 
-  // Loading Cache to hold greylisted CLyman hosts
+  // Cache to hold greylisted CLyman hosts
   // Keys will expire after 30 seconds, if we report another failure in this
   // time then the service will be blacklisted
   Cache<String, String> greylist = null;
 
-  // Loading Cache to hold redlisted CLyman hosts
+  // Cache to hold redlisted CLyman hosts
   // Keys will expire after 5 seconds, if we report another failure in this
   // time then the service will be blacklisted
   Cache<String, String> redlist = null;
