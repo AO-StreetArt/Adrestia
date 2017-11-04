@@ -17,6 +17,10 @@ limitations under the License.
 
 package adrestia;
 
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.when;
+
 import java.io.PrintWriter;
 
 import java.util.ArrayList;
@@ -29,7 +33,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import org.mockito.InjectMocks;
-import org.mockito.Mockito;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -55,6 +58,9 @@ public class ServiceManagerTest {
   @InjectMocks
   private ServiceManagerInterface serviceManager = new ServiceManager();
 
+  /**
+  * Test startup
+  */
   @Before
   public void setUp() {
     // Set the configuration values in the service manager
@@ -67,13 +73,11 @@ public class ServiceManagerTest {
   @Test
   public void testBasicDiscovery() {
 
-    // Mockito Expectations
-
     // Return 0 for all random integers
-    Mockito.when(utils.getRandomInt(Mockito.anyInt())).thenReturn(0);
+    when(utils.getRandomInt(anyInt())).thenReturn(0);
 
     // Return a default service instance from the consul client
-    Mockito.when(consulClient.getInstances(Mockito.anyString())).thenReturn(
+    when(consulClient.getInstances(anyString())).thenReturn(
         new ArrayList<ServiceInstance>(
             Arrays.asList(
                 new DefaultServiceInstance("TestId", "TestHost", 5555, false)
@@ -96,13 +100,11 @@ public class ServiceManagerTest {
   @Test
   public void testFailedServices() throws InterruptedException {
 
-    // Mockito Expectations
-
     // Return 0 for all random integers
-    Mockito.when(utils.getRandomInt(Mockito.anyInt())).thenReturn(0);
+    when(utils.getRandomInt(anyInt())).thenReturn(0);
 
     // Return a default service instance from the consul client
-    Mockito.when(consulClient.getInstances(Mockito.anyString())).thenReturn(
+    when(consulClient.getInstances(anyString())).thenReturn(
         new ArrayList<ServiceInstance>(
             Arrays.asList(
                 new DefaultServiceInstance("TestId1", "TestHost1", 5555, false),

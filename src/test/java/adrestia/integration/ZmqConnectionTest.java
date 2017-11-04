@@ -49,7 +49,7 @@ public class ZmqConnectionTest {
   ZmqConnection socket;
 
   /**
-   * Test the ZMQ Connection to Crazy Ivan
+   * Test the ZMQ Connection to Crazy Ivan.
    */
   @Test
   public void testIvanConnection() throws Exception {
