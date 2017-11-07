@@ -18,9 +18,8 @@ import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
 
 import java.util.List;
 import java.util.concurrent.Semaphore;
@@ -73,59 +72,59 @@ public class ServiceManager implements ServiceManagerInterface {
   // Service Manager Logger
   private final Logger logger = LogManager.getLogger("adrestia.ServiceManager");
 
-  // Loading cache to hold blacklisted CLyman hosts
+  // cache to hold blacklisted CLyman hosts
   // Keys will expire after 5 minutes, at which point Consul should be able
   // to determine if the service is active or inactive.
-  LoadingCache<String, Object> blacklist = CacheBuilder.newBuilder()
-      .expireAfterAccess(blacklistDuration, TimeUnit.SECONDS)
-      .maximumSize(60)
-      .weakKeys()
-      .build(new CacheLoader<String, Object>() {
-        @Override
-        public Object load(String key) throws Exception {
-          return key;
-        }
-      });
+  Cache<String, String> blacklist = null;
 
-  // Loading Cache to hold greylisted CLyman hosts
+  // Cache to hold greylisted CLyman hosts
   // Keys will expire after 30 seconds, if we report another failure in this
   // time then the service will be blacklisted
-  LoadingCache<String, Object> greylist = CacheBuilder.newBuilder()
-      .expireAfterAccess(greylistDuration, TimeUnit.SECONDS)
-      .maximumSize(50)
-      .weakKeys()
-      .build(new CacheLoader<String, Object>() {
-        @Override
-        public Object load(String key) throws Exception {
-          return key;
-        }
-      });
+  Cache<String, String> greylist = null;
 
-  // Loading Cache to hold redlisted CLyman hosts
+  // Cache to hold redlisted CLyman hosts
   // Keys will expire after 5 seconds, if we report another failure in this
   // time then the service will be blacklisted
-  LoadingCache<String, Object> redlist = CacheBuilder.newBuilder()
-      .expireAfterAccess(redlistDuration, TimeUnit.SECONDS)
-      .maximumSize(40)
-      .weakKeys()
-      .build(new CacheLoader<String, Object>() {
-        @Override
-        public Object load(String key) throws Exception {
-          return key;
-        }
-      });
+  Cache<String, String> redlist = null;
 
   /**
   * Default empty ServiceManager constructor.
   */
   public ServiceManager() {
     super();
+    logger.debug("RedList Duration: " + redlistDuration);
+    logger.debug("GreyList Duration: " + greylistDuration);
+    logger.debug("BlackList Duration: " + blacklistDuration);
+  }
+
+  private void initializeCaches() {
+    blacklist = CacheBuilder.newBuilder()
+        .expireAfterWrite(blacklistDuration, TimeUnit.SECONDS)
+        .maximumSize(60)
+        .build();
+
+    greylist = CacheBuilder.newBuilder()
+        .expireAfterWrite(greylistDuration, TimeUnit.SECONDS)
+        .maximumSize(50)
+        .build();
+
+    redlist = CacheBuilder.newBuilder()
+        .expireAfterWrite(redlistDuration, TimeUnit.SECONDS)
+        .maximumSize(40)
+        .build();
   }
 
   // Setup method to find and connect to an instance of a specified service name
   private ServiceInstance findService(String serviceName) {
+    if (redlist == null) {
+      initializeCaches();
+    }
     ServiceInstance returnService = null;
     logger.info("Finding a new Service instance");
+    logger.debug("RedList Size: " + redlist.size());
+    logger.debug("GreyList Size: " + greylist.size());
+    logger.debug("BlackList Size: " + blacklist.size());
+
     // Find an instance of CrazyIvan
     List<ServiceInstance> serviceInstances =
         consulClient.getInstances(serviceName);
@@ -145,19 +144,18 @@ public class ServiceManager implements ServiceManagerInterface {
         }
         // Pull the service instance, and the value from the blacklist
         returnService = serviceInstances.get(currentIndex);
-        logger.debug("Found Service Instance: "
-            + returnService.getUri().toString());
-        Object blacklistResp =
-            blacklist.getIfPresent(returnService.getUri().toString());
-        Object redlistResp =
-            redlist.getIfPresent(returnService.getUri().toString());
+        String instanceString = returnService.getUri().toString().trim();
+        logger.debug("Found Service Instance: " + instanceString);
+        logger.debug("Blacklist: " + blacklist.asMap().keySet().toString());
+        logger.debug("Redlist: " + redlist.asMap().keySet().toString());
         // We can go ahead and connect to the instance as long as it isn't
         // on the blacklist
-        if (blacklistResp == null && redlistResp == null) {
-          return returnService;
-        } else {
+        if (blacklist.asMap().containsKey(instanceString)
+            || redlist.asMap().containsKey(instanceString)) {
           logger.error("Invalid host found");
           returnService = null;
+        } else {
+          return returnService;
         }
       }
     } else {
@@ -172,22 +170,25 @@ public class ServiceManager implements ServiceManagerInterface {
   */
   @Override
   public void reportFailure(ServiceInstance connectedInstance) {
+    logger.info("Reporting Service Instance Failure");
     // Is the current host already on the greylist?
-    Object cacheResp =
-        greylist.getIfPresent(connectedInstance.getUri().toString());
     try {
-      if (cacheResp != null) {
+      String instanceString = connectedInstance.getUri().toString().trim();
+      if (greylist.asMap().containsKey(instanceString)) {
         // We have found an entry in the greylist, add the host to the blacklist
-        cacheResp = blacklist.get(connectedInstance.getUri().toString());
+        blacklist.put(instanceString, instanceString);
       } else {
         // We have no entry in the greylist, add the hostname to the greylist and redlist
-        cacheResp = greylist.get(connectedInstance.getUri().toString());
-        cacheResp = redlist.get(connectedInstance.getUri().toString());
+        greylist.put(instanceString, instanceString);
+        redlist.put(instanceString, instanceString);
       }
     } catch (Exception e) {
       logger.error("Error reporting service failure");
       logger.error(e.getMessage());
     }
+    logger.debug("RedList Size: " + redlist.size());
+    logger.debug("GreyList Size: " + greylist.size());
+    logger.debug("BlackList Size: " + blacklist.size());
   }
 
   /**
