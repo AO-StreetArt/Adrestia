@@ -147,12 +147,22 @@ public class CrazyIvanConnector implements SceneDao {
   // Execute a Registration Transaction with Crazy Ivan
   private SceneList registrationTransaction(String sceneName,
       String deviceId, Transform inpTransform, int registerMsgType) {
+    return registrationTransaction(sceneName, deviceId, "", 999999,
+        inpTransform, registerMsgType);
+  }
+
+  // Execute a Registration Transaction with Crazy Ivan
+  private SceneList registrationTransaction(String sceneName,
+      String deviceId, String deviceHost, int devicePort,
+      Transform inpTransform, int registerMsgType) {
     logger.debug("Scene Registration Name: " + sceneName);
     logger.debug("Scene Registration Device " + deviceId);
 
     // Construct a User Device array
     UserDevice ud = new UserDevice();
     ud.setKey(deviceId);
+    ud.setHost(deviceHost);
+    if (devicePort < 999999) {ud.setPort(devicePort);}
     // Pass the transform to the user device, if one is passed in
     if (inpTransform != null) {
       logger.debug("Input Transform detected");
@@ -192,6 +202,15 @@ public class CrazyIvanConnector implements SceneDao {
   @Override
   public SceneList register(String sceneName, String deviceId, Transform inpTransform) {
     return registrationTransaction(sceneName, deviceId, inpTransform, 4);
+  }
+
+  /**
+  * Register a Device to a Scene with connectivity information.
+  */
+  @Override
+  public SceneList register(String sceneName, String deviceId, String hostName,
+      int portNumber, Transform inpTransform) {
+    return registrationTransaction(sceneName, deviceId, hostName, portNumber, inpTransform, 4);
   }
 
   /**

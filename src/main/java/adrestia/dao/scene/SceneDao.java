@@ -70,6 +70,18 @@ public interface SceneDao {
   public SceneList register(String sceneName, String deviceId, Transform inpTransform);
 
   /**
+  * Register a Device to a Scene, with connectivity information.
+  * @param sceneName The name of the scene being registered to
+  * @param deviceId The key of the Device being registered
+  * @param hostName The hostname of the device being registered
+  * @param portNumber The port of the device being registered
+  * @param inpTransform The transform from Scene to Local Axis, can be null
+  * @return  A SceneList object, returned from the service implementing the DAO
+  */
+  public SceneList register(String sceneName, String deviceId, String hostName,
+      int portNumber, Transform inpTransform);
+
+  /**
   * Deregister a Device from a Scene.
   * @param sceneName The name of the scene being deregistered from
   * @param deviceId The key of the Device being deregistered

@@ -288,8 +288,14 @@ public class SceneDaoTest {
       testLogger.println("Test Response: ");
       testLogger.println(resp.getErrorCode());
       testLogger.println(resp.getErrorMessage());
+      // Create the scene and register the device to it with connectivity info
+      SceneList resp2 = scnData.register("RegDaoTestSceneKey", "RegDaoTestDeviceKey", "TestHost", 5555, null);
+      testLogger.println("Test2  Response: ");
+      testLogger.println(resp2.getErrorCode());
+      testLogger.println(resp2.getErrorMessage());
       // Validate that the device was registered
       assert (resp.getErrorCode() == 100);
+      assert (resp2.getErrorCode() == 100);
     } catch (Exception e) {
       e.printStackTrace(testLogger);
       assert (false);
