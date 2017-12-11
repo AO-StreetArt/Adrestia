@@ -20,6 +20,7 @@ package adrestia;
 import java.io.PrintWriter;
 import java.lang.Double;
 import java.util.Map;
+import java.util.HashMap;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,10 +93,14 @@ public class RegistrationServerTest {
       double[] translation = {0.0, 0.0, 0.0};
       double[] rotation = {0.0, 0.0, 0.0, 0.0};
       Transform transform = new Transform(translation, rotation);
+      HashMap urlVariables = new HashMap();
+      urlVariables.put("device_id", "12345");
+      urlVariables.put("device_host", "testhost");
+      urlVariables.put("device_port", 5555);
       // Put the registration to the endpoint
       testLogger.println("Executing Query HTTP Request");
       this.testTemplate.put(
-          "http://localhost:" + this.port + testSceneUrl, transform);
+          "http://localhost:" + this.port + testSceneUrl, transform, urlVariables);
     } catch (Exception e) {
       e.printStackTrace(testLogger);
     } finally  {
