@@ -162,7 +162,9 @@ public class CrazyIvanConnector implements SceneDao {
     UserDevice ud = new UserDevice();
     ud.setKey(deviceId);
     ud.setHost(deviceHost);
-    if (devicePort < 999999) {ud.setPort(devicePort);}
+    if (devicePort < 999999) {
+      ud.setPort(devicePort);
+    }
     // Pass the transform to the user device, if one is passed in
     if (inpTransform != null) {
       logger.debug("Input Transform detected");

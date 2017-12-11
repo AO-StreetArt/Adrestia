@@ -19,8 +19,8 @@ package adrestia;
 
 import java.io.PrintWriter;
 import java.lang.Double;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,14 +89,15 @@ public class RegistrationServerTest {
       // Read the response
       assert (createResponse.getStatusCode().is2xxSuccessful());
       testLogger.println("Starting Scene Registration Tests");
-      // Build a new Transform
-      double[] translation = {0.0, 0.0, 0.0};
-      double[] rotation = {0.0, 0.0, 0.0, 0.0};
-      Transform transform = new Transform(translation, rotation);
+      // Build a map of the URL Variables
       HashMap urlVariables = new HashMap();
       urlVariables.put("device_id", "12345");
       urlVariables.put("device_host", "testhost");
       urlVariables.put("device_port", 5555);
+      // Build a new Transform
+      double[] translation = {0.0, 0.0, 0.0};
+      double[] rotation = {0.0, 0.0, 0.0, 0.0};
+      Transform transform = new Transform(translation, rotation);
       // Put the registration to the endpoint
       testLogger.println("Executing Query HTTP Request");
       this.testTemplate.put(
