@@ -40,10 +40,10 @@ public class CrazyIvanConnector implements SceneDao {
   ZmqConnection zmqConn;
 
   // How many retries should we attempt prior to reporting a failure
-  @Value("${server.ivan.retries}")
+  @Value("${server.zmq.retries}")
   private int requestRetries;
   // How many milliseconds to wait for a reply
-  @Value("${server.ivan.timeout}")
+  @Value("${server.zmq.timeout}")
   private int requestTimeout;
 
   // Crazy Ivan Connection Logger

@@ -39,3 +39,7 @@ Configutation:
       Logger:
         - name: adrestia.IvanConnector
           level: debug
+
+      Logger:
+        - name: adrestia.ClymanConnector
+          level: debug
