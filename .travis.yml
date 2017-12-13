@@ -19,13 +19,13 @@ before_install:
 - sleep 3
 - docker run --name crazyivan --network=dvs -p 5555:5555 -d aostreetart/crazyivan:latest
   -consul-addr=registry:8500 -ip=localhost -port=5555 -log-conf=CrazyIvan/log4cpp.properties
-- sleep 3
+- sleep 10
+- docker ps -a
 - docker logs --tail 50 registry
 - docker logs --tail 50 cache
 - docker logs --tail 50 document-db
 - docker logs --tail 50 graph-db
 - docker logs --tail 150 crazyivan
-- docker ps -a
 install:
 - gradle assemble
 script:
