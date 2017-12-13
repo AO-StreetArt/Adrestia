@@ -25,7 +25,6 @@ before_install:
 - docker logs --tail 50 cache
 - docker logs --tail 50 document-db
 - docker logs --tail 50 graph-db
-- docker logs --tail 150 crazyivan
 install:
 - gradle assemble
 script:
