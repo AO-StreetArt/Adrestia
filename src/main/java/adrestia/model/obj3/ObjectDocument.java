@@ -34,6 +34,7 @@ public class ObjectDocument {
   private String type;
   private String subtype;
   private String owner;
+  private String scene;
   private double[] translation = new double[0];
   @JsonProperty("rotation_euler")
   private double[] rotationEuler = new double[0];
@@ -59,7 +60,7 @@ public class ObjectDocument {
   * @param scale The scale of the Object
   * @param assets The asset list of the Object
   */
-  public ObjectDocument(String key, String name, String type, String subtype, String owner,
+  public ObjectDocument(String key, String name, String type, String subtype, String owner, String scene,
       double[] translation, double[] rotationEuler, double[] scale, String[] assets) {
     super();
     this.key = key;
@@ -67,6 +68,7 @@ public class ObjectDocument {
     this.type = type;
     this.subtype = subtype;
     this.owner = owner;
+    this.scene = scene;
     this.translation = translation;
     this.rotationEuler = rotationEuler;
     this.scale = scale;
@@ -116,6 +118,15 @@ public class ObjectDocument {
   @JsonGetter("owner")
   public String getOwner() {
     return this.owner;
+  }
+
+  /**
+  * Returns value of scene.
+  * @return The scene of the object
+  */
+  @JsonGetter("scene")
+  public String getScene() {
+    return this.scene;
   }
 
   /**
@@ -196,6 +207,15 @@ public class ObjectDocument {
   @JsonSetter("owner")
   public void setOwner(String owner) {
     this.owner = owner;
+  }
+
+  /**
+  * Sets new value of scene.
+  * @param scene The scene of the object
+  */
+  @JsonSetter("scene")
+  public void setScene(String scene) {
+    this.scene = scene;
   }
 
   /**

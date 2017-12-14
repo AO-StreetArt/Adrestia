@@ -43,10 +43,10 @@ public interface ObjectDao {
 
   /**
   * Retrieve a ObjectDocument.
-  * @param docName The name of the doc to retrieve
+  * @param docKey The key of the doc to retrieve
   * @return  A ObjectList object, returned from the service implementing the DAO
   */
-  public ObjectList get(String docName);
+  public ObjectList get(String docKey);
 
   /**
   * Remove a ObjectDocument.
@@ -64,15 +64,15 @@ public interface ObjectDao {
 
   /**
   * Create a ObjectDocument.
-  * @param docName The name of the doc to get a lock on
+  * @param docKey The name of the doc to get a lock on
   * @return  A ObjectList object, returned from the service implementing the DAO
   */
-  public ObjectList lock(String docName);
+  public ObjectList lock(String docKey);
 
   /**
   * Update a ObjectDocument.
-  * @param docName The name of the doc to release a lock on
+  * @param docKey The name of the doc to release a lock on
   * @return  A ObjectList object, returned from the service implementing the DAO
   */
-  public ObjectList unlock(String docName);
+  public ObjectList unlock(String docKey);
 }

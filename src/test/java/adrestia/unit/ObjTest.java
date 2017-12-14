@@ -45,7 +45,7 @@ public class ObjTest {
       double[] scale = {0.0, 0.0, 0.0};
       String[] assets = {"TestAsset1", "TestAsset2"};
       ObjectDocument testDocument = new ObjectDocument("TestKey", "TestName",
-          "TestType", "TestSubtype", "TestOwner",
+          "TestType", "TestSubtype", "TestOwner", "TestScene",
           translation, rotationEuler, scale, assets);
       // Test the get methods
       assert (testDocument.getKey().equals("TestKey"));
@@ -103,7 +103,7 @@ public class ObjTest {
       double[] scale = {0.0, 0.0, 0.0};
       String[] assets = {"TestAsset1", "TestAsset2"};
       ObjectDocument testDocument = new ObjectDocument("TestKey", "TestName",
-          "TestType", "TestSubtype", "TestOwner",
+          "TestType", "TestSubtype", "TestOwner", "TestScene",
           translation, rotationEuler, scale, assets);
 
       ObjectDocument[] docList = {testDocument};

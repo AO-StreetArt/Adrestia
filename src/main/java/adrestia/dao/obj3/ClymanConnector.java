@@ -120,10 +120,10 @@ public class ClymanConnector implements ObjectDao {
   * Retrieve an ObjectDocument.
   */
   @Override
-  public ObjectList get(String docName) {
+  public ObjectList get(String docKey) {
     ObjectDocument obj = new ObjectDocument();
-    obj.setName(docName);
-    return crudTransaction(obj, 4);
+    obj.setKey(docKey);
+    return crudTransaction(obj, 2);
   }
 
   /**
@@ -144,37 +144,26 @@ public class ClymanConnector implements ObjectDao {
     return crudTransaction(inpObject, 4);
   }
 
-  private ObjectList lock_transaction(String docName, int msgType) {
-    // Set up
-    ObjectDocument[] baseReturnObjs = new ObjectDocument[0];
-    ObjectList returnList = new ObjectList(msgType, 1,
-        baseReturnObjs, 102, "No existing document found", "");
+  private ObjectList lock_transaction(String docKey, int msgType) {
     ObjectDocument msgDocument = new ObjectDocument();
-    // Retrieve the Object based on name
-    ObjectList existingDoc = get(docName);
-    // If the Object exists, send a lock message
-    if (existingDoc.getNumRecords() > 0) {
-      String docKey = existingDoc.getDocuments()[0].getKey();
-      msgDocument.setKey(docKey);
-      returnList = crudTransaction(msgDocument, msgType);
-    }
-    return returnList;
+    msgDocument.setKey(docKey);
+    return crudTransaction(msgDocument, msgType);
   }
 
   /**
   * Lock an ObjectDocument.
   */
   @Override
-  public ObjectList lock(String docName) {
-    return lock_transaction(docName, 5);
+  public ObjectList lock(String docKey) {
+    return lock_transaction(docKey, 5);
   }
 
   /**
   * Unlock an ObjectDocument.
   */
   @Override
-  public ObjectList unlock(String docName) {
-    return lock_transaction(docName, 6);
+  public ObjectList unlock(String docKey) {
+    return lock_transaction(docKey, 6);
   }
 
 }
