@@ -12,13 +12,21 @@ before_install:
 - docker exec -t registry curl -X PUT -d 'True' http://localhost:8500/v1/kv/ivan/StampTransactionId
 - docker exec -t registry curl -X PUT -d 'True' http://localhost:8500/v1/kv/ivan/AtomicTransactions
 - docker exec -t registry curl -X PUT -d 'Json' http://localhost:8500/v1/kv/ivan/Data_Format_Type
+- docker exec -t registry curl -X PUT -d 'cache--6379----2--5--0' http://localhost:8500/v1/kv/clyman/RedisConnectionString
+- docker exec -t registry curl -X PUT -d 'mongodb://document-db:27017/' http://localhost:8500/v1/kv/clyman/Mongo_ConnectionString
+- docker exec -t registry curl -X PUT -d 'mydb' http://localhost:8500/v1/kv/clyman/Mongo_DbName
+- docker exec -t registry curl -X PUT -d 'test' http://localhost:8500/v1/kv/clyman/Mongo_DbCollection
+- docker exec -t registry curl -X PUT -d 'True' http://localhost:8500/v1/kv/clyman/StampTransactionId
+- docker exec -t registry curl -X PUT -d 'False' http://localhost:8500/v1/kv/clyman/AtomicTransactions
+- docker exec -t registry curl -X PUT -d 'True' http://localhost:8500/v1/kv/clyman/ObjectLockingActive
+- docker exec -t registry curl -X PUT -d 'JSON' http://localhost:8500/v1/kv/clyman/DataFormatType
 - docker run -d --publish=7474:7474 --publish=7687:7687 --env=NEO4J_AUTH=none --volume=/home/abarry/neo4j/data:/data
   --network=dvs --name=graph-db neo4j
 - docker run --network=dvs --name=cache -d redis
 - docker run --name document-db -d --network=dvs mongo
 - sleep 3
-- docker run --name crazyivan --network=dvs -p 5555:5555 -d aostreetart/crazyivan:latest
-  -consul-addr=registry:8500 -ip=localhost -port=5555 -log-conf=CrazyIvan/log4cpp.properties
+- docker run --name crazyivan --network=dvs -p 5555:5555 -d aostreetart/crazyivan:latest -consul-addr=registry:8500 -ip=localhost -port=5555 -log-conf=CrazyIvan/log4cpp.properties
+- docker run --name clyman --network=dvs -p 5556:5556 -d aostreetart/clyman:latest -consul-addr=registry:8500 -ip=localhost -port=5556 -log-conf=CLyman/log4cpp.properties
 - sleep 10
 - docker ps -a
 - docker logs --tail 50 registry
@@ -33,11 +41,14 @@ after_success:
 - cd $TRAVIS_BUILD_DIR/scripts/linux && ./build_docker.sh $DOCKER_MAIL $DOCKER_UN $DOCKER_PW $TRAVIS_BRANCH
 after_failure:
 - docker logs --tail 150 crazyivan
+- docker logs --tail 150 clyman
 - cat logs/testUtils.txt
+- cat logs/testModel_obj.txt
 - cat logs/testModel_transform.txt
 - cat logs/testModel_device.txt
 - cat logs/testModel_scene.txt
 - cat logs/testModel_sceneList.txt
+- cat logs/testDao_obj.txt
 - cat logs/testDao_sceneCrt.txt
 - cat logs/testDao_sceneUpd.txt
 - cat logs/testDao_sceneGet.txt
