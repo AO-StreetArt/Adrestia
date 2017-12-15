@@ -236,13 +236,13 @@ public class ObjectController {
   }
 
   /**
-  * Object Create/Update.
-  * Object Name & Object name input as path variable, no Request Parameters accepted.
+  * Object Query.
+  * Object Name & Scene name input as path variable, Request Parameters accepted.
   * POST Data read in with Object data.
   */
   @RequestMapping(headers = "Content-Type=application/json",
       method = RequestMethod.GET)
-  public ResponseEntity<ObjectDocument> updateObject(
+  public ResponseEntity<ObjectDocument> queryObject(
       @PathVariable("scn_name") String sceneName,
       @RequestParam(value = "type", defaultValue = "") String type,
       @RequestParam(value = "subtype", defaultValue = "") String subtype,
