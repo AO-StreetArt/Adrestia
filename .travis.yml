@@ -58,6 +58,9 @@ after_failure:
 - cat logs/testDao_sceneDereg.txt
 - cat logs/testSceneCrudApi.txt
 - cat logs/testSceneQueryApi.txt
+- cat logs/testObjectCrudApi.txt
+- cat logs/testObjectQueryApi.txt
+- cat logs/testObjectLockApi.txt
 - cat logs/adrestia.log | grep ERROR
 notifications:
   slack:
