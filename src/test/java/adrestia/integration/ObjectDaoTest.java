@@ -93,6 +93,18 @@ public class ObjectDaoTest {
       assert (getResp2.getDocuments()[0].getType().equals("TestType2"));
       assert (getResp2.getDocuments()[0].getOwner().equals("TestOwner2"));
 
+      // Lock Test
+      ObjectList lockResp1 = objData.lock(clymanKey, "ud1");
+      assert (lockResp1.getErrorCode() == 100);
+      ObjectList lockResp2 = objData.lock(clymanKey, "ud2");
+      assert (lockResp2.getErrorCode() != 100);
+      ObjectList lockResp3 = objData.unlock(clymanKey, "ud1");
+      assert (lockResp3.getErrorCode() == 100);
+      ObjectList lockResp4 = objData.lock(clymanKey, "ud2");
+      assert (lockResp4.getErrorCode() == 100);
+      ObjectList lockResp5 = objData.unlock(clymanKey, "ud2");
+      assert (lockResp5.getErrorCode() == 100);
+
       // Delete test
       ObjectList delResp = objData.destroy(clymanKey);
       assert (delResp.getErrorCode() == 100);
