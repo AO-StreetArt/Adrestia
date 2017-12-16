@@ -188,12 +188,12 @@ public class ObjectServerTest {
       populateQueryData();
       // Run Query Tests
       testLogger.println("Starting Object Query Tests");
-      ObjectDocument obj = new ObjectDocument("", "", "", "", "",
-          "MyFirstQueryScene", null, null, null, null, null);
+      HashMap urlVariables = new HashMap();
+      urlVariables.put("type", "TestType2");
       // Post the Scene to the endpoint
       testLogger.println("Executing Query HTTP Request");
-      ResponseEntity<Map> queryResponse = this.testTemplate.postForEntity(
-          "http://localhost:" + this.port + testObjectUrl, obj, Map.class);
+      ResponseEntity<Map> queryResponse = this.testTemplate.getForEntity(
+          "http://localhost:" + this.port + testObjectUrl, Map.class, urlVariables);
       // Read the response
       testLogger.println("Query Response Code:");
       testLogger.println(queryResponse.getStatusCode());
@@ -235,8 +235,7 @@ public class ObjectServerTest {
       // Get the lock
       testLogger.println("Executing Lock Request");
       HashMap urlVariables = new HashMap();
-      urlVariables.put("obj_name", "obj1");
-      urlVariables.put("scn_name", "MyLockScene");
+      urlVariables.put("owner", "123");
       ResponseEntity<Map> lockResponse = this.testTemplate.getForEntity(
           "http://localhost:" + this.port + testObjectLockUrl, Map.class, urlVariables);
       // Read the response
@@ -246,8 +245,7 @@ public class ObjectServerTest {
       // Run unlock test
       testLogger.println("Executing Unlock Request");
       HashMap urlVariables2 = new HashMap();
-      urlVariables2.put("obj_name", "obj1");
-      urlVariables2.put("scn_name", "MyLockScene");
+      urlVariables2.put("owner", "123");
       this.testTemplate.delete(
           "http://localhost:" + this.port + testObjectLockUrl, Map.class, urlVariables2);
     } catch (Exception e) {
