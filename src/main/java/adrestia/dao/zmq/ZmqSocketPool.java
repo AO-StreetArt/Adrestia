@@ -168,6 +168,7 @@ public class ZmqSocketPool {
       }
     } catch (Exception e) {
       logger.error("Error Getting Socket: ", e);
+      newSocket = null;
     } finally {
       // Release the mutex
       socketMutex.release();

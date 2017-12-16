@@ -44,18 +44,20 @@ public class ObjTest {
       double[] rotationEuler = {0.0, 0.0, 0.0, 0.0};
       double[] scale = {0.0, 0.0, 0.0};
       String[] assets = {"TestAsset1", "TestAsset2"};
+      double[] transform = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
       ObjectDocument testDocument = new ObjectDocument("TestKey", "TestName",
           "TestType", "TestSubtype", "TestOwner", "TestScene",
-          translation, rotationEuler, scale, assets);
+          translation, rotationEuler, scale, assets, transform);
       // Test the get methods
       assert (testDocument.getKey().equals("TestKey"));
       assert (testDocument.getName().equals("TestName"));
       assert (testDocument.getType().equals("TestType"));
       assert (testDocument.getSubtype().equals("TestSubtype"));
       assert (testDocument.getOwner().equals("TestOwner"));
-      assert (testDocument.getTranslation()[0] - 0.0 < tolerance);
-      assert (testDocument.getRotationEuler()[0] - 0.0 < tolerance);
+      assert (testDocument.getTranslation()[0] < tolerance);
+      assert (testDocument.getRotationEuler()[0] < tolerance);
       assert (testDocument.getScale()[0] - 0.0 < tolerance);
+      assert (testDocument.getTransform()[0] < tolerance);
       assert (testDocument.getAssets()[0].equals("TestAsset1"));
       // Test the set methods
       testDocument.setKey("TestKey2");
@@ -104,7 +106,7 @@ public class ObjTest {
       String[] assets = {"TestAsset1", "TestAsset2"};
       ObjectDocument testDocument = new ObjectDocument("TestKey", "TestName",
           "TestType", "TestSubtype", "TestOwner", "TestScene",
-          translation, rotationEuler, scale, assets);
+          translation, rotationEuler, scale, assets, null);
 
       ObjectDocument[] docList = {testDocument};
       ObjectList objList = new ObjectList(1, 1, docList, 100, "ErrMsg", "TransactionID");

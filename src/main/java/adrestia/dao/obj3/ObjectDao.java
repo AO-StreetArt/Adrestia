@@ -67,12 +67,12 @@ public interface ObjectDao {
   * @param docKey The name of the doc to get a lock on
   * @return  A ObjectList object, returned from the service implementing the DAO
   */
-  public ObjectList lock(String docKey);
+  public ObjectList lock(String docKey, String ownerKey);
 
   /**
   * Update a ObjectDocument.
   * @param docKey The name of the doc to release a lock on
   * @return  A ObjectList object, returned from the service implementing the DAO
   */
-  public ObjectList unlock(String docKey);
+  public ObjectList unlock(String docKey, String ownerKey);
 }

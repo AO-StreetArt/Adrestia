@@ -66,12 +66,12 @@ public class ObjectDaoTest {
       String[] assets = {"TestAsset1", "TestAsset2"};
       ObjectDocument testDocument = new ObjectDocument("TestKey", "TestName",
           "TestType", "TestSubtype", "TestOwner", "TestScene",
-          translation, rotationEuler, scale, assets);
+          translation, rotationEuler, scale, assets, null);
       ObjectList crtResp = objData.create(testDocument);
-      assert (crtResp.getErrorCode() == 100);
-      testLogger.println("Test Response: ");
+      testLogger.println("Create Test Response: ");
       testLogger.println(crtResp.getErrorCode());
       testLogger.println(crtResp.getErrorMessage());
+      assert (crtResp.getErrorCode() == 100);
       String clymanKey = crtResp.getDocuments()[0].getKey();
 
       // Get test

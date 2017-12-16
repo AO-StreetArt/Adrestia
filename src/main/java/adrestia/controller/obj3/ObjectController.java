@@ -238,7 +238,6 @@ public class ObjectController {
   /**
   * Object Query.
   * Object Name & Scene name input as path variable, Request Parameters accepted.
-  * POST Data read in with Object data.
   */
   @RequestMapping(headers = "Content-Type=application/json",
       method = RequestMethod.GET)
@@ -282,5 +281,76 @@ public class ObjectController {
 
     // Create and return the new HTTP Response
     return new ResponseEntity<ObjectDocument>(returnObj, responseHeaders, returnCode);
+  }
+
+  private ResponseEntity<ObjectDocument> lockTransaction(String sceneName, String objName, String owner, boolean isLocking) {
+    logger.info("Object Lock Transaction");
+    ObjectDocument returnObj = new ObjectDocument();
+    HttpStatus returnCode = HttpStatus.OK;
+
+    // Execute a query against Clyman
+    ObjectDocument queryObj = new ObjectDocument();
+    queryObj.setScene(sceneName);
+    queryObj.setName(objName);
+    ObjectList clymanResponse = objData.query(queryObj);
+
+    if (isSuccessResponse(clymanResponse)) {
+      // Execute the lock transaction
+      ObjectList lockResponse = null;
+      if (isLocking) {
+        lockResponse = objData.lock(clymanResponse.getDocuments()[0].getKey(), clymanResponse.getDocuments()[0].getOwner());
+      } else {
+        lockResponse = objData.unlock(clymanResponse.getDocuments()[0].getKey(), clymanResponse.getDocuments()[0].getOwner());
+      }
+      if (isSuccessResponse(lockResponse)) {
+        returnObj = lockResponse.getDocuments()[0];
+        returnCode = utils.translateDvsError(lockResponse.getErrorCode());
+      } else {
+        returnCode = HttpStatus.REQUESTED_RANGE_NOT_SATISFIABLE;
+        logger.debug("Failure Registered.  Clyman Response Error Code and Length:");
+        logger.debug(clymanResponse.getNumRecords());
+        logger.debug(clymanResponse.getErrorCode());
+      }
+    } else {
+      returnCode = HttpStatus.REQUESTED_RANGE_NOT_SATISFIABLE;
+      logger.debug("Failure Registered.  Clyman Response Error Code and Length:");
+      logger.debug(clymanResponse.getNumRecords());
+      logger.debug(clymanResponse.getErrorCode());
+    }
+
+    // Set up a response header to return a valid HTTP Response
+    HttpHeaders responseHeaders = new HttpHeaders();
+    responseHeaders.set("Content-Type", "application/json");
+
+    // Create and return the new HTTP Response
+    return new ResponseEntity<ObjectDocument>(returnObj, responseHeaders, returnCode);
+  }
+
+  /**
+  * Object Lock.
+  * Object Name & Scene name input as path variable, Request Parameters accepted.
+  */
+  @RequestMapping(path = "/{obj_name}/lock",
+      headers = "Content-Type=application/json",
+      method = RequestMethod.GET)
+  public ResponseEntity<ObjectDocument> lockObject(
+      @PathVariable("scn_name") String sceneName,
+      @PathVariable("obj_name") String objName,
+      @RequestParam(value = "owner", defaultValue = "") String owner) {
+    return lockTransaction(sceneName, objName, owner, true);
+  }
+
+  /**
+  * Object Unlock.
+  * Object Name & Scene name input as path variable, Request Parameters accepted.
+  */
+  @RequestMapping(path = "/{obj_name}/lock",
+      headers = "Content-Type=application/json",
+      method = RequestMethod.DELETE)
+  public ResponseEntity<ObjectDocument> unlockObject(
+      @PathVariable("scn_name") String sceneName,
+      @PathVariable("obj_name") String objName,
+      @RequestParam(value = "owner", defaultValue = "") String owner) {
+    return lockTransaction(sceneName, objName, owner, false);
   }
 }

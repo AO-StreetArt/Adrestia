@@ -40,6 +40,7 @@ public class ObjectDocument {
   private double[] rotationEuler = new double[0];
   private double[] scale = new double[0];
   private String[] assets = new String[0];
+  private double[] transform = new double[0];
 
   /**
   * Default empty ObjectDocument constructor.
@@ -59,9 +60,10 @@ public class ObjectDocument {
   * @param rotationEuler The current rotation of the Object
   * @param scale The scale of the Object
   * @param assets The asset list of the Object
+  * @param transform The transform of the object
   */
   public ObjectDocument(String key, String name, String type, String subtype, String owner, String scene,
-      double[] translation, double[] rotationEuler, double[] scale, String[] assets) {
+      double[] translation, double[] rotationEuler, double[] scale, String[] assets, double[] transform) {
     super();
     this.key = key;
     this.name = name;
@@ -73,6 +75,7 @@ public class ObjectDocument {
     this.rotationEuler = rotationEuler;
     this.scale = scale;
     this.assets = assets;
+    this.transform = transform;
   }
 
   /**
@@ -165,6 +168,15 @@ public class ObjectDocument {
   }
 
   /**
+  * Returns value of transform.
+  * @return The current transform of the object
+  */
+  @JsonGetter("transform")
+  public double[] getTransform() {
+    return this.transform;
+  }
+
+  /**
   * Sets new value of key.
   * @param key The key of the object
   */
@@ -252,5 +264,14 @@ public class ObjectDocument {
   @JsonSetter("assets")
   public void setAssets(String[] assets) {
     this.assets = assets;
+  }
+
+  /**
+  * Sets new value of transform.
+  * @param transform The current transform of the object
+  */
+  @JsonSetter("transform")
+  public void setTransform(double[] transform) {
+    this.transform = transform;
   }
 }
