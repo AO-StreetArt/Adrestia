@@ -282,7 +282,8 @@ public class ObjectController {
     return new ResponseEntity<ObjectDocument>(returnObj, responseHeaders, returnCode);
   }
 
-  private ResponseEntity<ObjectDocument> lockTransaction(String sceneName, String objName, String owner, boolean isLocking) {
+  private ResponseEntity<ObjectDocument> lockTransaction(String sceneName,
+      String objName, String owner, boolean isLocking) {
     logger.info("Object Lock Transaction");
     ObjectDocument returnObj = new ObjectDocument();
     HttpStatus returnCode = HttpStatus.OK;
@@ -297,9 +298,9 @@ public class ObjectController {
       // Execute the lock transaction
       ObjectList lockResponse = null;
       if (isLocking) {
-        lockResponse = objData.lock(clymanResponse.getDocuments()[0].getKey(), clymanResponse.getDocuments()[0].getOwner());
+        lockResponse = objData.lock(clymanResponse.getDocuments()[0].getKey(), owner);
       } else {
-        lockResponse = objData.unlock(clymanResponse.getDocuments()[0].getKey(), clymanResponse.getDocuments()[0].getOwner());
+        lockResponse = objData.unlock(clymanResponse.getDocuments()[0].getKey(), owner);
       }
       if (isSuccessResponse(lockResponse)) {
         returnObj = lockResponse.getDocuments()[0];

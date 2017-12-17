@@ -62,8 +62,9 @@ public class ObjectDocument {
   * @param assets The asset list of the Object
   * @param transform The transform of the object
   */
-  public ObjectDocument(String key, String name, String type, String subtype, String owner, String scene,
-      double[] translation, double[] rotationEuler, double[] scale, String[] assets, double[] transform) {
+  public ObjectDocument(String key, String name, String type, String subtype, String owner,
+      String scene, double[] translation, double[] rotationEuler, double[] scale,
+      String[] assets, double[] transform) {
     super();
     this.key = key;
     this.name = name;

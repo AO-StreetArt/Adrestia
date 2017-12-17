@@ -100,6 +100,13 @@ public class ClymanConnector implements ObjectDao {
     return transaction(inpObjectList);
   }
 
+  private ObjectList lockTransaction(String docKey, String ownerKey, int msgType) {
+    ObjectDocument msgDocument = new ObjectDocument();
+    msgDocument.setKey(docKey);
+    msgDocument.setOwner(ownerKey);
+    return crudTransaction(msgDocument, msgType);
+  }
+
   /**
   * Create an ObjectDocument.
   */
@@ -144,19 +151,12 @@ public class ClymanConnector implements ObjectDao {
     return crudTransaction(inpObject, 4);
   }
 
-  private ObjectList lock_transaction(String docKey, String ownerKey, int msgType) {
-    ObjectDocument msgDocument = new ObjectDocument();
-    msgDocument.setKey(docKey);
-    msgDocument.setOwner(ownerKey);
-    return crudTransaction(msgDocument, msgType);
-  }
-
   /**
   * Lock an ObjectDocument.
   */
   @Override
   public ObjectList lock(String docKey, String ownerKey) {
-    return lock_transaction(docKey, ownerKey, 5);
+    return lockTransaction(docKey, ownerKey, 5);
   }
 
   /**
@@ -164,7 +164,7 @@ public class ClymanConnector implements ObjectDao {
   */
   @Override
   public ObjectList unlock(String docKey, String ownerKey) {
-    return lock_transaction(docKey, ownerKey, 6);
+    return lockTransaction(docKey, ownerKey, 6);
   }
 
 }

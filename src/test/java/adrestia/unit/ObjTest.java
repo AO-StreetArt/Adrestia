@@ -44,7 +44,8 @@ public class ObjTest {
       double[] rotationEuler = {0.0, 0.0, 0.0, 0.0};
       double[] scale = {0.0, 0.0, 0.0};
       String[] assets = {"TestAsset1", "TestAsset2"};
-      double[] transform = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+      double[] transform = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+          0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
       ObjectDocument testDocument = new ObjectDocument("TestKey", "TestName",
           "TestType", "TestSubtype", "TestOwner", "TestScene",
           translation, rotationEuler, scale, assets, transform);
