@@ -19,6 +19,7 @@ package adrestia;
 
 import java.io.PrintWriter;
 import java.lang.Double;
+import java.util.HashMap;
 import java.util.Map;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -64,7 +65,7 @@ public class RegistrationServerTest {
     double[] translation = {0.0, 0.0, 0.0};
     double[] rotation = {0.0, 0.0, 0.0, 0.0};
     Transform transform = new Transform(translation, rotation);
-    UserDevice dev = new UserDevice("DeviceKey", transform);
+    UserDevice dev = new UserDevice("DeviceKey", "TestHost", 5555, transform);
     devices[0] = dev;
     return new Scene(
         sceneKey, sceneName, "C", 1.0, 2.0, 3.0, assets, tags, devices);
@@ -88,6 +89,11 @@ public class RegistrationServerTest {
       // Read the response
       assert (createResponse.getStatusCode().is2xxSuccessful());
       testLogger.println("Starting Scene Registration Tests");
+      // Build a map of the URL Variables
+      HashMap urlVariables = new HashMap();
+      urlVariables.put("device_id", "12345");
+      urlVariables.put("device_host", "testhost");
+      urlVariables.put("device_port", 5555);
       // Build a new Transform
       double[] translation = {0.0, 0.0, 0.0};
       double[] rotation = {0.0, 0.0, 0.0, 0.0};
@@ -95,7 +101,7 @@ public class RegistrationServerTest {
       // Put the registration to the endpoint
       testLogger.println("Executing Query HTTP Request");
       this.testTemplate.put(
-          "http://localhost:" + this.port + testSceneUrl, transform);
+          "http://localhost:" + this.port + testSceneUrl, transform, urlVariables);
     } catch (Exception e) {
       e.printStackTrace(testLogger);
     } finally  {

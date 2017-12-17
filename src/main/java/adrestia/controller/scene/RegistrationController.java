@@ -66,14 +66,15 @@ public class RegistrationController {
 
   // Process a registration request
   private ResponseEntity<Scene> processRegistration(String name,
-      String device, Transform inpTransform, int registrationMsgType) {
+      String device, String deviceHost, int devicePort,
+      Transform inpTransform, int registrationMsgType) {
     Scene returnScn = new Scene();
     HttpStatus returnCode = HttpStatus.OK;
 
     // Get a response based on the msg type we've been passed in
     SceneList ivanResponse = null;
     switch (registrationMsgType) {
-      case 4: ivanResponse = scnData.register(name, device, inpTransform);
+      case 4: ivanResponse = scnData.register(name, device, deviceHost, devicePort, inpTransform);
               break;
       case 5: ivanResponse = scnData.deregister(name, device);
               break;
@@ -108,9 +109,11 @@ public class RegistrationController {
   @RequestMapping(path = "/{name}/registration", method = RequestMethod.PUT)
   public ResponseEntity<Scene> register(@PathVariable("name") String name,
       @RequestParam(value = "device_id", defaultValue = "") String device,
+      @RequestParam(value = "device_host", defaultValue = "") String deviceHost,
+      @RequestParam(value = "device_port", defaultValue = "0") int devicePort,
       @RequestBody(required = false) Transform inpTransform) {
     logger.info("Responding to Scene Registration Request");
-    return processRegistration(name, device, inpTransform, 4);
+    return processRegistration(name, device, deviceHost, devicePort, inpTransform, 4);
   }
 
   /**
@@ -120,7 +123,7 @@ public class RegistrationController {
   public ResponseEntity<Scene> deregister(@PathVariable("name") String name,
       @RequestParam(value = "device_id", defaultValue = "") String device) {
     logger.info("Responding to Scene De-Registration Request");
-    return processRegistration(name, device, null, 5);
+    return processRegistration(name, device, "", 0, null, 5);
   }
 
   /**
@@ -131,7 +134,7 @@ public class RegistrationController {
       @RequestParam(value = "device_id", defaultValue = "") String device,
       @RequestBody(required = false) Transform inpTransform) {
     logger.info("Responding to Scene Synchronization Request");
-    return processRegistration(name, device, inpTransform, 6);
+    return processRegistration(name, device, "", 0, inpTransform, 6);
   }
 
 }

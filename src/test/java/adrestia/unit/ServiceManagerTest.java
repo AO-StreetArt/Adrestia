@@ -59,7 +59,7 @@ public class ServiceManagerTest {
   private ServiceManagerInterface serviceManager = new ServiceManager();
 
   /**
-  * Test startup
+  * Test startup.
   */
   @Before
   public void setUp() {

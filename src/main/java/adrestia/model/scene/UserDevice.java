@@ -29,6 +29,8 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 public class UserDevice {
 
   private String key;
+  private String host;
+  private int port;
   private Transform transform;
 
 
@@ -42,11 +44,15 @@ public class UserDevice {
   /**
   * Default UserDevice constructor.
   * @param key       The Unique String Key of the Device.
+  * @param host      The hostname of the device for UDP Communications
+  * @param port      The port of the device for UDP Communications
   * @param transform A Transformation Object for the device to store.
   */
-  public UserDevice(String key, Transform transform) {
+  public UserDevice(String key, String host, int port, Transform transform) {
     super();
     this.key = key;
+    this.host = host;
+    this.port = port;
     this.transform = transform;
   }
 
@@ -57,6 +63,24 @@ public class UserDevice {
   @JsonGetter("key")
   public String getKey() {
     return this.key;
+  }
+
+  /**
+  * Returns value of host.
+  * @return The Unique String host of the Device.
+  */
+  @JsonGetter("hostname")
+  public String getHost() {
+    return this.host;
+  }
+
+  /**
+  * Returns value of port.
+  * @return The Unique Integer port of the Device.
+  */
+  @JsonGetter("port")
+  public int getPort() {
+    return this.port;
   }
 
   /**
@@ -75,6 +99,24 @@ public class UserDevice {
   @JsonSetter("key")
   public void setKey(String key) {
     this.key = key;
+  }
+
+  /**
+  * Sets new value of host.
+  * @param host A Unique String host for the device.
+  */
+  @JsonSetter("host")
+  public void setHost(String host) {
+    this.host = host;
+  }
+
+  /**
+  * Sets new value of port.
+  * @param port A Unique int port for the device.
+  */
+  @JsonSetter("port")
+  public void setPort(int port) {
+    this.port = port;
   }
 
   /**

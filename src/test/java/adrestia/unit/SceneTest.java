@@ -52,13 +52,15 @@ public class SceneTest {
   // Convenience method to build a test User Device
   private UserDevice buildDevice() {
     Transform trans = buildTransform();
-    return new UserDevice("MyTestKey", trans);
+    return new UserDevice("MyTestKey", "TestHost", 5555, trans);
   }
 
   // Convenience method to validate the contents of a test user device element
   private void assertDeviceElements(UserDevice dev) {
     assertTransformElements(dev.getTransform());
     assert (dev.getKey().equals("MyTestKey"));
+    assert (dev.getHost().equals("TestHost"));
+    assert (dev.getPort() == 5555);
   }
 
   // Convenience method to build a test scene
@@ -148,6 +150,8 @@ public class SceneTest {
       Transform defaultTrans = buildTransform();
       UserDevice defaultDev = new UserDevice();
       defaultDev.setKey("MyTestKey");
+      defaultDev.setHost("TestHost");
+      defaultDev.setPort(5555);
       defaultDev.setTransform(defaultTrans);
 
       assertDeviceElements(defaultDev);

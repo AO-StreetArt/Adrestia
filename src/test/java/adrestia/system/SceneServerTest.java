@@ -76,7 +76,7 @@ public class SceneServerTest {
       double[] translation = {0.0, 0.0, 0.0};
       double[] rotation = {0.0, 0.0, 0.0, 0.0};
       Transform transform = new Transform(translation, rotation);
-      UserDevice dev = new UserDevice("DeviceKey", transform);
+      UserDevice dev = new UserDevice("DeviceKey", "TestHost", 5555, transform);
       devices[0] = dev;
       Scene scn = new Scene(
           testSceneKey, "", "C", 1.0, 2.0, 3.0, assets, tags, devices);
@@ -190,7 +190,7 @@ public class SceneServerTest {
     double[] translation = {0.0, 0.0, 0.0};
     double[] rotation = {0.0, 0.0, 0.0, 0.0};
     Transform transform = new Transform(translation, rotation);
-    UserDevice dev = new UserDevice("DeviceKey", transform);
+    UserDevice dev = new UserDevice("DeviceKey", "TestHost", 5555, transform);
     devices[0] = dev;
     Scene scn = new Scene("A4B8C12D0",
         "MyFirstQueryScene", "MyRegion", 1.0, 2.0, 3.0, assets, tags, devices);
