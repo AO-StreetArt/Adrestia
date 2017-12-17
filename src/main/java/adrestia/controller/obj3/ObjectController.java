@@ -239,8 +239,7 @@ public class ObjectController {
   * Object Query.
   * Object Name & Scene name input as path variable, Request Parameters accepted.
   */
-  @RequestMapping(headers = "Content-Type=application/json",
-      method = RequestMethod.GET)
+  @RequestMapping(method = RequestMethod.GET)
   public ResponseEntity<ObjectDocument> queryObject(
       @PathVariable("scn_name") String sceneName,
       @RequestParam(value = "type", defaultValue = "") String type,
@@ -331,7 +330,6 @@ public class ObjectController {
   * Object Name & Scene name input as path variable, Request Parameters accepted.
   */
   @RequestMapping(path = "/{obj_name}/lock",
-      headers = "Content-Type=application/json",
       method = RequestMethod.GET)
   public ResponseEntity<ObjectDocument> lockObject(
       @PathVariable("scn_name") String sceneName,
@@ -345,7 +343,6 @@ public class ObjectController {
   * Object Name & Scene name input as path variable, Request Parameters accepted.
   */
   @RequestMapping(path = "/{obj_name}/lock",
-      headers = "Content-Type=application/json",
       method = RequestMethod.DELETE)
   public ResponseEntity<ObjectDocument> unlockObject(
       @PathVariable("scn_name") String sceneName,
