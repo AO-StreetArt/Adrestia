@@ -100,14 +100,18 @@ public class ZmqConnector implements ZmqConnection {
       try {
         // Get a socket from the socket pool
         transactionSocket = socketPool.getSocket(getZmqAddr(connectedInstance), serviceType);
-        transactionSocket.setService(connectedInstance);
+        if (transactionSocket != null) {
+          transactionSocket.setService(connectedInstance);
+        } else {
+          logger.error("Unable to connect to Crazy Ivan instance");
+          reportFailure(connectedInstance);
+        }
         return transactionSocket;
       } catch (Exception e) {
         logger.error("Error connecting to Crazy Ivan instance");
         logger.error(e.getMessage());
         reportFailure(connectedInstance);
       }
-      transactionSocket.setService(connectedInstance);
     }
     return transactionSocket;
   }

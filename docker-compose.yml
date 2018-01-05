@@ -29,12 +29,14 @@ services:
   documentdb:
     image: mongo
     container_name: document-db
+    ports:
+      - "27017:27017"
   crazyivan:
     image: aostreetart/crazyivan:latest
     container_name: crazyivan
     ports:
       - "5555:5555"
-    command: -consul-addr=registry:8500 -ip=localhost -port=5555 -log-conf=CrazyIvan/log4cpp.properties -wait=7
+    command: -consul-addr=registry:8500 -ip=localhost -port=5555 -log-conf=CrazyIvan/log4cpp.properties -wait=9
     depends_on:
       - "graphdb"
       - "cache"
@@ -45,7 +47,7 @@ services:
     container_name: clyman
     ports:
       - "5556:5556"
-    command: -consul-addr=registry:8500 -ip=localhost -port=5556 -log-conf=CLyman/log4cpp.properties -wait=7
+    command: -consul-addr=registry:8500 -ip=localhost -port=5556 -log-conf=CLyman/log4cpp.properties -wait=9
     depends_on:
       - "documentdb"
       - "cache"

@@ -52,7 +52,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(path = "/v1/scene")
 public class SceneController {
 
-  // DVS Manager, DAO Object allowing access to dependent services
+  // DAO Object allowing access to scene data
   @Autowired
   SceneDao scnData;
 
