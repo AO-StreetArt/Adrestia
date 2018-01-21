@@ -83,7 +83,7 @@ public class ObjectServerTest {
       Map crtRespBody = createResponse.getBody();
       testLogger.println("Create Response: " + crtRespBody.toString());
       testLogger.println("Key: " + crtRespBody.get("key"));
-      assert (!(crtRespBody.get("key").isEmpty()));
+      assert (!(crtRespBody.get("key").toString().isEmpty()));
 
       // Get Test
       testLogger.println("Get Test");
@@ -144,6 +144,7 @@ public class ObjectServerTest {
       assert (getResponse3.getStatusCode().is4xxClientError());
     } catch (Exception e) {
       e.printStackTrace(testLogger);
+      assert (false);
     } finally  {
       // Close the output text file
       testLogger.close();
@@ -200,6 +201,7 @@ public class ObjectServerTest {
       assert (queryResponse.getStatusCode().is2xxSuccessful());
     } catch (Exception e) {
       e.printStackTrace(testLogger);
+      assert (false);
     } finally  {
       // Close the output text file
       testLogger.close();
@@ -250,6 +252,7 @@ public class ObjectServerTest {
           "http://localhost:" + this.port + testObjectLockUrl, Map.class, urlVariables2);
     } catch (Exception e) {
       e.printStackTrace(testLogger);
+      assert (false);
     } finally  {
       // Close the output text file
       testLogger.close();
