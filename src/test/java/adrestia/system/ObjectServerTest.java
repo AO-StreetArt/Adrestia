@@ -83,7 +83,7 @@ public class ObjectServerTest {
       Map crtRespBody = createResponse.getBody();
       testLogger.println("Create Response: " + crtRespBody.toString());
       testLogger.println("Key: " + crtRespBody.get("key"));
-      assert (crtRespBody.get("name").equals(testObjectName));
+      assert (!(crtRespBody.get("key").isEmpty()));
 
       // Get Test
       testLogger.println("Get Test");
