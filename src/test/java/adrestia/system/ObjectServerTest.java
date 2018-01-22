@@ -141,6 +141,7 @@ public class ObjectServerTest {
       // Read the response
       testLogger.println("Delete Test Response Code");
       testLogger.println(getResponse3.getStatusCode());
+      testLogger.println("Get Response: " + getResponse3.toString());
       assert (getResponse3.getStatusCode().is4xxClientError());
     } catch (Exception e) {
       e.printStackTrace(testLogger);
