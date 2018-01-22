@@ -125,7 +125,7 @@ public class ObjectServerTest {
       // Validate the response
       Map getRespBody2 = getResponse2.getBody();
       testLogger.println("Get Response: " + getRespBody2.toString());
-      assert (getRespBody2.get("type").equals("TestType"));
+      assert (getRespBody2.get("type").equals("TestType2"));
 
       // Delete Test
       testLogger.println("Delete Test");
