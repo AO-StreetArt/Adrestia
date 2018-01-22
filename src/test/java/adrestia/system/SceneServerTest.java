@@ -168,6 +168,7 @@ public class SceneServerTest {
       assert (getResponse3.getStatusCode().is4xxClientError());
     } catch (Exception e) {
       e.printStackTrace(testLogger);
+      assert (false);
     } finally  {
       // Close the output text file
       testLogger.close();
@@ -238,6 +239,7 @@ public class SceneServerTest {
       assert (queryResponse.getStatusCode().is2xxSuccessful());
     } catch (Exception e) {
       e.printStackTrace(testLogger);
+      assert (false);
     } finally  {
       // Close the output text file
       testLogger.close();

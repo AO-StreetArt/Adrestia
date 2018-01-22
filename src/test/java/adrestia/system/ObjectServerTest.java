@@ -83,7 +83,7 @@ public class ObjectServerTest {
       Map crtRespBody = createResponse.getBody();
       testLogger.println("Create Response: " + crtRespBody.toString());
       testLogger.println("Key: " + crtRespBody.get("key"));
-      assert (crtRespBody.get("name").equals(testObjectName));
+      assert (!(crtRespBody.get("key").toString().isEmpty()));
 
       // Get Test
       testLogger.println("Get Test");
@@ -95,7 +95,7 @@ public class ObjectServerTest {
       // Validate the response
       Map getRespBody = getResponse.getBody();
       testLogger.println("Get Response: " + getRespBody.toString());
-      assert (getRespBody.get("type") == "TestType");
+      assert (getRespBody.get("type").equals("TestType"));
 
       // Update Test
       testLogger.println("Update Test");
@@ -125,7 +125,7 @@ public class ObjectServerTest {
       // Validate the response
       Map getRespBody2 = getResponse2.getBody();
       testLogger.println("Get Response: " + getRespBody2.toString());
-      assert (getRespBody2.get("type") == "TestType");
+      assert (getRespBody2.get("type").equals("TestType2"));
 
       // Delete Test
       testLogger.println("Delete Test");
@@ -141,9 +141,11 @@ public class ObjectServerTest {
       // Read the response
       testLogger.println("Delete Test Response Code");
       testLogger.println(getResponse3.getStatusCode());
+      testLogger.println("Get Response: " + getResponse3.toString());
       assert (getResponse3.getStatusCode().is4xxClientError());
     } catch (Exception e) {
       e.printStackTrace(testLogger);
+      assert (false);
     } finally  {
       // Close the output text file
       testLogger.close();
@@ -200,6 +202,7 @@ public class ObjectServerTest {
       assert (queryResponse.getStatusCode().is2xxSuccessful());
     } catch (Exception e) {
       e.printStackTrace(testLogger);
+      assert (false);
     } finally  {
       // Close the output text file
       testLogger.close();
@@ -250,6 +253,7 @@ public class ObjectServerTest {
           "http://localhost:" + this.port + testObjectLockUrl, Map.class, urlVariables2);
     } catch (Exception e) {
       e.printStackTrace(testLogger);
+      assert (false);
     } finally  {
       // Close the output text file
       testLogger.close();

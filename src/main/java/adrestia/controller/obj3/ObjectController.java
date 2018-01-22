@@ -107,11 +107,13 @@ public class ObjectController {
 
     // If we have a successful response, then we pull the first value and
     // the error code
-    if (isSuccessResponse(clymanResponse)) {
+    returnCode = utils.translateDvsError(clymanResponse.getErrorCode());
+    if (clymanResponse.getNumRecords() > 0) {
       returnObj = clymanResponse.getDocuments()[0];
-      returnCode = utils.translateDvsError(clymanResponse.getErrorCode());
+    } else if (clymanResponse.getErrorCode() == 100) {
+      logger.debug("Query returned no values");
+      returnCode = HttpStatus.REQUESTED_RANGE_NOT_SATISFIABLE;;
     } else {
-      returnCode = HttpStatus.REQUESTED_RANGE_NOT_SATISFIABLE;
       logger.debug("Failure Registered.  Clyman Response Error Code and Length:");
       logger.debug(clymanResponse.getNumRecords());
       logger.debug(clymanResponse.getErrorCode());
@@ -163,11 +165,10 @@ public class ObjectController {
     ObjectList updateResponse = saveObject(inpObject, objectExists);
 
     // If we have a successful response, then we pull the first value
+    returnCode = utils.translateDvsError(updateResponse.getErrorCode());
     if (isSuccessResponse(updateResponse)) {
       returnObj = updateResponse.getDocuments()[0];
-      returnCode = utils.translateDvsError(updateResponse.getErrorCode());
     } else {
-      returnCode = HttpStatus.REQUESTED_RANGE_NOT_SATISFIABLE;
       logger.debug("Failure Registered.  Clyman Response Error Code and Length:");
       logger.debug(updateResponse.getNumRecords());
       logger.debug(updateResponse.getErrorCode());
@@ -186,7 +187,6 @@ public class ObjectController {
   * Object Name & Object name input as path variable, no Request Parameters accepted.
   */
   @RequestMapping(path = "/{obj_name}",
-      headers = "Content-Type=application/json",
       method = RequestMethod.DELETE)
   public ResponseEntity<ObjectDocument> deleteObject(
       @PathVariable("scn_name") String sceneName,
@@ -208,21 +208,22 @@ public class ObjectController {
       if (clymanRespKey != null && !clymanRespKey.isEmpty()) {
         logger.debug("Clyman Response Key: " + clymanRespKey);
         ObjectList deleteResponse = objData.destroy(clymanRespKey);
+        returnCode = utils.translateDvsError(deleteResponse.getErrorCode());
         // If we have a successful response, then set a success code
         if (isSuccessResponse(deleteResponse)) {
           returnObj = deleteResponse.getDocuments()[0];
-          returnCode = utils.translateDvsError(deleteResponse.getErrorCode());
         } else {
-          returnCode = HttpStatus.REQUESTED_RANGE_NOT_SATISFIABLE;
           logger.debug("Failure Registered.  Clyman Response Error Code and Length:");
           logger.debug(deleteResponse.getNumRecords());
           logger.debug(deleteResponse.getErrorCode());
         }
+      } else {
+        logger.error("Unable to find key in clyman response");
       }
     } else {
       // Delete request for non-existing object
       returnCode = HttpStatus.INTERNAL_SERVER_ERROR;
-      logger.debug("Key not found in Clyman response");
+      logger.debug("Document not found");
       logger.debug(clymanResponse.getNumRecords());
       logger.debug(clymanResponse.getErrorCode());
     }
@@ -264,11 +265,10 @@ public class ObjectController {
     ObjectList clymanResponse = objData.query(queryObj);
 
     // Update our HTTP Response based on the Clyman response
+    returnCode = utils.translateDvsError(clymanResponse.getErrorCode());
     if (isSuccessResponse(clymanResponse)) {
       returnObj = clymanResponse.getDocuments()[0];
-      returnCode = utils.translateDvsError(clymanResponse.getErrorCode());
     } else {
-      returnCode = HttpStatus.REQUESTED_RANGE_NOT_SATISFIABLE;
       logger.debug("Failure Registered.  Clyman Response Error Code and Length:");
       logger.debug(clymanResponse.getNumRecords());
       logger.debug(clymanResponse.getErrorCode());
@@ -302,11 +302,10 @@ public class ObjectController {
       } else {
         lockResponse = objData.unlock(clymanResponse.getDocuments()[0].getKey(), owner);
       }
+      returnCode = utils.translateDvsError(lockResponse.getErrorCode());
       if (isSuccessResponse(lockResponse)) {
         returnObj = lockResponse.getDocuments()[0];
-        returnCode = utils.translateDvsError(lockResponse.getErrorCode());
       } else {
-        returnCode = HttpStatus.REQUESTED_RANGE_NOT_SATISFIABLE;
         logger.debug("Failure Registered.  Clyman Response Error Code and Length:");
         logger.debug(clymanResponse.getNumRecords());
         logger.debug(clymanResponse.getErrorCode());

@@ -33,6 +33,10 @@ Configutation:
           level: debug
 
       Logger:
+        - name: adrestia.ObjectController
+          level: debug
+
+      Logger:
         - name: adrestia.ZMQ
           level: debug
 

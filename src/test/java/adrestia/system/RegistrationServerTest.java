@@ -104,6 +104,7 @@ public class RegistrationServerTest {
           "http://localhost:" + this.port + testSceneUrl, transform, urlVariables);
     } catch (Exception e) {
       e.printStackTrace(testLogger);
+      assert (false);
     } finally  {
       // Close the output text file
       testLogger.close();
@@ -153,6 +154,7 @@ public class RegistrationServerTest {
       assert (queryResponse2.getStatusCode().is2xxSuccessful());
     } catch (Exception e) {
       e.printStackTrace(testLogger);
+      assert (false);
     } finally  {
       // Close the output text file
       testLogger.close();
@@ -192,6 +194,7 @@ public class RegistrationServerTest {
           "http://localhost:" + this.port + testSceneUrl, Map.class);
     } catch (Exception e) {
       e.printStackTrace(testLogger);
+      assert (false);
     } finally  {
       // Close the output text file
       testLogger.close();
