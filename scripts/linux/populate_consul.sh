@@ -15,3 +15,4 @@ curl -X PUT -d 'True' http://$CONSUL_HOST:8500/v1/kv/clyman/StampTransactionId
 curl -X PUT -d 'False' http://$CONSUL_HOST:8500/v1/kv/clyman/AtomicTransactions
 curl -X PUT -d 'True' http://$CONSUL_HOST:8500/v1/kv/clyman/ObjectLockingActive
 curl -X PUT -d 'JSON' http://$CONSUL_HOST:8500/v1/kv/clyman/DataFormatType
+curl -X PUT -d 'queue:9092' http://$CONSUL_HOST:8500/v1/kv/clyman/KafkaBrokerAddress
