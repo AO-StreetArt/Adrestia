@@ -29,7 +29,7 @@ after_success:
 # Build and push the Docker image for Adrestia
 - cd $TRAVIS_BUILD_DIR/scripts/linux && ./build_docker.sh $DOCKER_MAIL $DOCKER_UN $DOCKER_PW $TRAVIS_BRANCH
 # Build and push the convenience image used by the Docker Compose File
-- cd $TRAVIS_BUILD_DIR && scripts/docker/build_config_docker_image.sh
+- cd $TRAVIS_BUILD_DIR && scripts/docker/build_config_docker_image.sh $TRAVIS_BRANCH
 after_failure:
 - docker logs --tail 150 crazyivan
 - docker logs --tail 150 clyman
