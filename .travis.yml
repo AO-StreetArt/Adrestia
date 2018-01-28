@@ -7,19 +7,7 @@ before_install:
 - docker network create dvs
 - docker run -d -p 8500:8500 --name=registry --network=dvs consul agent --dev -ui
   -client=0.0.0.0
-- docker exec -t registry curl -X PUT -d 'cache--6379----2--5--0' http://localhost:8500/v1/kv/ivan/RedisConnectionString
-- docker exec -t registry curl -X PUT -d 'neo4j://graph-db:7687' http://localhost:8500/v1/kv/ivan/DB_ConnectionString
-- docker exec -t registry curl -X PUT -d 'True' http://localhost:8500/v1/kv/ivan/StampTransactionId
-- docker exec -t registry curl -X PUT -d 'True' http://localhost:8500/v1/kv/ivan/AtomicTransactions
-- docker exec -t registry curl -X PUT -d 'Json' http://localhost:8500/v1/kv/ivan/Data_Format_Type
-- docker exec -t registry curl -X PUT -d 'cache--6379----2--5--0' http://localhost:8500/v1/kv/clyman/RedisConnectionString
-- docker exec -t registry curl -X PUT -d 'mongodb://document-db:27017/' http://localhost:8500/v1/kv/clyman/Mongo_ConnectionString
-- docker exec -t registry curl -X PUT -d 'mydb' http://localhost:8500/v1/kv/clyman/Mongo_DbName
-- docker exec -t registry curl -X PUT -d 'test' http://localhost:8500/v1/kv/clyman/Mongo_DbCollection
-- docker exec -t registry curl -X PUT -d 'True' http://localhost:8500/v1/kv/clyman/StampTransactionId
-- docker exec -t registry curl -X PUT -d 'False' http://localhost:8500/v1/kv/clyman/AtomicTransactions
-- docker exec -t registry curl -X PUT -d 'True' http://localhost:8500/v1/kv/clyman/ObjectLockingActive
-- docker exec -t registry curl -X PUT -d 'JSON' http://localhost:8500/v1/kv/clyman/DataFormatType
+- scripts/linux/populate_consul.sh localhost docker
 - docker run -d --publish=7474:7474 --publish=7687:7687 --env=NEO4J_AUTH=none --volume=/home/abarry/neo4j/data:/data
   --network=dvs --name=graph-db neo4j
 - docker run --network=dvs --name=cache -d redis
@@ -38,7 +26,10 @@ install:
 script:
 - gradle check
 after_success:
+# Build and push the Docker image for Adrestia
 - cd $TRAVIS_BUILD_DIR/scripts/linux && ./build_docker.sh $DOCKER_MAIL $DOCKER_UN $DOCKER_PW $TRAVIS_BRANCH
+# Build and push the convenience image used by the Docker Compose File
+- cd $TRAVIS_BUILD_DIR && scripts/docker/build_config_docker_image.sh $TRAVIS_BRANCH
 after_failure:
 - docker logs --tail 150 crazyivan
 - docker logs --tail 150 clyman
