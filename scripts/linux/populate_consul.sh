@@ -22,3 +22,4 @@ $CURL_COMMAND -X PUT -d 'False' http://$CONSUL_HOST:8500/v1/kv/clyman/AtomicTran
 $CURL_COMMAND -X PUT -d 'True' http://$CONSUL_HOST:8500/v1/kv/clyman/ObjectLockingActive
 $CURL_COMMAND -X PUT -d 'JSON' http://$CONSUL_HOST:8500/v1/kv/clyman/DataFormatType
 $CURL_COMMAND -X PUT -d 'queue:9092' http://$CONSUL_HOST:8500/v1/kv/clyman/KafkaBrokerAddress
+$CURL_COMMAND -X PUT -d 'queue:9092' http://$CONSUL_HOST:8500/v1/kv/ivan/KafkaBrokerAddress
