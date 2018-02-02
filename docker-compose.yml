@@ -31,6 +31,15 @@ services:
     container_name: document-db
     ports:
       - "27017:27017"
+  queue:
+    image: spotify/kafka
+    container_name: queue
+    ports:
+      - "9092:9092"
+      - "2181:2181"
+    environment:
+      ADVERTISED_PORT: 9092
+      ADVERTISED_HOST: "queue"
   crazyivan:
     image: aostreetart/crazyivan:latest
     container_name: crazyivan
@@ -42,6 +51,7 @@ services:
       - "cache"
       - "registry"
       - "config"
+      - "queue"
   clyman:
     image: aostreetart/clyman:latest
     container_name: clyman
@@ -53,6 +63,7 @@ services:
       - "cache"
       - "registry"
       - "config"
+      - "queue"
   adrestia:
     image: aostreetart/adrestia:latest
     container_name: adrestia

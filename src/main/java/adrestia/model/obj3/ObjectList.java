@@ -168,4 +168,42 @@ public class ObjectList {
   public void setTransactionId(String transactionId) {
     this.transactionId = transactionId;
   }
+
+  /**
+  * We build this JSON by hand with concat() to minimize performance overhead.
+  * Object Overwrites should be FAST FAST FAST!!!
+  * @return JSON String of the transforms of the objects
+  */
+  public String generateTransformOverwrite() {
+    String returnString = "{\"msg_type\": 7, \"objects\": [";
+    for (int i = 0; i < this.documents.length; i++) {
+      returnString = returnString.concat("{\"key\": \"")
+          .concat(this.documents[i].getKey())
+          .concat("\", \"translation\": [")
+          .concat(Double.toString(this.documents[i].getTranslation()[0]))
+          .concat(", ")
+          .concat(Double.toString(this.documents[i].getTranslation()[1]))
+          .concat(", ")
+          .concat(Double.toString(this.documents[i].getTranslation()[2]))
+          .concat("], \"rotation_euler\": [")
+          .concat(Double.toString(this.documents[i].getRotationEuler()[0]))
+          .concat(", ")
+          .concat(Double.toString(this.documents[i].getRotationEuler()[1]))
+          .concat(", ")
+          .concat(Double.toString(this.documents[i].getRotationEuler()[2]))
+          .concat(", ")
+          .concat(Double.toString(this.documents[i].getRotationEuler()[3]))
+          .concat("], \"scale\": [")
+          .concat(Double.toString(this.documents[i].getScale()[0]))
+          .concat(", ")
+          .concat(Double.toString(this.documents[i].getScale()[1]))
+          .concat(", ")
+          .concat(Double.toString(this.documents[i].getScale()[2]))
+          .concat("]}");
+      if (i < this.documents.length - 1) {
+        returnString = returnString.concat(",");
+      }
+    }
+    return returnString.concat("]}");
+  }
 }

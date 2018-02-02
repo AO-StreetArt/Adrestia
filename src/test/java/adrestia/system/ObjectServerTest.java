@@ -84,6 +84,7 @@ public class ObjectServerTest {
       testLogger.println("Create Response: " + crtRespBody.toString());
       testLogger.println("Key: " + crtRespBody.get("key"));
       assert (!(crtRespBody.get("key").toString().isEmpty()));
+      String clymanKey = crtRespBody.get("key").toString();
 
       // Get Test
       testLogger.println("Get Test");
@@ -126,6 +127,21 @@ public class ObjectServerTest {
       Map getRespBody2 = getResponse2.getBody();
       testLogger.println("Get Response: " + getRespBody2.toString());
       assert (getRespBody2.get("type").equals("TestType2"));
+
+      // Overwrite Test
+      testLogger.println("Create Test");
+      double[] ovrTranslation = {1.0, 1.0, 1.0};
+      double[] ovrRotationEuler = {0.0, 0.0, 0.0, 0.0};
+      double[] ovrScale = {1.0, 1.0, 1.0};
+      String[] ovrAssets = {"TestAsset1", "TestAsset2"};
+      ObjectDocument ovrObj = new ObjectDocument(clymanKey, "AeselTestObject11",
+          "TestType", "TestSubtype", "TestOwner", "AeselTestScene11",
+          ovrTranslation, ovrRotationEuler, ovrScale, ovrAssets, null);
+      ResponseEntity<Map> ovrResponse = this.testTemplate.postForEntity(
+          "http://localhost:" + this.port + "/v1/object/" + clymanKey, ovrObj, Map.class);
+      testLogger.println(ovrResponse.getStatusCode());
+      // Read the response
+      assert (ovrResponse.getStatusCode().is2xxSuccessful());
 
       // Delete Test
       testLogger.println("Delete Test");

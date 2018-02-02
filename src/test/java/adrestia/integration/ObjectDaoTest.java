@@ -62,7 +62,7 @@ public class ObjectDaoTest {
       // Create test
       double[] translation = {0.0, 0.0, 0.0};
       double[] rotationEuler = {0.0, 0.0, 0.0, 0.0};
-      double[] scale = {0.0, 0.0, 0.0};
+      double[] scale = {1.0, 1.0, 1.0};
       String[] assets = {"TestAsset1", "TestAsset2"};
       ObjectDocument testDocument = new ObjectDocument("TestKey", "TestName",
           "TestType", "TestSubtype", "TestOwner", "TestScene",
@@ -92,6 +92,25 @@ public class ObjectDaoTest {
       assert (getResp2.getNumRecords() > 0);
       assert (getResp2.getDocuments()[0].getType().equals("TestType2"));
       assert (getResp2.getDocuments()[0].getOwner().equals("TestOwner2"));
+
+      // Overwrite Test
+      double[] ovrTranslation = {1.0, 1.0, 1.0};
+      double[] ovrRotationEuler = {0.0, 0.0, 0.0, 0.0};
+      double[] ovrScale = {1.0, 1.0, 1.0};
+      String[] ovrAssets = {"TestAsset1", "TestAsset2"};
+      ObjectDocument overwriteTestDoc = new ObjectDocument(clymanKey, "TestName",
+          "TestType", "TestSubtype", "TestOwner", "TestScene",
+          ovrTranslation, ovrRotationEuler, ovrScale, ovrAssets, null);
+      ObjectList ovrResp = objData.overwrite(overwriteTestDoc);
+      testLogger.println("Overwrite Test Response: ");
+      testLogger.println(ovrResp.getErrorCode());
+      testLogger.println(ovrResp.getErrorMessage());
+      assert (ovrResp.getErrorCode() == 100);
+      ObjectList ovrCheckResp = objData.get(clymanKey);
+      assert (ovrCheckResp.getErrorCode() == 100);
+      assert (ovrCheckResp.getNumRecords() > 0);
+      assert (ovrCheckResp.getDocuments()[0].getTransform()[0] - 1.0 < 0.001);
+      assert (ovrCheckResp.getDocuments()[0].getTransform()[3] - 1.0 < 0.001);
 
       // Lock Test
       ObjectList lockResp1 = objData.lock(clymanKey, "ud1");
