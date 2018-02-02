@@ -42,6 +42,13 @@ public interface ObjectDao {
   public ObjectList update(ObjectDocument inpDocument);
 
   /**
+  * Overwrite an ObjectDocument transform.
+  * @param inpObject A ObjectDocument Object to save
+  * @return  A ObjectList object, returned from the service implementing the DAO
+  */
+  public ObjectList overwrite(ObjectDocument inpObject);
+
+  /**
   * Retrieve a ObjectDocument.
   * @param docKey The key of the doc to retrieve
   * @return  A ObjectList object, returned from the service implementing the DAO

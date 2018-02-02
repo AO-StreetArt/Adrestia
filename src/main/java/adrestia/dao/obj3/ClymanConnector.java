@@ -57,6 +57,15 @@ public class ClymanConnector implements ObjectDao {
     super();
   }
 
+  private String sendMessage(String clymanMsg) {
+    // Send the message to Clyman
+    logger.debug("Clyman Message: " + clymanMsg);
+    String replyString =
+        zmqConn.send(clymanMsg, requestTimeout, requestRetries, "Clyman");
+    logger.debug("Clyman Response: " + replyString);
+    return replyString;
+  }
+
   // Send a message to Clyman, return the response.
   private ObjectList transaction(ObjectList inpObject) {
     // Set up a default return ObjectDocument List
@@ -69,13 +78,9 @@ public class ClymanConnector implements ObjectDao {
       // Construct our JSON from the ObjectDocument List
       ObjectMapper mapper = new ObjectMapper();
       String clymanMsg = mapper.writeValueAsString(inpObject);
-      logger.debug("Clyman Message: " + clymanMsg);
 
       // Send the message to Clyman
-      String replyString =
-          zmqConn.send(clymanMsg, requestTimeout, requestRetries, "Clyman");
-      logger.debug("Clyman Response: " + replyString);
-
+      String replyString = sendMessage(clymanMsg);
       // Convert the Response back to a ObjectDocument List
       if (replyString != null) {
         returnObjectList = mapper.readValue(replyString, ObjectList.class);
@@ -121,6 +126,34 @@ public class ClymanConnector implements ObjectDao {
   @Override
   public ObjectList update(ObjectDocument inpObject) {
     return crudTransaction(inpObject, 1);
+  }
+
+  /**
+  * Overwrite an ObjectDocument transform.
+  */
+  @Override
+  public ObjectList overwrite(ObjectDocument inpObject) {
+    // Set up a default return ObjectDocument List
+    ObjectDocument[] baseReturnObjs = new ObjectDocument[0];
+    ObjectList returnObjectList = new ObjectList(7,
+        1, baseReturnObjs, 120, "Error Processing Request", "");
+
+    // Send the information to Clyman
+    try {
+      ObjectDocument[] clymanMsgObjs = {inpObject};
+      ObjectList clymanMessageList = new ObjectList(7, 1, clymanMsgObjs, 100, "", "");
+
+      // Send the message to Clyman
+      String replyString = sendMessage(clymanMessageList.generateTransformOverwrite());
+      // Convert the Response back to a ObjectDocument List
+      if (replyString != null) {
+        ObjectMapper mapper = new ObjectMapper();
+        returnObjectList = mapper.readValue(replyString, ObjectList.class);
+      }
+    } catch (Exception e) {
+      logger.error("Error Retrieving Value from Clyman: ", e);
+    }
+    return returnObjectList;
   }
 
   /**

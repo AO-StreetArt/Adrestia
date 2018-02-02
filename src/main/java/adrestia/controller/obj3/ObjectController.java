@@ -49,7 +49,7 @@ import org.springframework.web.bind.annotation.RestController;
 * Responsible for handling and responding to all Object API Requests.
 */
 @RestController
-@RequestMapping(path = "/v1/scene/{scn_name}/object")
+@RequestMapping(path = "/v1/")
 public class ObjectController {
 
   // DAO Object allowing access to object data
@@ -94,7 +94,7 @@ public class ObjectController {
   * Object Retrieval.
   * Object name & object name input as path variables, no Request Parameters accepted.
   */
-  @RequestMapping(path = "/{obj_name}", method = RequestMethod.GET)
+  @RequestMapping(path = "scene/{scn_name}/object/{obj_name}", method = RequestMethod.GET)
   public ResponseEntity<ObjectDocument> getObject(@PathVariable("scn_name") String sceneName,
       @PathVariable("obj_name") String objName) {
     logger.info("Responding to Object Get Request");
@@ -132,7 +132,7 @@ public class ObjectController {
   * Object Name & Object name input as path variable, no Request Parameters accepted.
   * POST Data read in with Object data.
   */
-  @RequestMapping(path = "/{obj_name}",
+  @RequestMapping(path = "scene/{scn_name}/object/{obj_name}",
       headers = "Content-Type=application/json",
       method = RequestMethod.POST)
   public ResponseEntity<ObjectDocument> updateObject(
@@ -141,7 +141,6 @@ public class ObjectController {
       @RequestBody ObjectDocument inpObject) {
     logger.info("Responding to Object Save Request");
     ObjectDocument returnObj = new ObjectDocument();
-    HttpStatus returnCode = HttpStatus.OK;
 
     // See if we can find the Object requested
     ObjectList clymanResponse = objectQuery(sceneName, objName);
@@ -165,7 +164,7 @@ public class ObjectController {
     ObjectList updateResponse = saveObject(inpObject, objectExists);
 
     // If we have a successful response, then we pull the first value
-    returnCode = utils.translateDvsError(updateResponse.getErrorCode());
+    HttpStatus returnCode = utils.translateDvsError(updateResponse.getErrorCode());
     if (isSuccessResponse(updateResponse)) {
       returnObj = updateResponse.getDocuments()[0];
     } else {
@@ -183,10 +182,45 @@ public class ObjectController {
   }
 
   /**
+  * Object Overwrite.
+  * Object key input as path variable, no Request Parameters accepted.
+  * POST Data read in with Object data.
+  */
+  @RequestMapping(path = "object/{obj_key}",
+      headers = "Content-Type=application/json",
+      method = RequestMethod.POST)
+  public ResponseEntity<ObjectDocument> overwriteObject(
+      @PathVariable("obj_key") String objectKey,
+      @RequestBody ObjectDocument inpObject) {
+    logger.info("Responding to Object Overwrite Request");
+    ObjectDocument returnObj = new ObjectDocument();
+    HttpStatus returnCode = HttpStatus.OK;
+
+    // Send the update
+    ObjectList clymanResponse = objData.overwrite(inpObject);
+    // If we have a successful response, then we pull the first value
+    returnCode = utils.translateDvsError(clymanResponse.getErrorCode());
+    if (isSuccessResponse(clymanResponse)) {
+      returnObj = clymanResponse.getDocuments()[0];
+    } else {
+      logger.debug("Failure Registered.  Clyman Response Error Code and Length:");
+      logger.debug(clymanResponse.getNumRecords());
+      logger.debug(clymanResponse.getErrorCode());
+    }
+
+    // Set up a response header to return a valid HTTP Response
+    HttpHeaders responseHeaders = new HttpHeaders();
+    responseHeaders.set("Content-Type", "application/json");
+
+    // Create and return the new HTTP Response
+    return new ResponseEntity<ObjectDocument>(returnObj, responseHeaders, returnCode);
+  }
+
+  /**
   * Object Delete.
   * Object Name & Object name input as path variable, no Request Parameters accepted.
   */
-  @RequestMapping(path = "/{obj_name}",
+  @RequestMapping(path = "scene/{scn_name}/object/{obj_name}",
       method = RequestMethod.DELETE)
   public ResponseEntity<ObjectDocument> deleteObject(
       @PathVariable("scn_name") String sceneName,
@@ -238,9 +272,9 @@ public class ObjectController {
 
   /**
   * Object Query.
-  * Object Name & Scene name input as path variable, Request Parameters accepted.
+  * Scene name input as path variable, Request Parameters accepted.
   */
-  @RequestMapping(method = RequestMethod.GET)
+  @RequestMapping(method = RequestMethod.GET, path = "scene/{scn_name}/object")
   public ResponseEntity<ObjectDocument> queryObject(
       @PathVariable("scn_name") String sceneName,
       @RequestParam(value = "type", defaultValue = "") String type,
@@ -248,7 +282,6 @@ public class ObjectController {
       @RequestParam(value = "owner", defaultValue = "") String owner) {
     logger.info("Responding to Object Query");
     ObjectDocument returnObj = new ObjectDocument();
-    HttpStatus returnCode = HttpStatus.OK;
 
     // Execute a query against Clyman
     ObjectDocument queryObj = new ObjectDocument();
@@ -265,7 +298,7 @@ public class ObjectController {
     ObjectList clymanResponse = objData.query(queryObj);
 
     // Update our HTTP Response based on the Clyman response
-    returnCode = utils.translateDvsError(clymanResponse.getErrorCode());
+    HttpStatus returnCode = utils.translateDvsError(clymanResponse.getErrorCode());
     if (isSuccessResponse(clymanResponse)) {
       returnObj = clymanResponse.getDocuments()[0];
     } else {
@@ -329,7 +362,7 @@ public class ObjectController {
   * Object Lock.
   * Object Name & Scene name input as path variable, Request Parameters accepted.
   */
-  @RequestMapping(path = "/{obj_name}/lock",
+  @RequestMapping(path = "scene/{scn_name}/object/{obj_name}/lock",
       method = RequestMethod.GET)
   public ResponseEntity<ObjectDocument> lockObject(
       @PathVariable("scn_name") String sceneName,
@@ -342,7 +375,7 @@ public class ObjectController {
   * Object Unlock.
   * Object Name & Scene name input as path variable, Request Parameters accepted.
   */
-  @RequestMapping(path = "/{obj_name}/lock",
+  @RequestMapping(path = "scene/{scn_name}/object/{obj_name}/lock",
       method = RequestMethod.DELETE)
   public ResponseEntity<ObjectDocument> unlockObject(
       @PathVariable("scn_name") String sceneName,
