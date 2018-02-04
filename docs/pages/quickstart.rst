@@ -45,5 +45,3 @@ Adrestia can also be downloaded as a runnable JAR for the latest release from `h
 When using a JAR, unzip the downloaded package, move to the main directory from a terminal, and run:
 
 ``java -jar build/libs/adrestia-0.1.0.jar``
-
-Be sure to update the version number to your downloaded version in the command.
