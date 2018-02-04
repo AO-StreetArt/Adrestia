@@ -44,7 +44,7 @@
 							"key": "file",
 							"description": "",
 							"type": "file",
-							"src": "test/resources/testupload.txt"
+							"src": "testupload.txt"
 						}
 					]
 				},
