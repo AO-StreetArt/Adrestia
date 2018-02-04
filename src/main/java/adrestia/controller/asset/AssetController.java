@@ -97,7 +97,9 @@ public class AssetController {
   * Create an Asset.
   * Uses Multi-part form data to accept the file
   */
-  @RequestMapping(path = "/v1/asset", headers=("content-type=multipart/*"), method = RequestMethod.POST)
+  @RequestMapping(path = "/v1/asset",
+      headers = ("content-type=multipart/*"), 
+      method = RequestMethod.POST)
   public ResponseEntity<String> handleFileUpload(@RequestParam("file") MultipartFile file,
       @RequestParam(value = "content-type", defaultValue = "text/plain") String contentType,
       @RequestParam(value = "file-type", defaultValue = "txt") String fileType) {
