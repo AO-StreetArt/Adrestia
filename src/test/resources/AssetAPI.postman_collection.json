@@ -1,0 +1,166 @@
+{
+	"info": {
+		"name": "AssetAPI",
+		"_postman_id": "7abdc7fc-232e-e170-b0fd-104858ae619c",
+		"description": "Run Basic Tests on the Aesel Asset API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Upload Test File",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "30c16872-3e8d-407d-b85d-fdf1ad924cc4",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Response time is less than 5000ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(5000);",
+							"});",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.environment.unset(\"ASSET_ID\");",
+							"",
+							"pm.environment.set(\"ASSET_ID\", pm.response.text());",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"description": "",
+							"type": "file",
+							"src": "test/resources/testupload.txt"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{AESEL_URL}}/v1/asset",
+					"host": [
+						"{{AESEL_URL}}"
+					],
+					"path": [
+						"v1",
+						"asset"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get Test File",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ddef8b6f-f259-45cf-a66e-4a1af69ce1f7",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Response time is less than 5000ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(5000);",
+							"});",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{AESEL_URL}}/v1/asset/{{ASSET_ID}}",
+					"host": [
+						"{{AESEL_URL}}"
+					],
+					"path": [
+						"v1",
+						"asset",
+						"{{ASSET_ID}}"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Test File",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "17228248-7ee8-444e-8f49-7d94cdcba892",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Response time is less than 5000ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(5000);",
+							"});",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{AESEL_URL}}/v1/asset/{{ASSET_ID}}",
+					"host": [
+						"{{AESEL_URL}}"
+					],
+					"path": [
+						"v1",
+						"asset",
+						"{{ASSET_ID}}"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "d75c5bce-7cc0-4263-9295-0d3e3b7f440a",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "cc80f4d0-e454-484d-bec5-47ed28538c35",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

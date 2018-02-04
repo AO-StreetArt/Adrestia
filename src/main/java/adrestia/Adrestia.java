@@ -17,10 +17,18 @@ limitations under the License.
 
 package adrestia;
 
+import com.mongodb.Mongo;
+import com.mongodb.MongoClient;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.mongodb.config.AbstractMongoConfiguration;
+import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 
 /**
 * Central Application.
@@ -28,8 +36,32 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 * on startup.
 */
 @EnableDiscoveryClient
+@Configuration
 @SpringBootApplication
-public class Adrestia {
+public class Adrestia extends AbstractMongoConfiguration {
+
+  // Hostname of Mongo Connection
+  @Value("${server.mongo.host}")
+  private String mongoHost;
+
+  // Hostname of Mongo Port
+  @Value("${server.mongo.port}")
+  private int mongoPort;
+
+  @Bean
+  public GridFsTemplate gridFsTemplate() throws Exception {
+    return new GridFsTemplate(mongoDbFactory(), mappingMongoConverter());
+  }
+
+  @Override
+  public Mongo mongo() throws Exception {
+    return new MongoClient(mongoHost, mongoPort);
+  }
+
+  @Override
+  protected String getDatabaseName() {
+    return "_dvs";
+  }
 
   public static void main(String[] args) {
     SpringApplication.run(Adrestia.class, args);
