@@ -32,9 +32,9 @@ install:
 script:
 - gradle check
 - gradle bootRun &
-- sleep 10
+- sleep 60
 - curl http://localhost:5885/health
-- cd $TRAVIS_BUILD_DIR/test/resources && newman run AssetAPI.postman_collection.json -e AeselTest.postman_environment.json
+- cd $TRAVIS_BUILD_DIR/src/test/resources && newman run AssetAPI.postman_collection.json -e AeselTest.postman_environment.json
 after_success:
 # Build and push the Docker image for Adrestia
 - cd $TRAVIS_BUILD_DIR/scripts/linux && ./build_docker.sh $DOCKER_MAIL $DOCKER_UN $DOCKER_PW $TRAVIS_BRANCH
