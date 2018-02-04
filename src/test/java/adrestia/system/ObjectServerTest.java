@@ -84,7 +84,6 @@ public class ObjectServerTest {
       testLogger.println("Create Response: " + crtRespBody.toString());
       testLogger.println("Key: " + crtRespBody.get("key"));
       assert (!(crtRespBody.get("key").toString().isEmpty()));
-      String clymanKey = crtRespBody.get("key").toString();
 
       // Get Test
       testLogger.println("Get Test");
@@ -134,6 +133,7 @@ public class ObjectServerTest {
       double[] ovrRotationEuler = {0.0, 0.0, 0.0, 0.0};
       double[] ovrScale = {1.0, 1.0, 1.0};
       String[] ovrAssets = {"TestAsset1", "TestAsset2"};
+      String clymanKey = crtRespBody.get("key").toString();
       ObjectDocument ovrObj = new ObjectDocument(clymanKey, "AeselTestObject11",
           "TestType", "TestSubtype", "TestOwner", "AeselTestScene11",
           ovrTranslation, ovrRotationEuler, ovrScale, ovrAssets, null);
