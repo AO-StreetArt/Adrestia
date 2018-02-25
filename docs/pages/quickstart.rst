@@ -17,9 +17,6 @@ development environments.
 To stand up all of Adrestia's dependencies, as well as the Adrestia Docker image,
 run the following from the main folder of the repository:
 
-``sudo ./scripts/docker/elk/copyKibanaConfig.sh``
-
-
 ``docker-compose up``
 
 The Kibana UI will be available at http://127.0.0.1:5601, and logs will be available there.  Note that logs sent prior to the logstash endpoint being available will not be seen.
