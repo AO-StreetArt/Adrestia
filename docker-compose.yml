@@ -1,4 +1,4 @@
-version: '3'
+version: '2.1'
 
 services:
   elasticsearch:
@@ -11,9 +11,15 @@ services:
     container_name: logstash
     ports:
       - "12201:12201/udp"
+      - "9600:9600"
     command: -e 'input { gelf {} } output { elasticsearch { hosts => [ "elasticsearch:9200" ] } }'
     depends_on:
       - "elasticsearch"
+    healthcheck:
+      test: ["CMD", "curl", "-XGET", "http://localhost:9600"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
   kibana:
     image: docker.elastic.co/kibana/kibana:6.2.2
     container_name: kibana
@@ -33,18 +39,31 @@ services:
       options:
         gelf-address: udp://localhost:12201
     command: agent --dev -ui -client=0.0.0.0
+    healthcheck:
+      test: ["CMD", "curl", "http://localhost:8500/v1/status/leader"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
     depends_on:
-      - "logstash"
+      logstash:
+        condition: service_healthy
   config:
     image: aostreetart/populateaeselconfig:latest
     container_name: config
     command: ./populate_consul.sh registry
     depends_on:
-      - "registry"
-      - "logstash"
+      registry:
+        condition: service_healthy
   cache:
     image: redis
     container_name: cache
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://localhost:12201
+    depends_on:
+      logstash:
+        condition: service_healthy
   graphdb:
     image: neo4j
     container_name: graph-db
@@ -59,6 +78,9 @@ services:
       driver: gelf
       options:
         gelf-address: udp://localhost:12201
+    depends_on:
+      logstash:
+        condition: service_healthy
   documentdb:
     image: mongo
     container_name: document-db
@@ -68,6 +90,9 @@ services:
       driver: gelf
       options:
         gelf-address: udp://localhost:12201
+    depends_on:
+      logstash:
+        condition: service_healthy
   queue:
     image: spotify/kafka
     container_name: queue
@@ -81,6 +106,9 @@ services:
       driver: gelf
       options:
         gelf-address: udp://localhost:12201
+    depends_on:
+      logstash:
+        condition: service_healthy
   crazyivan:
     image: aostreetart/crazyivan:latest
     container_name: crazyivan
@@ -96,11 +124,8 @@ services:
         gelf-address: udp://localhost:12201
     command: -consul-addr=registry:8500 -ip=localhost -advertised-host=crazyivan -port=5555 -log-conf=CrazyIvan/log4cpp.properties -wait=9
     depends_on:
-      - "graphdb"
-      - "cache"
-      - "registry"
-      - "config"
-      - "queue"
+      registry:
+        condition: service_healthy
   clyman:
     image: aostreetart/clyman:latest
     container_name: clyman
@@ -112,11 +137,8 @@ services:
         gelf-address: udp://localhost:12201
     command: -consul-addr=registry:8500 -ip=localhost -advertised-host=clyman -port=5556 -log-conf=CLyman/log4cpp.properties -wait=9
     depends_on:
-      - "documentdb"
-      - "cache"
-      - "registry"
-      - "config"
-      - "queue"
+      registry:
+        condition: service_healthy
   adrestia:
     image: aostreetart/adrestia:latest
     container_name: adrestia
@@ -127,6 +149,7 @@ services:
       options:
         gelf-address: udp://localhost:12201
     depends_on:
-      - "registry"
+      registry:
+        condition: service_healthy
     environment:
-      SPRING_APPLICATION_JSON: '{"server":{"port":"5885","mongo":{"host":"document-db","port":"27017"},"zmq":{"redlist":{"duration":"10"},"greylist":{"duration":"10"},"blacklist":{"duration":"10"},"retries":"3","timeout":"10000"}},"management":{"port":"5885","address":"127.0.0.1"},"spring":{"application":{"name":"Adrestia"},"profiles":{"active":"dev"},"cloud":{"consul":{"host":"registry","discovery":{"preferIpAddress":false}}},"http":{"multipart":{"max-file-size":"128MB","max-request-size":"128MB"}}}}'
+      SPRING_APPLICATION_JSON: '{"logging":{"level":{"org":{"springframework":"INFO","mongodb":"INFO","hibernate":"INFO","apache":{"http":"INFO"}}}},"server":{"port":"5885","mongo":{"host":"document-db","port":"27017"},"zmq":{"redlist":{"duration":"10"},"greylist":{"duration":"10"},"blacklist":{"duration":"10"},"retries":"3","timeout":"10000"}},"management":{"port":"5885","address":"127.0.0.1"},"spring":{"application":{"name":"Adrestia"},"profiles":{"active":"dev"},"cloud":{"consul":{"host":"registry","discovery":{"preferIpAddress":false}}},"http":{"multipart":{"max-file-size":"128MB","max-request-size":"128MB"}}}}'
