@@ -68,8 +68,9 @@ public class ObjectController {
   private ObjectList saveObject(ObjectDocument inpDoc, boolean docExists) {
     if (docExists) {
       return objData.update(inpDoc);
+    } else {
+      return objData.create(inpDoc);
     }
-    return objData.create(inpDoc);
   }
 
   // Query Clyman
