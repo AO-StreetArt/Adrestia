@@ -276,7 +276,7 @@ public class ObjectController {
   * Scene name input as path variable, Request Parameters accepted.
   */
   @RequestMapping(method = RequestMethod.GET, path = "scene/{scn_name}/object")
-  public ResponseEntity<ObjectDocument> queryObject(
+  public ResponseEntity<ObjectList> queryObject(
       @PathVariable("scn_name") String sceneName,
       @RequestParam(value = "type", defaultValue = "") String type,
       @RequestParam(value = "subtype", defaultValue = "") String subtype,
@@ -300,9 +300,7 @@ public class ObjectController {
 
     // Update our HTTP Response based on the Clyman response
     HttpStatus returnCode = utils.translateDvsError(clymanResponse.getErrorCode());
-    if (isSuccessResponse(clymanResponse)) {
-      returnObj = clymanResponse.getDocuments()[0];
-    } else {
+    if (!(isSuccessResponse(clymanResponse))) {
       logger.debug("Failure Registered.  Clyman Response Error Code and Length:");
       logger.debug(clymanResponse.getNumRecords());
       logger.debug(clymanResponse.getErrorCode());
@@ -313,7 +311,7 @@ public class ObjectController {
     responseHeaders.set("Content-Type", "application/json");
 
     // Create and return the new HTTP Response
-    return new ResponseEntity<ObjectDocument>(returnObj, responseHeaders, returnCode);
+    return new ResponseEntity<ObjectList>(clymanResponse, responseHeaders, returnCode);
   }
 
   private ResponseEntity<ObjectDocument> lockTransaction(String sceneName,
