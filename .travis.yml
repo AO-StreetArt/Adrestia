@@ -43,7 +43,7 @@ after_success:
 after_failure:
 - docker logs --tail 150 crazyivan
 - docker logs --tail 150 clyman
-- cat logs/testUtils.txt
+- cd $TRAVIS_BUILD_DIR && cat logs/testUtils.txt
 - cat logs/testModel_obj.txt
 - cat logs/testModel_transform.txt
 - cat logs/testModel_device.txt

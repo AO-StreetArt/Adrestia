@@ -90,6 +90,9 @@ public class ObjectDaoTest {
       ObjectList getResp2 = objData.get(clymanKey);
       assert (getResp2.getErrorCode() == 100);
       assert (getResp2.getNumRecords() > 0);
+      testLogger.println("Update Test Result: ");
+      testLogger.println(getResp2.getDocuments()[0].getType());
+      testLogger.println(getResp2.getDocuments()[0].getOwner());
       assert (getResp2.getDocuments()[0].getType().equals("TestType2"));
       assert (getResp2.getDocuments()[0].getOwner().equals("TestOwner2"));
 
@@ -109,6 +112,9 @@ public class ObjectDaoTest {
       ObjectList ovrCheckResp = objData.get(clymanKey);
       assert (ovrCheckResp.getErrorCode() == 100);
       assert (ovrCheckResp.getNumRecords() > 0);
+      testLogger.println("Overwrite Test Result: ");
+      testLogger.println(ovrCheckResp.getDocuments()[0].getTransform()[0]);
+      testLogger.println(ovrCheckResp.getDocuments()[0].getTransform()[3]);
       assert (ovrCheckResp.getDocuments()[0].getTransform()[0] - 1.0 < 0.001);
       assert (ovrCheckResp.getDocuments()[0].getTransform()[3] - 1.0 < 0.001);
 
