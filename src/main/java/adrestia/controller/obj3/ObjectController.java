@@ -198,6 +198,7 @@ public class ObjectController {
     HttpStatus returnCode = HttpStatus.OK;
 
     // Send the update
+    inpObject.setKey(objectKey);
     ObjectList clymanResponse = objData.overwrite(inpObject);
     // If we have a successful response, then we pull the first value
     returnCode = utils.translateDvsError(clymanResponse.getErrorCode());
