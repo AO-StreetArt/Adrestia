@@ -135,6 +135,8 @@ public class SceneController {
         inpScene.setKey(ivanRespKey);
         logger.debug("Ivan Response Key: " + ivanRespKey);
       }
+    } else {
+      logger.debug("Failure response from Crazy Ivan");
     }
 
     // Update the scene
