@@ -61,7 +61,7 @@ public class ObjectDaoTest {
     try {
       // Create test
       double[] translation = {0.0, 0.0, 0.0};
-      double[] rotationEuler = {0.0, 0.0, 0.0, 0.0};
+      double[] rotationEuler = {0.0, 1.0, 0.0, 0.0};
       double[] scale = {1.0, 1.0, 1.0};
       String[] assets = {"TestAsset1", "TestAsset2"};
       ObjectDocument testDocument = new ObjectDocument("TestKey", "TestName",
@@ -69,6 +69,7 @@ public class ObjectDaoTest {
           translation, rotationEuler, scale, assets, null);
       ObjectList crtResp = objData.create(testDocument);
       testLogger.println("Create Test Response: ");
+      testLogger.println(crtResp);
       testLogger.println(crtResp.getErrorCode());
       testLogger.println(crtResp.getErrorMessage());
       assert (crtResp.getErrorCode() == 100);
@@ -78,6 +79,7 @@ public class ObjectDaoTest {
       ObjectList getResp = objData.get(clymanKey);
       assert (getResp.getErrorCode() == 100);
       assert (getResp.getNumRecords() > 0);
+      testLogger.println(getResp);
       assert (getResp.getDocuments()[0].getType().equals("TestType"));
       assert (getResp.getDocuments()[0].getOwner().equals("TestOwner"));
 
@@ -98,7 +100,7 @@ public class ObjectDaoTest {
 
       // Overwrite Test
       double[] ovrTranslation = {1.0, 1.0, 1.0};
-      double[] ovrRotationEuler = {0.0, 0.0, 0.0, 0.0};
+      double[] ovrRotationEuler = {0.0, 1.0, 0.0, 0.0};
       double[] ovrScale = {1.0, 1.0, 1.0};
       String[] ovrAssets = {"TestAsset1", "TestAsset2"};
       ObjectDocument overwriteTestDoc = new ObjectDocument(clymanKey, "TestName",

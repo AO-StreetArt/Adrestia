@@ -185,7 +185,7 @@ public class ObjectList {
           .concat(Double.toString(this.documents[i].getTranslation()[1]))
           .concat(", ")
           .concat(Double.toString(this.documents[i].getTranslation()[2]))
-          .concat("], \"rotation_euler\": [")
+          .concat("], \"euler_rotation\": [")
           .concat(Double.toString(this.documents[i].getRotationEuler()[0]))
           .concat(", ")
           .concat(Double.toString(this.documents[i].getRotationEuler()[1]))

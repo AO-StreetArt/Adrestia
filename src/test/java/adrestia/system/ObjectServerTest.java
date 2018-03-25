@@ -66,7 +66,7 @@ public class ObjectServerTest {
       // Build a new Object
       testLogger.println("Create Test");
       double[] translation = {0.0, 0.0, 0.0};
-      double[] rotationEuler = {0.0, 0.0, 0.0, 0.0};
+      double[] rotationEuler = {0.0, 1.0, 0.0, 0.0};
       double[] scale = {1.0, 1.0, 1.0};
       String[] assets = {"TestAsset1", "TestAsset2"};
       ObjectDocument obj = new ObjectDocument("TestKey", "AeselTestObject11",
@@ -130,7 +130,7 @@ public class ObjectServerTest {
       // Overwrite Test
       testLogger.println("Create Test");
       double[] ovrTranslation = {1.0, 1.0, 1.0};
-      double[] ovrRotationEuler = {0.0, 0.0, 0.0, 0.0};
+      double[] ovrRotationEuler = {0.0, 1.0, 0.0, 0.0};
       double[] ovrScale = {1.0, 1.0, 1.0};
       String[] ovrAssets = {"TestAsset1", "TestAsset2"};
       String clymanKey = crtRespBody.get("key").toString();
@@ -172,7 +172,7 @@ public class ObjectServerTest {
     final String testObjectUrl = "/v1/scene/MyFirstQueryScene/object/obj1";
     final String testObjectUrl2 = "/v1/scene/MyFirstQueryScene/object/obj2";
     double[] translation = {0.0, 0.0, 0.0};
-    double[] rotationEuler = {0.0, 0.0, 0.0, 0.0};
+    double[] rotationEuler = {0.0, 1.0, 0.0, 0.0};
     double[] scale = {1.0, 1.0, 1.0};
     String[] assets = {"TestAsset1", "TestAsset2"};
     ObjectDocument obj = new ObjectDocument("TestKey", "obj1",
@@ -238,7 +238,7 @@ public class ObjectServerTest {
     try {
       testLogger.println("Populating Data for Lock Tests");
       double[] translation = {0.0, 0.0, 0.0};
-      double[] rotationEuler = {0.0, 0.0, 0.0, 0.0};
+      double[] rotationEuler = {0.0, 1.0, 0.0, 0.0};
       double[] scale = {1.0, 1.0, 1.0};
       String[] assets = {"TestAsset1", "TestAsset2"};
       ObjectDocument obj = new ObjectDocument("TestKey", "obj1",

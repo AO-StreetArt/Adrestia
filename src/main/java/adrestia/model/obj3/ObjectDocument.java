@@ -36,7 +36,7 @@ public class ObjectDocument {
   private String owner;
   private String scene;
   private double[] translation = new double[0];
-  @JsonProperty("rotation_euler")
+  @JsonProperty("euler_rotation")
   private double[] rotationEuler = new double[0];
   private double[] scale = new double[0];
   private String[] assets = new String[0];
@@ -146,7 +146,7 @@ public class ObjectDocument {
   * Returns value of rotationEuler.
   * @return The current euler rotation of the object
   */
-  @JsonGetter("rotation_euler")
+  @JsonGetter("euler_rotation")
   public double[] getRotationEuler() {
     return this.rotationEuler;
   }
@@ -244,7 +244,7 @@ public class ObjectDocument {
   * Sets new value of rotationEuler.
   * @param rotationEuler The current rotation of the object
   */
-  @JsonSetter("rotation_euler")
+  @JsonSetter("euler_rotation")
   public void setRotationEuler(double[] rotationEuler) {
     this.rotationEuler = rotationEuler;
   }

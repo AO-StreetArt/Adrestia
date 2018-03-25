@@ -36,6 +36,10 @@ Configuration:
           level: debug
 
       Logger:
+        - name: adrestia.UdpController
+          level: debug
+
+      Logger:
         - name: adrestia.ZMQ
           level: debug
 
