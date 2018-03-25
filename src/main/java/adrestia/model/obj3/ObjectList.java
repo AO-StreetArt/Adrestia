@@ -29,6 +29,8 @@ public class ObjectList {
 
   @JsonProperty("msg_type")
   private int msgType;
+  @JsonProperty("operator")
+  private int opType;
   @JsonProperty("num_records")
   private long numRecords;
   @JsonProperty("objects")
@@ -59,6 +61,7 @@ public class ObjectList {
     this.errorCode = errorCode;
     this.errorMessage = errorMessage;
     this.transactionId = transactionId;
+    this.opType = 10;
   }
 
   /**
@@ -67,6 +70,15 @@ public class ObjectList {
   */
   @JsonGetter("msg_type")
   public int getMsgType() {
+    return this.msgType;
+  }
+
+  /**
+  * Returns value of opType.
+  * @return The integer operator type of the Object List
+  */
+  @JsonGetter("operator")
+  public int getOpType() {
     return this.msgType;
   }
 
@@ -122,6 +134,15 @@ public class ObjectList {
   @JsonSetter("msg_type")
   public void setMsgType(int msgType) {
     this.msgType = msgType;
+  }
+
+  /**
+  * Sets new value of opType.
+  * @param opType The integer operator type
+  */
+  @JsonSetter("opeator")
+  public void setOpType(int opType) {
+    this.opType = opType;
   }
 
   /**

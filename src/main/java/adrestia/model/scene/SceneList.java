@@ -29,6 +29,8 @@ public class SceneList {
 
   @JsonProperty("msg_type")
   private int msgType;
+  @JsonProperty("operation")
+  private int opType;
   @JsonProperty("num_records")
   private long numRecords;
   private Scene[] scenes;
@@ -50,6 +52,7 @@ public class SceneList {
     this.errorCode = 100;
     this.errorMessage = "";
     this.transactionId = "";
+    this.opType = 10;
   }
 
   /**
@@ -58,6 +61,7 @@ public class SceneList {
   public SceneList(int newMsgType, Scene[] newSceneList) {
     super();
     this.msgType = newMsgType;
+    this.opType = 10;
     this.numRecords = 1;
     this.scenes = newSceneList;
     this.errorCode = 100;
@@ -94,12 +98,30 @@ public class SceneList {
   }
 
   /**
+  * Returns value of opType.
+  * @return Integer Value representing the Type of operation.
+  */
+  @JsonGetter("operation")
+  public int getOpType() {
+    return this.opType;
+  }
+
+  /**
   * Set value of msgType.
   * @param newMsgType Integer Value representing the Type of Message.
   */
   @JsonSetter("msg_type")
   public void setMsgType(int newMsgType) {
     this.msgType = newMsgType;
+  }
+
+  /**
+  * Set value of msgType.
+  * @param newMsgType Integer Value representing the Type of Message.
+  */
+  @JsonSetter("operation")
+  public void setOpType(int newOpType) {
+    this.opType = newOpType;
   }
 
   /**

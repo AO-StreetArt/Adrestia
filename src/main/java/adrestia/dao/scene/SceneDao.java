@@ -40,6 +40,14 @@ public interface SceneDao {
   public SceneList update(Scene inpScene);
 
   /**
+  * Update a Scene.
+  * @param inpScene A Scene Object to save
+  * @param isAppendOperation True if we want to send an append operation to Crazy Ivan, false to send a remove operation
+  * @return  A SceneList object, returned from the service implementing the DAO
+  */
+  public SceneList update(Scene inpScene, boolean isAppendOperation);
+
+  /**
   * Retrieve a Scene.
   * @param sceneName The name of the scene to retrieve
   * @return  A SceneList object, returned from the service implementing the DAO
