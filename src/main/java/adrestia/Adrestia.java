@@ -21,9 +21,9 @@ import com.mongodb.Mongo;
 import com.mongodb.MongoClient;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.solr.SolrAutoConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.solr.SolrAutoConfiguration;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.Bean;
@@ -38,7 +38,7 @@ import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 */
 @EnableDiscoveryClient
 @Configuration
-@SpringBootApplication(exclude={SolrAutoConfiguration.class})
+@SpringBootApplication(exclude = {SolrAutoConfiguration.class})
 public class Adrestia extends AbstractMongoConfiguration {
 
   // Hostname of Mongo Connection

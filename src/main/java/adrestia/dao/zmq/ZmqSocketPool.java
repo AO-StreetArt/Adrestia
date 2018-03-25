@@ -150,12 +150,13 @@ public class ZmqSocketPool {
       }
 
       // Check if we have any sockets currently in use
-      for (int i = 0; i < usedSockets.size(); i++) {
-        if (usedSockets.get(i).getHostname().equals(connection)) {
-          makeNewSocket = false;
-          logger.debug("Identified Socket in use: " + usedSockets.get(i).getHostname());
-        }
-      }
+      // Pretty sure we still need a new socket here (multiple threads)
+      // for (int i = 0; i < usedSockets.size(); i++) {
+      //   if (usedSockets.get(i).getHostname().equals(connection)) {
+      //     makeNewSocket = false;
+      //     logger.debug("Identified Socket in use: " + usedSockets.get(i).getHostname());
+      //   }
+      // }
 
       // Build a new socket
       if (makeNewSocket) {

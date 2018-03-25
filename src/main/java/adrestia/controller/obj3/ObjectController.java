@@ -60,6 +60,10 @@ public class ObjectController {
   @Autowired
   UtilityProviderInterface utils;
 
+  // UdpController, which exposes the UDP API
+  @Autowired
+  UdpController udpApi;
+
   // Object Controller Logger
   private static final Logger logger =
       LogManager.getLogger("adrestia.ObjectController");
