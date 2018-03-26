@@ -236,7 +236,7 @@
 							"",
 							"pm.test(\"Scene Asset Updated\", function () {",
 							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.assets[0]).to.eql(pm.environment.get(\"ASSET_ID\"));",
+							"    pm.expect(jsonData.asset_ids[0]).to.eql(pm.environment.get(\"ASSET_ID\"));",
 							"});"
 						]
 					}
@@ -637,7 +637,7 @@
 							"",
 							"pm.test(\"Scene Asset Updated\", function () {",
 							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.assets[0]).to.eql(pm.environment.get(\"ASSET_ID\"));",
+							"    pm.expect(jsonData.asset_ids[0]).to.eql(pm.environment.get(\"ASSET_ID\"));",
 							"});"
 						]
 					}
