@@ -73,24 +73,19 @@ public class AssetHistoryController {
   */
   @GetMapping("/v1/asset-history/{assetId}")
   @ResponseBody
-  public ResponseEntity<AssetHistory> getHistory(@PathVariable String assetId) {
-    HttpStatus returnCode = HttpStatus.OK;
+  public ResponseEntity<List<AssetHistory>> getHistory(@PathVariable String assetId) {
     logger.info("Responding to Asset History Get Request");
+    HttpStatus returnCode = HttpStatus.OK;
     HttpHeaders responseHeaders = new HttpHeaders();
     responseHeaders.set("Content-Type", "application/json");
-
     List<AssetHistory> existingHistoryList = assetHistories.findByAsset(assetId);
-    AssetHistory returnAsset = new AssetHistory();
-    // If we have an existing history, return it.
-    if (existingHistoryList.size() > 0) {
-      returnAsset = existingHistoryList.get(0);
-    } else {
+    if (existingHistoryList.size() == 0) {
       returnCode = HttpStatus.REQUESTED_RANGE_NOT_SATISFIABLE;
       logger.debug("No Asset Histories found");
     }
 
     // Create and return the new HTTP Response
-    return new ResponseEntity<AssetHistory>(returnAsset, responseHeaders, returnCode);
+    return new ResponseEntity<List<AssetHistory>>(existingHistoryList, responseHeaders, returnCode);
   }
 
 }
