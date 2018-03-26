@@ -18,6 +18,7 @@ limitations under the License.
 package adrestia;
 
 import java.io.PrintWriter;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.TestPropertySource;
@@ -50,16 +51,16 @@ public class ObjTest {
           "TestType", "TestSubtype", "TestOwner", "TestScene",
           translation, rotationEuler, scale, assets, transform);
       // Test the get methods
-      assert (testDocument.getKey().equals("TestKey"));
-      assert (testDocument.getName().equals("TestName"));
-      assert (testDocument.getType().equals("TestType"));
-      assert (testDocument.getSubtype().equals("TestSubtype"));
-      assert (testDocument.getOwner().equals("TestOwner"));
-      assert (testDocument.getTranslation()[0] < tolerance);
-      assert (testDocument.getRotationEuler()[0] < tolerance);
-      assert (testDocument.getScale()[0] - 0.0 < tolerance);
-      assert (testDocument.getTransform()[0] < tolerance);
-      assert (testDocument.getAssets()[0].equals("TestAsset1"));
+      Assert.assertTrue(testDocument.getKey().equals("TestKey"));
+      Assert.assertTrue(testDocument.getName().equals("TestName"));
+      Assert.assertTrue(testDocument.getType().equals("TestType"));
+      Assert.assertTrue(testDocument.getSubtype().equals("TestSubtype"));
+      Assert.assertTrue(testDocument.getOwner().equals("TestOwner"));
+      Assert.assertTrue(testDocument.getTranslation()[0] < tolerance);
+      Assert.assertTrue(testDocument.getRotationEuler()[0] < tolerance);
+      Assert.assertTrue(testDocument.getScale()[0] - 0.0 < tolerance);
+      Assert.assertTrue(testDocument.getTransform()[0] < tolerance);
+      Assert.assertTrue(testDocument.getAssets()[0].equals("TestAsset1"));
       // Test the set methods
       testDocument.setKey("TestKey2");
       testDocument.setName("TestName2");
@@ -74,18 +75,18 @@ public class ObjTest {
       testDocument.setRotationEuler(rotationEuler2);
       testDocument.setScale(scale2);
       testDocument.setAssets(assets2);
-      assert (testDocument.getKey().equals("TestKey2"));
-      assert (testDocument.getName().equals("TestName2"));
-      assert (testDocument.getType().equals("TestType2"));
-      assert (testDocument.getSubtype().equals("TestSubtype2"));
-      assert (testDocument.getOwner().equals("TestOwner2"));
-      assert (testDocument.getTranslation()[0] - 1.0 < tolerance);
-      assert (testDocument.getRotationEuler()[0] - 1.0 < tolerance);
-      assert (testDocument.getScale()[0] - 1.0 < tolerance);
-      assert (testDocument.getAssets()[0].equals("TestAsset3"));
+      Assert.assertTrue(testDocument.getKey().equals("TestKey2"));
+      Assert.assertTrue(testDocument.getName().equals("TestName2"));
+      Assert.assertTrue(testDocument.getType().equals("TestType2"));
+      Assert.assertTrue(testDocument.getSubtype().equals("TestSubtype2"));
+      Assert.assertTrue(testDocument.getOwner().equals("TestOwner2"));
+      Assert.assertTrue(testDocument.getTranslation()[0] - 1.0 < tolerance);
+      Assert.assertTrue(testDocument.getRotationEuler()[0] - 1.0 < tolerance);
+      Assert.assertTrue(testDocument.getScale()[0] - 1.0 < tolerance);
+      Assert.assertTrue(testDocument.getAssets()[0].equals("TestAsset3"));
     } catch (Exception e) {
       e.printStackTrace(testLogger);
-      assert (false);
+      Assert.assertTrue(false);
     } finally  {
       // Close the output text file
       testLogger.close();
@@ -111,15 +112,15 @@ public class ObjTest {
 
       ObjectDocument[] docList = {testDocument};
       ObjectList objList = new ObjectList(1, 1, docList, 100, "ErrMsg", "TransactionID");
-      assert (objList.getMsgType() == 1);
-      assert (objList.getNumRecords() == 1);
-      assert (objList.getErrorCode() == 100);
-      assert (objList.getErrorMessage().equals("ErrMsg"));
-      assert (objList.getTransactionId().equals("TransactionID"));
-      assert (objList.getDocuments()[0].getKey().equals("TestKey"));
+      Assert.assertTrue(objList.getMsgType() == 1);
+      Assert.assertTrue(objList.getNumRecords() == 1);
+      Assert.assertTrue(objList.getErrorCode() == 100);
+      Assert.assertTrue(objList.getErrorMessage().equals("ErrMsg"));
+      Assert.assertTrue(objList.getTransactionId().equals("TransactionID"));
+      Assert.assertTrue(objList.getDocuments()[0].getKey().equals("TestKey"));
     } catch (Exception e) {
       e.printStackTrace(testLogger);
-      assert (false);
+      Assert.assertTrue(false);
     } finally  {
       // Close the output text file
       testLogger.close();

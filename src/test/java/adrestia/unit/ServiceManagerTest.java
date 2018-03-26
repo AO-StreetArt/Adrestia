@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Properties;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -87,13 +88,13 @@ public class ServiceManagerTest {
 
     // Find an instance of Crazy Ivan from the service manager
     ServiceInstance ivanInstance = serviceManager.findCrazyIvan();
-    assert (ivanInstance.getHost().equals("TestHost"));
-    assert (ivanInstance.getPort() == 5555);
+    Assert.assertTrue(ivanInstance.getHost().equals("TestHost"));
+    Assert.assertTrue(ivanInstance.getPort() == 5555);
 
     // Find an instance of CLyman from the service manager
     ServiceInstance clymanInstance = serviceManager.findClyman();
-    assert (clymanInstance.getHost().equals("TestHost"));
-    assert (clymanInstance.getPort() == 5555);
+    Assert.assertTrue(clymanInstance.getHost().equals("TestHost"));
+    Assert.assertTrue(clymanInstance.getPort() == 5555);
   }
 
   // Failure Reporting Test
@@ -116,17 +117,17 @@ public class ServiceManagerTest {
     // Pull Down and validate the first instance
     // Find an instance of Crazy Ivan from the service manager
     ServiceInstance ivanInstance = serviceManager.findCrazyIvan();
-    assert (ivanInstance.getHost().equals("TestHost1"));
-    assert (ivanInstance.getPort() == 5555);
+    Assert.assertTrue(ivanInstance.getHost().equals("TestHost1"));
+    Assert.assertTrue(ivanInstance.getPort() == 5555);
 
     // Report a failure on the instance
     serviceManager.reportFailure(ivanInstance);
 
     // Pull down and validate the second instance
     ServiceInstance secondInstance = serviceManager.findCrazyIvan();
-    assert (secondInstance != null);
-    assert (secondInstance.getHost().equals("TestHost2"));
-    assert (secondInstance.getPort() == 5556);
+    Assert.assertTrue(secondInstance != null);
+    Assert.assertTrue(secondInstance.getHost().equals("TestHost2"));
+    Assert.assertTrue(secondInstance.getPort() == 5556);
 
     // Report a failure on the instance
     serviceManager.reportFailure(secondInstance);
@@ -136,21 +137,21 @@ public class ServiceManagerTest {
 
     // Pull Down and validate the first instance
     ServiceInstance firstInstance = serviceManager.findCrazyIvan();
-    assert (firstInstance.getHost().equals("TestHost1"));
-    assert (firstInstance.getPort() == 5555);
+    Assert.assertTrue(firstInstance.getHost().equals("TestHost1"));
+    Assert.assertTrue(firstInstance.getPort() == 5555);
 
     // Report a failure on the instance
     serviceManager.reportFailure(firstInstance);
 
     // Pull down and validate the second instance
     ServiceInstance finalInstance = serviceManager.findCrazyIvan();
-    assert (finalInstance.getHost().equals("TestHost2"));
-    assert (finalInstance.getPort() == 5556);
+    Assert.assertTrue(finalInstance.getHost().equals("TestHost2"));
+    Assert.assertTrue(finalInstance.getPort() == 5556);
 
     // Report a failure on the instance
     serviceManager.reportFailure(finalInstance);
 
     ServiceInstance noInstance = serviceManager.findCrazyIvan();
-    assert (noInstance == null);
+    Assert.assertTrue(noInstance == null);
   }
 }

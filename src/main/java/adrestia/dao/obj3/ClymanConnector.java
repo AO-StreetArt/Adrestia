@@ -92,15 +92,17 @@ public class ClymanConnector implements ObjectDao {
   }
 
   // Convenience method to turn a ObjectDocument into a ObjectDocument List
-  private ObjectList buildObjectList(ObjectDocument inpObject, int msgType) {
+  private ObjectList buildObjectList(ObjectDocument inpObject, int msgType, int opType) {
     ObjectDocument[] baseInpScns = {inpObject};
-    return new ObjectList(msgType, 1, baseInpScns, 100, "", "");
+    ObjectList objList = new ObjectList(msgType, 1, baseInpScns, 100, "", "");
+    objList.setOpType(opType);
+    return objList;
   }
 
   // Execute a CRUD Transaction with Clyman
-  private ObjectList crudTransaction(ObjectDocument inpObject, int msgType) {
+  private ObjectList crudTransaction(ObjectDocument inpObject, int msgType, int opType) {
     // Construct a ObjectDocument List, which we will then convert to JSON
-    ObjectList inpObjectList = buildObjectList(inpObject, msgType);
+    ObjectList inpObjectList = buildObjectList(inpObject, msgType, opType);
     // Send the ObjectDocument List to Clyman and get the response
     return transaction(inpObjectList);
   }
@@ -109,7 +111,7 @@ public class ClymanConnector implements ObjectDao {
     ObjectDocument msgDocument = new ObjectDocument();
     msgDocument.setKey(docKey);
     msgDocument.setOwner(ownerKey);
-    return crudTransaction(msgDocument, msgType);
+    return crudTransaction(msgDocument, msgType, 10);
   }
 
   /**
@@ -117,7 +119,7 @@ public class ClymanConnector implements ObjectDao {
   */
   @Override
   public ObjectList create(ObjectDocument inpObject) {
-    return crudTransaction(inpObject, 0);
+    return crudTransaction(inpObject, 0, 10);
   }
 
   /**
@@ -125,7 +127,21 @@ public class ClymanConnector implements ObjectDao {
   */
   @Override
   public ObjectList update(ObjectDocument inpObject) {
-    return crudTransaction(inpObject, 1);
+    return crudTransaction(inpObject, 1, 10);
+  }
+
+  /**
+  * Update a ObjectDocument.
+  * @param inpDocument A ObjectDocument Object to save
+  * @param isAppendOperation True if we want to send an append operation to CLyman, false to send a remove operation
+  * @return  A ObjectList object, returned from the service implementing the DAO
+  */
+  @Override
+  public ObjectList update(ObjectDocument inpDocument, boolean isAppendOperation) {
+    if (isAppendOperation) {
+      return crudTransaction(inpDocument, 1, 10);
+    }
+    return crudTransaction(inpDocument, 1, 11);
   }
 
   /**
@@ -163,7 +179,7 @@ public class ClymanConnector implements ObjectDao {
   public ObjectList get(String docKey) {
     ObjectDocument obj = new ObjectDocument();
     obj.setKey(docKey);
-    return crudTransaction(obj, 2);
+    return crudTransaction(obj, 2, 10);
   }
 
   /**
@@ -173,7 +189,7 @@ public class ClymanConnector implements ObjectDao {
   public ObjectList destroy(String docKey) {
     ObjectDocument obj = new ObjectDocument();
     obj.setKey(docKey);
-    return crudTransaction(obj, 3);
+    return crudTransaction(obj, 3, 10);
   }
 
   /**
@@ -181,7 +197,7 @@ public class ClymanConnector implements ObjectDao {
   */
   @Override
   public ObjectList query(ObjectDocument inpObject) {
-    return crudTransaction(inpObject, 4);
+    return crudTransaction(inpObject, 4, 10);
   }
 
   /**

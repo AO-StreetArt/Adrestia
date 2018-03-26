@@ -21,6 +21,7 @@ import adrestia.ClymanConnector;
 import adrestia.ObjectDao;
 import java.io.PrintWriter;
 import java.util.Properties;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -72,31 +73,29 @@ public class ObjectDaoTest {
       testLogger.println(crtResp);
       testLogger.println(crtResp.getErrorCode());
       testLogger.println(crtResp.getErrorMessage());
-      assert (crtResp.getErrorCode() == 100);
+      Assert.assertTrue(crtResp.getErrorCode() == 100);
       String clymanKey = crtResp.getDocuments()[0].getKey();
 
       // Get test
       ObjectList getResp = objData.get(clymanKey);
-      assert (getResp.getErrorCode() == 100);
-      assert (getResp.getNumRecords() > 0);
+      Assert.assertTrue(getResp.getErrorCode() == 100);
+      Assert.assertTrue(getResp.getNumRecords() > 0);
       testLogger.println(getResp);
-      assert (getResp.getDocuments()[0].getType().equals("TestType"));
-      assert (getResp.getDocuments()[0].getOwner().equals("TestOwner"));
+      Assert.assertTrue(getResp.getDocuments()[0].getType().equals("TestType"));
+      Assert.assertTrue(getResp.getDocuments()[0].getOwner().equals("TestOwner"));
 
       // Update test
       testDocument.setKey(clymanKey);
       testDocument.setType("TestType2");
       testDocument.setOwner("TestOwner2");
       ObjectList updResp = objData.update(testDocument);
-      assert (updResp.getErrorCode() == 100);
+      Assert.assertTrue(updResp.getErrorCode() == 100);
       ObjectList getResp2 = objData.get(clymanKey);
-      assert (getResp2.getErrorCode() == 100);
-      assert (getResp2.getNumRecords() > 0);
-      testLogger.println("Update Test Result: ");
-      testLogger.println(getResp2.getDocuments()[0].getType());
-      testLogger.println(getResp2.getDocuments()[0].getOwner());
-      assert (getResp2.getDocuments()[0].getType().equals("TestType2"));
-      assert (getResp2.getDocuments()[0].getOwner().equals("TestOwner2"));
+
+      Assert.assertTrue(getResp2.getErrorCode() == 100);
+      Assert.assertTrue(getResp2.getNumRecords() > 0);
+      Assert.assertTrue(getResp2.getDocuments()[0].getType().equals("TestType2"));
+      Assert.assertTrue(getResp2.getDocuments()[0].getOwner().equals("TestOwner2"));
 
       // Overwrite Test
       double[] ovrTranslation = {1.0, 1.0, 1.0};
@@ -110,36 +109,34 @@ public class ObjectDaoTest {
       testLogger.println("Overwrite Test Response: ");
       testLogger.println(ovrResp.getErrorCode());
       testLogger.println(ovrResp.getErrorMessage());
-      assert (ovrResp.getErrorCode() == 100);
+      Assert.assertTrue(ovrResp.getErrorCode() == 100);
       ObjectList ovrCheckResp = objData.get(clymanKey);
-      assert (ovrCheckResp.getErrorCode() == 100);
-      assert (ovrCheckResp.getNumRecords() > 0);
-      testLogger.println("Overwrite Test Result: ");
-      testLogger.println(ovrCheckResp.getDocuments()[0].getTransform()[0]);
-      testLogger.println(ovrCheckResp.getDocuments()[0].getTransform()[3]);
-      assert (ovrCheckResp.getDocuments()[0].getTransform()[0] - 1.0 < 0.001);
-      assert (ovrCheckResp.getDocuments()[0].getTransform()[3] - 1.0 < 0.001);
+
+      Assert.assertTrue(ovrCheckResp.getErrorCode() == 100);
+      Assert.assertTrue(ovrCheckResp.getNumRecords() > 0);
+      Assert.assertTrue(ovrCheckResp.getDocuments()[0].getTransform()[0] - 1.0 < 0.001);
+      Assert.assertTrue(ovrCheckResp.getDocuments()[0].getTransform()[3] - 1.0 < 0.001);
 
       // Lock Test
       ObjectList lockResp1 = objData.lock(clymanKey, "ud1");
-      assert (lockResp1.getErrorCode() == 100);
+      Assert.assertTrue(lockResp1.getErrorCode() == 100);
       ObjectList lockResp2 = objData.lock(clymanKey, "ud2");
-      assert (lockResp2.getErrorCode() != 100);
+      Assert.assertTrue(lockResp2.getErrorCode() != 100);
       ObjectList lockResp3 = objData.unlock(clymanKey, "ud1");
-      assert (lockResp3.getErrorCode() == 100);
+      Assert.assertTrue(lockResp3.getErrorCode() == 100);
       ObjectList lockResp4 = objData.lock(clymanKey, "ud2");
-      assert (lockResp4.getErrorCode() == 100);
+      Assert.assertTrue(lockResp4.getErrorCode() == 100);
       ObjectList lockResp5 = objData.unlock(clymanKey, "ud2");
-      assert (lockResp5.getErrorCode() == 100);
+      Assert.assertTrue(lockResp5.getErrorCode() == 100);
 
       // Delete test
       ObjectList delResp = objData.destroy(clymanKey);
-      assert (delResp.getErrorCode() == 100);
+      Assert.assertTrue(delResp.getErrorCode() == 100);
       ObjectList getResp3 = objData.get(clymanKey);
-      assert (getResp3.getErrorCode() == 102);
+      Assert.assertTrue(getResp3.getErrorCode() == 102);
     } catch (Exception e) {
       e.printStackTrace(testLogger);
-      assert (false);
+      Assert.assertTrue(false);
     } finally  {
       // Close the output text file
       testLogger.close();

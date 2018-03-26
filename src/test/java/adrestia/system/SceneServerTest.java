@@ -20,6 +20,7 @@ package adrestia;
 import java.io.PrintWriter;
 import java.lang.Double;
 import java.util.Map;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,12 +86,12 @@ public class SceneServerTest {
           "http://localhost:" + this.port + testSceneUrl, scn, Map.class);
       testLogger.println(createResponse.getStatusCode());
       // Read the response
-      assert (createResponse.getStatusCode().is2xxSuccessful());
+      Assert.assertTrue(createResponse.getStatusCode().is2xxSuccessful());
       // Validate the response
       Map crtRespBody = createResponse.getBody();
       testLogger.println("Create Response: " + crtRespBody.toString());
       testLogger.println("Key: " + crtRespBody.get("key"));
-      assert (crtRespBody.get("key").equals(testSceneKey));
+      Assert.assertTrue(crtRespBody.get("key").equals(testSceneKey));
 
       // Get Test
       testLogger.println("Get Test");
@@ -98,7 +99,7 @@ public class SceneServerTest {
       ResponseEntity<Map> getResponse = this.testTemplate.getForEntity(
           "http://localhost:" + this.port + testSceneUrl, Map.class);
       // Read the response
-      assert (getResponse.getStatusCode().is2xxSuccessful());
+      Assert.assertTrue(getResponse.getStatusCode().is2xxSuccessful());
       // Validate the response
       Map getRespBody = getResponse.getBody();
       testLogger.println("Get Response: " + getRespBody.toString());
@@ -107,13 +108,13 @@ public class SceneServerTest {
       testLogger.println("Region: " + getRespBody.get("region"));
       testLogger.println("Latitude: " + getRespBody.get("latitude"));
       testLogger.println("Longitude: " + getRespBody.get("longitude"));
-      assert (getRespBody.get("key").equals(testSceneKey));
-      assert (getRespBody.get("name").equals(testSceneName));
-      assert (getRespBody.get("region").equals("C"));
+      Assert.assertTrue(getRespBody.get("key").equals(testSceneKey));
+      Assert.assertTrue(getRespBody.get("name").equals(testSceneName));
+      Assert.assertTrue(getRespBody.get("region").equals("C"));
       Double latDbl = Double.valueOf(getRespBody.get("latitude").toString());
-      assert (latDbl.doubleValue() - 1.0 < tolerance);
+      Assert.assertTrue(latDbl.doubleValue() - 1.0 < tolerance);
       Double longDbl = Double.valueOf(getRespBody.get("longitude").toString());
-      assert (longDbl.doubleValue() - 2.0 < tolerance);
+      Assert.assertTrue(longDbl.doubleValue() - 2.0 < tolerance);
 
       // Update Test
       testLogger.println("Update Test");
@@ -123,7 +124,7 @@ public class SceneServerTest {
       ResponseEntity<Map> updateResponse = this.testTemplate.postForEntity(
           "http://localhost:" + this.port + testSceneUrl, scn2, Map.class);
       // Read the response
-      assert (updateResponse.getStatusCode().is2xxSuccessful());
+      Assert.assertTrue(updateResponse.getStatusCode().is2xxSuccessful());
       // Validate the response
       Map updRespBody = updateResponse.getBody();
       testLogger.println("Update Response: " + updRespBody.toString());
@@ -134,7 +135,7 @@ public class SceneServerTest {
       ResponseEntity<Map> getResponse2 = this.testTemplate.getForEntity(
           "http://localhost:" + this.port + testSceneUrl, Map.class);
       // Read the response
-      assert (getResponse2.getStatusCode().is2xxSuccessful());
+      Assert.assertTrue(getResponse2.getStatusCode().is2xxSuccessful());
       // Validate the response
       Map getRespBody2 = getResponse2.getBody();
       testLogger.println("Get Response: " + getRespBody2.toString());
@@ -143,13 +144,13 @@ public class SceneServerTest {
       testLogger.println("Region: " + getRespBody2.get("region"));
       testLogger.println("Latitude: " + getRespBody2.get("latitude"));
       testLogger.println("Longitude: " + getRespBody2.get("longitude"));
-      assert (getRespBody2.get("key").equals(testSceneKey));
-      assert (getRespBody2.get("name").equals(testSceneName));
-      assert (getRespBody2.get("region").equals("NewRegion"));
+      Assert.assertTrue(getRespBody2.get("key").equals(testSceneKey));
+      Assert.assertTrue(getRespBody2.get("name").equals(testSceneName));
+      Assert.assertTrue(getRespBody2.get("region").equals("NewRegion"));
       Double latDbl2 = Double.valueOf(getRespBody2.get("latitude").toString());
-      assert (latDbl2.doubleValue() - 110.0 < tolerance);
+      Assert.assertTrue(latDbl2.doubleValue() - 110.0 < tolerance);
       Double longDbl2 = Double.valueOf(getRespBody2.get("longitude").toString());
-      assert (longDbl2.doubleValue() - 210.0 < tolerance);
+      Assert.assertTrue(longDbl2.doubleValue() - 210.0 < tolerance);
 
       // Delete Test
       testLogger.println("Delete Test");
@@ -165,10 +166,10 @@ public class SceneServerTest {
       // Read the response
       testLogger.println("Delete Test Response Code");
       testLogger.println(getResponse3.getStatusCode());
-      assert (getResponse3.getStatusCode().is4xxClientError());
+      Assert.assertTrue(getResponse3.getStatusCode().is4xxClientError());
     } catch (Exception e) {
       e.printStackTrace(testLogger);
-      assert (false);
+      Assert.assertTrue(false);
     } finally  {
       // Close the output text file
       testLogger.close();
@@ -199,14 +200,14 @@ public class SceneServerTest {
     ResponseEntity<Map> createResponse = this.testTemplate.postForEntity(
         "http://localhost:" + this.port + testSceneUrl, scn, Map.class);
     // Read the response
-    assert (createResponse.getStatusCode().is2xxSuccessful());
+    Assert.assertTrue(createResponse.getStatusCode().is2xxSuccessful());
     Scene scn2 = new Scene("A6B8C12D0", "MySecondQueryScene",
         "MyRegion", 12.0, 23.0, 34.0, assets, tags, devices);
     // Post the Scene to the endpoint
     ResponseEntity<Map> createResponse2 = this.testTemplate.postForEntity(
         "http://localhost:" + this.port + testSceneUrl2, scn2, Map.class);
     // Read the response
-    assert (createResponse2.getStatusCode().is2xxSuccessful());
+    Assert.assertTrue(createResponse2.getStatusCode().is2xxSuccessful());
   }
 
   // Test Query Functions for scenes
@@ -236,10 +237,10 @@ public class SceneServerTest {
       // Read the response
       testLogger.println("Query Response Code:");
       testLogger.println(queryResponse.getStatusCode());
-      assert (queryResponse.getStatusCode().is2xxSuccessful());
+      Assert.assertTrue(queryResponse.getStatusCode().is2xxSuccessful());
     } catch (Exception e) {
       e.printStackTrace(testLogger);
-      assert (false);
+      Assert.assertTrue(false);
     } finally  {
       // Close the output text file
       testLogger.close();

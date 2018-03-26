@@ -87,15 +87,17 @@ public class CrazyIvanConnector implements SceneDao {
   }
 
   // Convenience method to turn a Scene into a Scene List
-  private SceneList buildSceneList(Scene inpScene, int msgType) {
+  private SceneList buildSceneList(Scene inpScene, int msgType, int opType) {
     Scene[] baseInpScns = {inpScene};
-    return new SceneList(msgType, baseInpScns);
+    SceneList scnList = new SceneList(msgType, baseInpScns);
+    scnList.setOpType(opType);
+    return scnList;
   }
 
   // Execute a CRUD Transaction with Crazy Ivan
-  private SceneList crudTransaction(Scene inpScene, int msgType) {
+  private SceneList crudTransaction(Scene inpScene, int msgType, int opType) {
     // Construct a Scene List, which we will then convert to JSON
-    SceneList inpSceneList = buildSceneList(inpScene, msgType);
+    SceneList inpSceneList = buildSceneList(inpScene, msgType, opType);
     // Send the Scene List to Crazy Ivan and get the response
     return transaction(inpSceneList);
   }
@@ -105,7 +107,7 @@ public class CrazyIvanConnector implements SceneDao {
   */
   @Override
   public SceneList create(Scene inpScene) {
-    return crudTransaction(inpScene, 0);
+    return crudTransaction(inpScene, 0, 10);
   }
 
   /**
@@ -113,7 +115,21 @@ public class CrazyIvanConnector implements SceneDao {
   */
   @Override
   public SceneList update(Scene inpScene) {
-    return crudTransaction(inpScene, 1);
+    return update(inpScene, true);
+  }
+
+  /**
+  * Update a Scene.
+  * @param inpScene A Scene Object to save
+  * @param isAppendOperation True if we want to send an append operation to Crazy Ivan, false to send a remove operation
+  * @return  A SceneList object, returned from the service implementing the DAO
+  */
+  @Override
+  public SceneList update(Scene inpScene, boolean isAppendOperation) {
+    if (isAppendOperation) {
+      return crudTransaction(inpScene, 1, 10);
+    }
+    return crudTransaction(inpScene, 1, 11);
   }
 
   /**
@@ -123,7 +139,7 @@ public class CrazyIvanConnector implements SceneDao {
   public SceneList get(String sceneName) {
     Scene scn = new Scene();
     scn.setName(sceneName);
-    return crudTransaction(scn, 2);
+    return crudTransaction(scn, 2, 10);
   }
 
   /**
@@ -133,7 +149,7 @@ public class CrazyIvanConnector implements SceneDao {
   public SceneList destroy(String sceneKey) {
     Scene scn = new Scene();
     scn.setKey(sceneKey);
-    return crudTransaction(scn, 3);
+    return crudTransaction(scn, 3, 10);
   }
 
   /**
@@ -141,7 +157,7 @@ public class CrazyIvanConnector implements SceneDao {
   */
   @Override
   public SceneList query(Scene inpScene) {
-    return crudTransaction(inpScene, 2);
+    return crudTransaction(inpScene, 2, 10);
   }
 
   // Execute a Registration Transaction with Crazy Ivan

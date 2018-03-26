@@ -20,6 +20,7 @@ package adrestia;
 import java.io.PrintWriter;
 import java.lang.Double;
 import java.util.Map;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +56,6 @@ public class BasicServerTest {
     ResponseEntity<Map> response = this.testTemplate.getForEntity(
         "http://localhost:" + this.mgtPort + "/info", Map.class);
 
-    assert (response.getStatusCode().is2xxSuccessful());
+    Assert.assertTrue(response.getStatusCode().is2xxSuccessful());
   }
 }

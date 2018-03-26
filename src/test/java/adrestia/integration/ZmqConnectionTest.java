@@ -22,6 +22,7 @@ import adrestia.SceneDao;
 import java.io.PrintWriter;
 import java.util.Properties;
 import org.json.JSONObject;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -65,10 +66,10 @@ public class ZmqConnectionTest {
       testLogger.println("Ping Response: " + response);
       // Parse the response and validate the success code
       JSONObject responseObj = new JSONObject(response);
-      assert (responseObj.getInt("err_code") == 100);
+      Assert.assertTrue(responseObj.getInt("err_code") == 100);
     } catch (Exception e) {
       e.printStackTrace(testLogger);
-      assert (false);
+      Assert.assertTrue(false);
     } finally  {
       // Close the output text file
       testLogger.close();

@@ -1,7 +1,7 @@
 {
 	"info": {
 		"name": "AssetAPI",
-		"_postman_id": "7abdc7fc-232e-e170-b0fd-104858ae619c",
+		"_postman_id": "b2184c8c-f2b8-ba00-28fd-2d78e1e548c8",
 		"description": "Run Basic Tests on the Aesel Asset API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -42,7 +42,6 @@
 					"formdata": [
 						{
 							"key": "file",
-							"description": "",
 							"type": "file",
 							"src": "testupload.txt"
 						}
@@ -57,8 +56,275 @@
 						"v1",
 						"asset"
 					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Upload Test File2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "27e8aa61-34e6-4234-adaa-5da19b4f85b5",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Response time is less than 5000ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(5000);",
+							"});",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.environment.unset(\"ASSET_ID2\");",
+							"",
+							"pm.environment.set(\"ASSET_ID2\", pm.response.text());",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
 				},
-				"description": ""
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "testupload2.txt"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{AESEL_URL}}/v1/asset",
+					"host": [
+						"{{AESEL_URL}}"
+					],
+					"path": [
+						"v1",
+						"asset"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Scene with Asset",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "04161c64-77ee-4971-97fa-9fa4dd4984ff",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Response time is less than 5000ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(5000);",
+							"});",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\":\"assetScene\",\n    \"latitude\":124.0,\n    \"longitude\":122.0,\n    \"distance\":100.0,\n    \"region\":\"basicFlowRegion\",\n    \"asset_ids\":[\"{{ASSET_ID}}\"],\n    \"tags\":[\"basicTag\"]\n}"
+				},
+				"url": {
+					"raw": "{{AESEL_URL}}/v1/scene/assetScene",
+					"host": [
+						"{{AESEL_URL}}"
+					],
+					"path": [
+						"v1",
+						"scene",
+						"assetScene"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Object with Asset",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "04161c64-77ee-4971-97fa-9fa4dd4984ff",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Response time is less than 5000ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(5000);",
+							"});",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"key\": \"\",\n  \"name\": \"basicTestObject\",\n  \"type\": \"basicTestType\",\n  \"subtype\": \"basicTestSubtype\",\n  \"owner\": \"basicTestOwner\",\n  \"scene\": \"assetScene\",\n  \"translation\": [0.0, 0.0, 0.0],\n  \"euler_rotation\": [0.0, 1.0, 0.0, 0.0],\n  \"scale\": [1.0, 1.0, 1.0],\n  \"assets\": [\"{{ASSET_ID2}}\"]\n}"
+				},
+				"url": {
+					"raw": "{{AESEL_URL}}/v1/scene/assetScene/object/assetObject",
+					"host": [
+						"{{AESEL_URL}}"
+					],
+					"path": [
+						"v1",
+						"scene",
+						"assetScene",
+						"object",
+						"assetObject"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Scene",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b0f11f15-0346-4639-a9b7-09146130c3e3",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Response time is less than 5000ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(5000);",
+							"});",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Scene Asset Updated\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.asset_ids[0]).to.eql(pm.environment.get(\"ASSET_ID\"));",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\":\"assetScene\",\n    \"latitude\":124.0,\n    \"longitude\":122.0,\n    \"distance\":100.0,\n    \"region\":\"basicFlowRegion\",\n    \"asset_ids\":[\"{{ASSET_ID}}\"],\n    \"tags\":[\"basicTag\"]\n}"
+				},
+				"url": {
+					"raw": "{{AESEL_URL}}/v1/scene/assetScene",
+					"host": [
+						"{{AESEL_URL}}"
+					],
+					"path": [
+						"v1",
+						"scene",
+						"assetScene"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Object",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "6d64196d-75ab-4817-bb8b-2194a3dc04e3",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Response time is less than 5000ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(5000);",
+							"});",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Object Asset Updated\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.assets[0]).to.eql(pm.environment.get(\"ASSET_ID2\"));",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\":\"assetScene\",\n    \"latitude\":124.0,\n    \"longitude\":122.0,\n    \"distance\":100.0,\n    \"region\":\"basicFlowRegion\",\n    \"asset_ids\":[\"{{ASSET_ID}}\"],\n    \"tags\":[\"basicTag\"]\n}"
+				},
+				"url": {
+					"raw": "{{AESEL_URL}}/v1/scene/assetScene/object/assetObject",
+					"host": [
+						"{{AESEL_URL}}"
+					],
+					"path": [
+						"v1",
+						"scene",
+						"assetScene",
+						"object",
+						"assetObject"
+					]
+				}
 			},
 			"response": []
 		},
@@ -85,7 +351,10 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"body": {},
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
 				"url": {
 					"raw": "{{AESEL_URL}}/v1/asset/{{ASSET_ID}}",
 					"host": [
@@ -96,8 +365,367 @@
 						"asset",
 						"{{ASSET_ID}}"
 					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Test File2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ddef8b6f-f259-45cf-a66e-4a1af69ce1f7",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Response time is less than 5000ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(5000);",
+							"});",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{AESEL_URL}}/v1/asset/{{ASSET_ID2}}",
+					"host": [
+						"{{AESEL_URL}}"
+					],
+					"path": [
+						"v1",
+						"asset",
+						"{{ASSET_ID2}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Test File",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "22915957-5168-40db-bb6d-a96ca545ae15",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Response time is less than 5000ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(5000);",
+							"});",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.environment.unset(\"ASSET_ID\");",
+							"",
+							"pm.environment.set(\"ASSET_ID\", pm.response.text());",
+							"",
+							"pm.environment.unset(\"OLD_ASSET_ID\");",
+							"",
+							"pm.environment.set(\"OLD_ASSET_ID\", pm.response.text());"
+						]
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
 				},
-				"description": ""
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "testupload3.txt"
+						},
+						{
+							"key": "scene",
+							"value": "assetScene",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{AESEL_URL}}/v1/asset/{{ASSET_ID}}",
+					"host": [
+						"{{AESEL_URL}}"
+					],
+					"path": [
+						"v1",
+						"asset",
+						"{{ASSET_ID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Test File2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "51923eda-ab9c-4fb0-b57b-5ce905a02927",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Response time is less than 5000ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(5000);",
+							"});",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.environment.unset(\"ASSET_ID2\");",
+							"",
+							"pm.environment.set(\"ASSET_ID2\", pm.response.text());",
+							"",
+							"pm.environment.unset(\"OLD_ASSET_ID2\");",
+							"",
+							"pm.environment.set(\"OLD_ASSET_ID2\", pm.response.text());"
+						]
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "testupload4.txt"
+						},
+						{
+							"key": "scene",
+							"value": "assetScene",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "object",
+							"value": "assetObject",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{AESEL_URL}}/v1/asset/{{ASSET_ID2}}",
+					"host": [
+						"{{AESEL_URL}}"
+					],
+					"path": [
+						"v1",
+						"asset",
+						"{{ASSET_ID2}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Asset History",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ddef8b6f-f259-45cf-a66e-4a1af69ce1f7",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Response time is less than 5000ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(5000);",
+							"});",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{AESEL_URL}}/v1/asset-history/{{ASSET_ID}}",
+					"host": [
+						"{{AESEL_URL}}"
+					],
+					"path": [
+						"v1",
+						"asset-history",
+						"{{ASSET_ID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Asset History2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ddef8b6f-f259-45cf-a66e-4a1af69ce1f7",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Response time is less than 5000ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(5000);",
+							"});",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{AESEL_URL}}/v1/asset-history/{{ASSET_ID2}}",
+					"host": [
+						"{{AESEL_URL}}"
+					],
+					"path": [
+						"v1",
+						"asset-history",
+						"{{ASSET_ID2}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Updated Scene",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b0f11f15-0346-4639-a9b7-09146130c3e3",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Response time is less than 5000ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(5000);",
+							"});",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Scene Asset Updated\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.asset_ids[0]).to.eql(pm.environment.get(\"ASSET_ID\"));",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\":\"assetScene\",\n    \"latitude\":124.0,\n    \"longitude\":122.0,\n    \"distance\":100.0,\n    \"region\":\"basicFlowRegion\",\n    \"asset_ids\":[\"{{ASSET_ID}}\"],\n    \"tags\":[\"basicTag\"]\n}"
+				},
+				"url": {
+					"raw": "{{AESEL_URL}}/v1/scene/assetScene",
+					"host": [
+						"{{AESEL_URL}}"
+					],
+					"path": [
+						"v1",
+						"scene",
+						"assetScene"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Updated Object",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "be46f277-0dfe-4d7b-9132-27a9470a3f46",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Response time is less than 5000ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(5000);",
+							"});",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Object Asset Updated\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.assets[0]).to.eql(pm.environment.get(\"ASSET_ID2\"));",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\":\"assetScene\",\n    \"latitude\":124.0,\n    \"longitude\":122.0,\n    \"distance\":100.0,\n    \"region\":\"basicFlowRegion\",\n    \"asset_ids\":[\"{{ASSET_ID}}\"],\n    \"tags\":[\"basicTag\"]\n}"
+				},
+				"url": {
+					"raw": "{{AESEL_URL}}/v1/scene/assetScene/object/assetObject",
+					"host": [
+						"{{AESEL_URL}}"
+					],
+					"path": [
+						"v1",
+						"scene",
+						"assetScene",
+						"object",
+						"assetObject"
+					]
+				}
 			},
 			"response": []
 		},
@@ -124,7 +752,10 @@
 			"request": {
 				"method": "DELETE",
 				"header": [],
-				"body": {},
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
 				"url": {
 					"raw": "{{AESEL_URL}}/v1/asset/{{ASSET_ID}}",
 					"host": [
@@ -135,8 +766,121 @@
 						"asset",
 						"{{ASSET_ID}}"
 					]
-				},
-				"description": ""
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Test File2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "17228248-7ee8-444e-8f49-7d94cdcba892",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Response time is less than 5000ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(5000);",
+							"});",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{AESEL_URL}}/v1/asset/{{ASSET_ID2}}",
+					"host": [
+						"{{AESEL_URL}}"
+					],
+					"path": [
+						"v1",
+						"asset",
+						"{{ASSET_ID2}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Old Test File",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "17228248-7ee8-444e-8f49-7d94cdcba892",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Response time is less than 5000ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(5000);",
+							"});",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{AESEL_URL}}/v1/asset/{{OLD_ASSET_ID}}",
+					"host": [
+						"{{AESEL_URL}}"
+					],
+					"path": [
+						"v1",
+						"asset",
+						"{{OLD_ASSET_ID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Old Test File2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "17228248-7ee8-444e-8f49-7d94cdcba892",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Response time is less than 5000ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(5000);",
+							"});",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{AESEL_URL}}/v1/asset/{{OLD_ASSET_ID2}}",
+					"host": [
+						"{{AESEL_URL}}"
+					],
+					"path": [
+						"v1",
+						"asset",
+						"{{OLD_ASSET_ID2}}"
+					]
+				}
 			},
 			"response": []
 		}

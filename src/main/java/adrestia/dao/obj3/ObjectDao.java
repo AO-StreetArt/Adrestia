@@ -42,6 +42,14 @@ public interface ObjectDao {
   public ObjectList update(ObjectDocument inpDocument);
 
   /**
+  * Update a ObjectDocument.
+  * @param inpDocument A ObjectDocument Object to save
+  * @param isAppendOperation True if we want to send an append operation to CLyman, false to send a remove operation
+  * @return  A ObjectList object, returned from the service implementing the DAO
+  */
+  public ObjectList update(ObjectDocument inpDocument, boolean isAppendOperation);
+
+  /**
   * Overwrite an ObjectDocument transform.
   * @param inpObject A ObjectDocument Object to save
   * @return  A ObjectList object, returned from the service implementing the DAO

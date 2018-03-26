@@ -18,6 +18,7 @@ limitations under the License.
 package adrestia;
 
 import java.io.PrintWriter;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.TestPropertySource;
@@ -40,13 +41,13 @@ public class SceneTest {
 
   // Convenience method to validate the contents of a test transform element
   private void assertTransformElements(Transform trans) {
-    assert (trans.getTranslation()[0] - 1.0 < tolerance);
-    assert (trans.getTranslation()[1] - 2.0 < tolerance);
-    assert (trans.getTranslation()[2] - 3.0 < tolerance);
-    assert (trans.getRotation()[0] - 45.0 < tolerance);
-    assert (trans.getRotation()[1] - 1.0 < tolerance);
-    assert (trans.getRotation()[2] - 0.0 < tolerance);
-    assert (trans.getRotation()[3] - 0.0 < tolerance);
+    Assert.assertTrue(trans.getTranslation()[0] - 1.0 < tolerance);
+    Assert.assertTrue(trans.getTranslation()[1] - 2.0 < tolerance);
+    Assert.assertTrue(trans.getTranslation()[2] - 3.0 < tolerance);
+    Assert.assertTrue(trans.getRotation()[0] - 45.0 < tolerance);
+    Assert.assertTrue(trans.getRotation()[1] - 1.0 < tolerance);
+    Assert.assertTrue(trans.getRotation()[2] - 0.0 < tolerance);
+    Assert.assertTrue(trans.getRotation()[3] - 0.0 < tolerance);
   }
 
   // Convenience method to build a test User Device
@@ -58,9 +59,9 @@ public class SceneTest {
   // Convenience method to validate the contents of a test user device element
   private void assertDeviceElements(UserDevice dev) {
     assertTransformElements(dev.getTransform());
-    assert (dev.getKey().equals("MyTestKey"));
-    assert (dev.getHost().equals("TestHost"));
-    assert (dev.getPort() == 5555);
+    Assert.assertTrue(dev.getKey().equals("MyTestKey"));
+    Assert.assertTrue(dev.getHost().equals("TestHost"));
+    Assert.assertTrue(dev.getPort() == 5555);
   }
 
   // Convenience method to build a test scene
@@ -74,18 +75,18 @@ public class SceneTest {
 
   // Convenience method to validate the contents of a test scene
   private void assertSceneElements(Scene scn) {
-    assert (scn.getKey().equals("MyKey"));
-    assert (scn.getName().equals("MyName"));
-    assert (scn.getRegion().equals("MyRegion"));
-    assert (scn.getLatitude() - 100.0 < tolerance);
-    assert (scn.getLongitude() - 120.0 < tolerance);
-    assert (scn.getDistance() < tolerance);
-    assert (scn.getAssets().length == 2);
-    assert (scn.getAssets()[0].equals("FirstAsset"));
-    assert (scn.getAssets()[1].equals("SecondAsset"));
-    assert (scn.getTags().length == 2);
-    assert (scn.getTags()[0].equals("ABC"));
-    assert (scn.getTags()[1].equals("123"));
+    Assert.assertTrue(scn.getKey().equals("MyKey"));
+    Assert.assertTrue(scn.getName().equals("MyName"));
+    Assert.assertTrue(scn.getRegion().equals("MyRegion"));
+    Assert.assertTrue(scn.getLatitude() - 100.0 < tolerance);
+    Assert.assertTrue(scn.getLongitude() - 120.0 < tolerance);
+    Assert.assertTrue(scn.getDistance() < tolerance);
+    Assert.assertTrue(scn.getAssets().length == 2);
+    Assert.assertTrue(scn.getAssets()[0].equals("FirstAsset"));
+    Assert.assertTrue(scn.getAssets()[1].equals("SecondAsset"));
+    Assert.assertTrue(scn.getTags().length == 2);
+    Assert.assertTrue(scn.getTags()[0].equals("ABC"));
+    Assert.assertTrue(scn.getTags()[1].equals("123"));
     assertDeviceElements(scn.getDevices()[0]);
   }
 
@@ -99,7 +100,7 @@ public class SceneTest {
 
   // Convenience method to validate the contents of a scene list
   private void assertSceneListElements(SceneList scnList) {
-    assert (scnList.getMsgType() == 0);
+    Assert.assertTrue(scnList.getMsgType() == 0);
     assertSceneElements(scnList.getSceneList()[0]);
   }
 
@@ -126,7 +127,7 @@ public class SceneTest {
       assertTransformElements(defaultTrans);
     } catch (Exception e) {
       e.printStackTrace(testLogger);
-      assert (false);
+      Assert.assertTrue(false);
     } finally  {
       // Close the output text file
       testLogger.close();
@@ -157,7 +158,7 @@ public class SceneTest {
       assertDeviceElements(defaultDev);
     } catch (Exception e) {
       e.printStackTrace(testLogger);
-      assert (false);
+      Assert.assertTrue(false);
     } finally  {
       // Close the output text file
       testLogger.close();
@@ -195,7 +196,7 @@ public class SceneTest {
       assertSceneElements(defaultScn);
     } catch (Exception e) {
       e.printStackTrace(testLogger);
-      assert (false);
+      Assert.assertTrue(false);
     } finally  {
       // Close the output text file
       testLogger.close();
@@ -223,7 +224,7 @@ public class SceneTest {
       assertSceneListElements(defaultScnList);
     } catch (Exception e) {
       e.printStackTrace(testLogger);
-      assert (false);
+      Assert.assertTrue(false);
     } finally  {
       // Close the output text file
       testLogger.close();
