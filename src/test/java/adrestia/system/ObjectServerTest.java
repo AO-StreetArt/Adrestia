@@ -21,6 +21,7 @@ import java.io.PrintWriter;
 import java.lang.Double;
 import java.util.HashMap;
 import java.util.Map;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,12 +79,12 @@ public class ObjectServerTest {
           "http://localhost:" + this.port + testObjectUrl, obj, Map.class);
       testLogger.println(createResponse.getStatusCode());
       // Read the response
-      assert (createResponse.getStatusCode().is2xxSuccessful());
+      Assert.assertTrue(createResponse.getStatusCode().is2xxSuccessful());
       // Validate the response
       Map crtRespBody = createResponse.getBody();
       testLogger.println("Create Response: " + crtRespBody.toString());
       testLogger.println("Key: " + crtRespBody.get("key"));
-      assert (!(crtRespBody.get("key").toString().isEmpty()));
+      Assert.assertTrue(!(crtRespBody.get("key").toString().isEmpty()));
 
       // Get Test
       testLogger.println("Get Test");
@@ -91,11 +92,11 @@ public class ObjectServerTest {
       ResponseEntity<Map> getResponse = this.testTemplate.getForEntity(
           "http://localhost:" + this.port + testObjectUrl, Map.class);
       // Read the response
-      assert (getResponse.getStatusCode().is2xxSuccessful());
+      Assert.assertTrue(getResponse.getStatusCode().is2xxSuccessful());
       // Validate the response
       Map getRespBody = getResponse.getBody();
       testLogger.println("Get Response: " + getRespBody.toString());
-      assert (getRespBody.get("type").equals("TestType"));
+      Assert.assertTrue(getRespBody.get("type").equals("TestType"));
 
       // Update Test
       testLogger.println("Update Test");
@@ -110,7 +111,7 @@ public class ObjectServerTest {
       ResponseEntity<Map> updateResponse = this.testTemplate.postForEntity(
           "http://localhost:" + this.port + testObjectUrl, obj2, Map.class);
       // Read the response
-      assert (updateResponse.getStatusCode().is2xxSuccessful());
+      Assert.assertTrue(updateResponse.getStatusCode().is2xxSuccessful());
       // Validate the response
       Map updRespBody = updateResponse.getBody();
       testLogger.println("Update Response: " + updRespBody.toString());
@@ -121,11 +122,11 @@ public class ObjectServerTest {
       ResponseEntity<Map> getResponse2 = this.testTemplate.getForEntity(
           "http://localhost:" + this.port + testObjectUrl, Map.class);
       // Read the response
-      assert (getResponse2.getStatusCode().is2xxSuccessful());
+      Assert.assertTrue(getResponse2.getStatusCode().is2xxSuccessful());
       // Validate the response
       Map getRespBody2 = getResponse2.getBody();
       testLogger.println("Get Response: " + getRespBody2.toString());
-      assert (getRespBody2.get("type").equals("TestType2"));
+      Assert.assertTrue(getRespBody2.get("type").equals("TestType2"));
 
       // Overwrite Test
       testLogger.println("Create Test");
@@ -141,7 +142,7 @@ public class ObjectServerTest {
           "http://localhost:" + this.port + "/v1/object/" + clymanKey, ovrObj, Map.class);
       testLogger.println(ovrResponse.getStatusCode());
       // Read the response
-      assert (ovrResponse.getStatusCode().is2xxSuccessful());
+      Assert.assertTrue(ovrResponse.getStatusCode().is2xxSuccessful());
 
       // Delete Test
       testLogger.println("Delete Test");
@@ -158,10 +159,10 @@ public class ObjectServerTest {
       testLogger.println("Delete Test Response Code");
       testLogger.println(getResponse3.getStatusCode());
       testLogger.println("Get Response: " + getResponse3.toString());
-      assert (getResponse3.getStatusCode().is4xxClientError());
+      Assert.assertTrue(getResponse3.getStatusCode().is4xxClientError());
     } catch (Exception e) {
       e.printStackTrace(testLogger);
-      assert (false);
+      Assert.assertTrue(false);
     } finally  {
       // Close the output text file
       testLogger.close();
@@ -182,7 +183,7 @@ public class ObjectServerTest {
     ResponseEntity<Map> createResponse = this.testTemplate.postForEntity(
         "http://localhost:" + this.port + testObjectUrl, obj, Map.class);
     // Read the response
-    assert (createResponse.getStatusCode().is2xxSuccessful());
+    Assert.assertTrue(createResponse.getStatusCode().is2xxSuccessful());
     ObjectDocument obj2 = new ObjectDocument("TestKey", "obj2",
         "TestType2", "TestSubtype2", "TestOwner2", "MyFirstQueryScene",
         translation, rotationEuler, scale, assets, null);
@@ -190,7 +191,7 @@ public class ObjectServerTest {
     ResponseEntity<Map> createResponse2 = this.testTemplate.postForEntity(
         "http://localhost:" + this.port + testObjectUrl2, obj2, Map.class);
     // Read the response
-    assert (createResponse2.getStatusCode().is2xxSuccessful());
+    Assert.assertTrue(createResponse2.getStatusCode().is2xxSuccessful());
   }
 
   // Test Query Functions for objects
@@ -215,10 +216,10 @@ public class ObjectServerTest {
       // Read the response
       testLogger.println("Query Response Code:");
       testLogger.println(queryResponse.getStatusCode());
-      assert (queryResponse.getStatusCode().is2xxSuccessful());
+      Assert.assertTrue(queryResponse.getStatusCode().is2xxSuccessful());
     } catch (Exception e) {
       e.printStackTrace(testLogger);
-      assert (false);
+      Assert.assertTrue(false);
     } finally  {
       // Close the output text file
       testLogger.close();
@@ -248,7 +249,7 @@ public class ObjectServerTest {
       ResponseEntity<Map> createResponse = this.testTemplate.postForEntity(
           "http://localhost:" + this.port + testObjectUrl, obj, Map.class);
       // Read the response
-      assert (createResponse.getStatusCode().is2xxSuccessful());
+      Assert.assertTrue(createResponse.getStatusCode().is2xxSuccessful());
       // Run Lock Tests
       testLogger.println("Starting Object Lock Tests");
       // Get the lock
@@ -260,7 +261,7 @@ public class ObjectServerTest {
       // Read the response
       testLogger.println("Lock Response Code:");
       testLogger.println(lockResponse.getStatusCode());
-      assert (lockResponse.getStatusCode().is2xxSuccessful());
+      Assert.assertTrue(lockResponse.getStatusCode().is2xxSuccessful());
       // Run unlock test
       testLogger.println("Executing Unlock Request");
       HashMap urlVariables2 = new HashMap();
@@ -269,7 +270,7 @@ public class ObjectServerTest {
           "http://localhost:" + this.port + testObjectLockUrl, Map.class, urlVariables2);
     } catch (Exception e) {
       e.printStackTrace(testLogger);
-      assert (false);
+      Assert.assertTrue(false);
     } finally  {
       // Close the output text file
       testLogger.close();

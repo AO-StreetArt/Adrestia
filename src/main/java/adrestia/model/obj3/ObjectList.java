@@ -29,7 +29,7 @@ public class ObjectList {
 
   @JsonProperty("msg_type")
   private int msgType;
-  @JsonProperty("operator")
+  @JsonProperty("operation")
   private int opType;
   @JsonProperty("num_records")
   private long numRecords;

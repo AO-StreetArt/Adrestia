@@ -117,7 +117,7 @@ public class SceneList {
 
   /**
   * Set value of msgType.
-  * @param newMsgType Integer Value representing the Type of Message.
+  * @param newOpType Integer Value representing the Type of Message.
   */
   @JsonSetter("operation")
   public void setOpType(int newOpType) {

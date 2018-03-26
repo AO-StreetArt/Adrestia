@@ -21,6 +21,7 @@ import java.io.PrintWriter;
 import java.lang.Double;
 import java.util.HashMap;
 import java.util.Map;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,7 +88,7 @@ public class RegistrationServerTest {
           "http://localhost:" + this.port + testSceneBaseUrl, buildTestScene("firstRegTest", "myscene"), Map.class);
       testLogger.println(createResponse.getStatusCode());
       // Read the response
-      assert (createResponse.getStatusCode().is2xxSuccessful());
+      Assert.assertTrue(createResponse.getStatusCode().is2xxSuccessful());
       testLogger.println("Starting Scene Registration Tests");
       // Build a map of the URL Variables
       HashMap urlVariables = new HashMap();
@@ -104,7 +105,7 @@ public class RegistrationServerTest {
           "http://localhost:" + this.port + testSceneUrl, transform, urlVariables);
     } catch (Exception e) {
       e.printStackTrace(testLogger);
-      assert (false);
+      Assert.assertTrue(false);
     } finally  {
       // Close the output text file
       testLogger.close();
@@ -127,7 +128,7 @@ public class RegistrationServerTest {
           "http://localhost:" + this.port + testSceneBaseUrl, buildTestScene("secondRegTest", "synctest"), Map.class);
       testLogger.println(createResponse.getStatusCode());
       // Read the response
-      assert (createResponse.getStatusCode().is2xxSuccessful());
+      Assert.assertTrue(createResponse.getStatusCode().is2xxSuccessful());
       // Start by building some base data
       testLogger.println("Starting Scene Sync Tests");
       // Build a new Transform
@@ -151,10 +152,10 @@ public class RegistrationServerTest {
       // Read the response
       testLogger.println("Sync Response Code:");
       testLogger.println(queryResponse2.getStatusCode());
-      assert (queryResponse2.getStatusCode().is2xxSuccessful());
+      Assert.assertTrue(queryResponse2.getStatusCode().is2xxSuccessful());
     } catch (Exception e) {
       e.printStackTrace(testLogger);
-      assert (false);
+      Assert.assertTrue(false);
     } finally  {
       // Close the output text file
       testLogger.close();
@@ -177,7 +178,7 @@ public class RegistrationServerTest {
           "http://localhost:" + this.port + testSceneBaseUrl, buildTestScene("secondRegTest", "synctest"), Map.class);
       testLogger.println(createResponse.getStatusCode());
       // Read the response
-      assert (createResponse.getStatusCode().is2xxSuccessful());
+      Assert.assertTrue(createResponse.getStatusCode().is2xxSuccessful());
       // Build some data
       testLogger.println("Starting Scene Deregistration Tests");
       // Build a new Transform
@@ -194,7 +195,7 @@ public class RegistrationServerTest {
           "http://localhost:" + this.port + testSceneUrl, Map.class);
     } catch (Exception e) {
       e.printStackTrace(testLogger);
-      assert (false);
+      Assert.assertTrue(false);
     } finally  {
       // Close the output text file
       testLogger.close();

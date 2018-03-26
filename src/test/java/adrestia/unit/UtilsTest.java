@@ -18,6 +18,7 @@ limitations under the License.
 package adrestia;
 
 import java.io.PrintWriter;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,14 +42,14 @@ public class UtilsTest {
     testLogger.println("Starting Test for Scene List");
     try {
       UtilityProvider utils = new UtilityProvider();
-      assert (utils.translateDvsError(100) == HttpStatus.OK);
-      assert (utils.translateDvsError(102) == HttpStatus.NO_CONTENT);
-      assert (utils.translateDvsError(110) == HttpStatus.BAD_REQUEST);
-      assert (utils.translateDvsError(122) == HttpStatus.NOT_ACCEPTABLE);
-      assert (utils.translateDvsError(101) == HttpStatus.INTERNAL_SERVER_ERROR);
+      Assert.assertTrue(utils.translateDvsError(100) == HttpStatus.OK);
+      Assert.assertTrue(utils.translateDvsError(102) == HttpStatus.NO_CONTENT);
+      Assert.assertTrue(utils.translateDvsError(110) == HttpStatus.BAD_REQUEST);
+      Assert.assertTrue(utils.translateDvsError(122) == HttpStatus.NOT_ACCEPTABLE);
+      Assert.assertTrue(utils.translateDvsError(101) == HttpStatus.INTERNAL_SERVER_ERROR);
     } catch (Exception e) {
       e.printStackTrace(testLogger);
-      assert (false);
+      Assert.assertTrue(false);
     } finally  {
       // Close the output text file
       testLogger.close();
