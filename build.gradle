@@ -58,12 +58,14 @@ dependencies {
 	compile('org.springframework.cloud:spring-cloud-starter-consul-all')
 	compile('org.springframework.cloud:spring-cloud-consul-config')
 	compile('org.springframework.data:spring-data-mongodb')
+	compile("org.springframework.boot:spring-boot-starter-data-mongodb")
 	compile('com.fasterxml.jackson.core:jackson-databind')
 	compile('com.fasterxml.jackson.dataformat:jackson-dataformat-yaml')
 	compile('com.fasterxml.jackson.core:jackson-annotations')
-	errorprone 'com.google.errorprone:error_prone_core:2.1.1'
+	errorprone 'com.google.errorprone:error_prone_core:2.2.0'
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 	testCompile("junit:junit")
+	compileOnly('org.projectlombok:lombok')
 	// https://mvnrepository.com/artifact/org.json/json
 	compile group: 'org.json', name: 'json', version: '20160810'
 	// https://mvnrepository.com/artifact/commons-io/commons-io
@@ -72,6 +74,7 @@ dependencies {
 
 tasks.withType(JavaCompile) {
     options.compilerArgs << "-Xlint:deprecation"
+		options.compilerArgs += [ '-Xep:ParameterName:OFF' ]
 }
 
 task buildDocker(type: Docker, dependsOn: build) {

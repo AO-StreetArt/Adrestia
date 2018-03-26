@@ -24,7 +24,9 @@ import com.mongodb.gridfs.GridFSDBFile;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
@@ -62,6 +64,10 @@ public class AssetController {
   // Spring-Data Object allowing access to Mongo GridFS
   @Autowired
   GridFsTemplate gridFsTemplate;
+
+  // Spring Data Mongo Repository allowing access to standard Mongo operations
+  @Autowired
+  AssetHistoryRepository assetHistories;
 
   // DAO Object allowing access to scene data
   @Autowired
@@ -110,12 +116,12 @@ public class AssetController {
     return retScene;
   }
 
-  private Scene buildUpdateScene(String key, String asset_id) {
+  private Scene buildUpdateScene(String key, String assetId) {
     Scene updateScn = new Scene();
     // Update the scene
     updateScn.setKey(key);
     String[] newAssets = new String[1];
-    newAssets[0] = asset_id;
+    newAssets[0] = assetId;
     updateScn.setAssets(newAssets);
     return updateScn;
   }
@@ -133,6 +139,29 @@ public class AssetController {
       logger.debug(updateResponse.getErrorCode());
     }
     return returnCode;
+  }
+
+  private void updateAssetHistory(String sceneName, String objectName,
+      String assetId, String oldAssetId) {
+    List<AssetHistory> existingHistoryList = assetHistories.findByAsset(oldAssetId);
+    // If we have an existing history, update it.
+    if (existingHistoryList.size() > 0) {
+      AssetHistory existingHistory = existingHistoryList.get(0);
+      existingHistory.getAssetIds().add(0, assetId);
+      existingHistory.setAsset(assetId);
+      assetHistories.save(existingHistory);
+    } else {
+      // If we don't have an existing history, create one
+      List<String> historyList = new ArrayList<String>();
+      historyList.add(oldAssetId);
+      historyList.add(0, assetId);
+      AssetHistory newHistory = new AssetHistory();
+      newHistory.setScene(sceneName);
+      newHistory.setObject(objectName);
+      newHistory.setAsset(assetId);
+      newHistory.setAssetIds(historyList);
+      assetHistories.save(newHistory);
+    }
   }
 
   private HttpStatus overwriteAssetToScene(String sceneName, String assetId, String oldAssetId) {
@@ -221,7 +250,8 @@ public class AssetController {
     return updateObj;
   }
 
-  private HttpStatus overwriteAssetToObject(String sceneName, String objectName, String assetId, String oldAssetId) {
+  private HttpStatus overwriteAssetToObject(String sceneName, String objectName,
+      String assetId, String oldAssetId) {
     HttpStatus returnCode = HttpStatus.OK;
     // See if we can find the Object requested
     ObjectDocument existingDoc = findObject(sceneName, objectName);
@@ -358,6 +388,7 @@ public class AssetController {
         returnCode = overwriteAssetToScene(sceneName, newId, key);
       }
     }
+    updateAssetHistory(sceneName, objectName, newId, key);
     return new ResponseEntity<String>(newId, responseHeaders, returnCode);
   }
 
