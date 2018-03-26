@@ -91,6 +91,7 @@ public class ObjectDaoTest {
       ObjectList updResp = objData.update(testDocument);
       Assert.assertTrue(updResp.getErrorCode() == 100);
       ObjectList getResp2 = objData.get(clymanKey);
+
       Assert.assertTrue(getResp2.getErrorCode() == 100);
       Assert.assertTrue(getResp2.getNumRecords() > 0);
       Assert.assertTrue(getResp2.getDocuments()[0].getType().equals("TestType2"));
@@ -110,6 +111,7 @@ public class ObjectDaoTest {
       testLogger.println(ovrResp.getErrorMessage());
       Assert.assertTrue(ovrResp.getErrorCode() == 100);
       ObjectList ovrCheckResp = objData.get(clymanKey);
+
       Assert.assertTrue(ovrCheckResp.getErrorCode() == 100);
       Assert.assertTrue(ovrCheckResp.getNumRecords() > 0);
       Assert.assertTrue(ovrCheckResp.getDocuments()[0].getTransform()[0] - 1.0 < 0.001);
