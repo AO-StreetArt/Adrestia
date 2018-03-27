@@ -54,9 +54,9 @@ test_transform = [1.0, 0.0, 0.0, 0.0,
                   0.0, 0.0, 1.0, 0.0,
                   0.0, 0.0, 0.0, 1.0]
 
-updated_test_transform = [2.0, 0.0, 0.0, 2.0,
-                          0.0, 1.0806046, -1.682942, -0.6023374,
-                          0.0, 1.682942, 1.0806046, 2.7635466,
+updated_test_transform = [2.0, 0.0, 0.0, 1.0,
+                          0.0, 2.0, 0.0, 1.0,
+                          0.0, 0.0, 2.0, 1.0,
                           0.0, 0.0, 0.0, 1.0]
 
 # Object data represented through each piece of the flow
@@ -68,7 +68,7 @@ test_data = {
   "owner": "basicTestOwner",
   "scene": "basicFlowName",
   "translation": [0.0, 0.0, 0.0],
-  "euler_rotation": [0.0, 1.0, 0.0, 0.0],
+  "euler_rotation": [0.0, 0.0, 0.0],
   "scale": [1.0, 1.0, 1.0],
   "assets": ["basicTestAsset"]
 }
@@ -81,7 +81,7 @@ updated_test_data = {
   "owner": "Alex",
   "scene": "basicFlowName",
   "translation": [1.0, 1.0, 1.0],
-  "euler_rotation": [1.0, 1.0, 0.0, 0.0],
+  "euler_rotation": [0.0, 0.0, 0.0],
   "scale": [2.0, 2.0, 2.0],
   "assets": ["anotherAsset"]
 }
