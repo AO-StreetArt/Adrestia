@@ -8,6 +8,8 @@ Start by forking the repository, cloning your repository, and changing to the ma
 
 Then, change to the 'scripts/deps' folder and run:
 
+`docker pull aostreetart/clyman`
+`docker pull aostreetart/crazyivan`
 `docker-compose up`
 
 Now, you can execute the tests and other validations from the main folder of the repository:
