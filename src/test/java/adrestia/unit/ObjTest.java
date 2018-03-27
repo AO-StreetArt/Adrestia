@@ -42,14 +42,15 @@ public class ObjTest {
     try {
       // Full Constructor Test
       double[] translation = {0.0, 0.0, 0.0};
-      double[] rotationEuler = {0.0, 0.0, 0.0, 0.0};
+      double[] rotationEuler = {0.0, 0.0, 0.0};
+      double[] rotationQuaternion = {0.0, 1.0, 0.0, 0.0};
       double[] scale = {0.0, 0.0, 0.0};
       String[] assets = {"TestAsset1", "TestAsset2"};
       double[] transform = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
           0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
       ObjectDocument testDocument = new ObjectDocument("TestKey", "TestName",
           "TestType", "TestSubtype", "TestOwner", "TestScene",
-          translation, rotationEuler, scale, assets, transform);
+          translation, rotationEuler, rotationQuaternion, scale, assets, transform);
       // Test the get methods
       Assert.assertTrue(testDocument.getKey().equals("TestKey"));
       Assert.assertTrue(testDocument.getName().equals("TestName"));
@@ -103,12 +104,13 @@ public class ObjTest {
     try {
       // Full Constructor Test
       double[] translation = {0.0, 0.0, 0.0};
-      double[] rotationEuler = {0.0, 0.0, 0.0, 0.0};
+      double[] rotationEuler = {0.0, 0.0, 0.0};
+      double[] rotationQuaternion = {0.0, 1.0, 0.0, 0.0};
       double[] scale = {0.0, 0.0, 0.0};
       String[] assets = {"TestAsset1", "TestAsset2"};
       ObjectDocument testDocument = new ObjectDocument("TestKey", "TestName",
           "TestType", "TestSubtype", "TestOwner", "TestScene",
-          translation, rotationEuler, scale, assets, null);
+          translation, rotationEuler, rotationQuaternion, scale, assets, null);
 
       ObjectDocument[] docList = {testDocument};
       ObjectList objList = new ObjectList(1, 1, docList, 100, "ErrMsg", "TransactionID");
