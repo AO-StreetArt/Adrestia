@@ -67,12 +67,13 @@ public class ObjectServerTest {
       // Build a new Object
       testLogger.println("Create Test");
       double[] translation = {0.0, 0.0, 0.0};
-      double[] rotationEuler = {0.0, 1.0, 0.0, 0.0};
+      double[] rotationEuler = {0.0, 0.0, 0.0};
+      double[] rotationQuaternion = {0.0, 1.0, 0.0, 0.0};
       double[] scale = {1.0, 1.0, 1.0};
       String[] assets = {"TestAsset1", "TestAsset2"};
       ObjectDocument obj = new ObjectDocument("TestKey", "AeselTestObject11",
           "TestType", "TestSubtype", "TestOwner", "AeselTestScene11",
-          translation, rotationEuler, scale, assets, null);
+          translation, rotationEuler, rotationQuaternion, scale, assets, null);
 
       // Post the Object to the endpoint
       ResponseEntity<Map> createResponse = this.testTemplate.postForEntity(
@@ -101,12 +102,13 @@ public class ObjectServerTest {
       // Update Test
       testLogger.println("Update Test");
       double[] translation2 = {1.0, 1.0, 1.0};
-      double[] rotationEuler2 = {1.0, 1.0, 1.0, 45.0};
+      double[] rotationEuler2 = {0.0, 0.0, 0.0};
+      double[] rotationQuaternion2 = {1.67, 1.0, 1.0, 1.0};
       double[] scale2 = {2.0, 2.0, 2.0};
       String[] assets2 = {"TestAsset3", "TestAsset4"};
       ObjectDocument obj2 = new ObjectDocument("TestKey", "AeselTestObject11",
           "TestType2", "TestSubtype2", "TestOwner2", "AeselTestScene11",
-          translation2, rotationEuler2, scale2, assets2, null);
+          translation2, rotationEuler2, rotationQuaternion2, scale2, assets2, null);
       // Post the Scene to the endpoint
       ResponseEntity<Map> updateResponse = this.testTemplate.postForEntity(
           "http://localhost:" + this.port + testObjectUrl, obj2, Map.class);
@@ -131,13 +133,14 @@ public class ObjectServerTest {
       // Overwrite Test
       testLogger.println("Create Test");
       double[] ovrTranslation = {1.0, 1.0, 1.0};
-      double[] ovrRotationEuler = {0.0, 1.0, 0.0, 0.0};
+      double[] ovrRotationEuler = {0.0, 0.0, 0.0};
+      double[] ovrRotationQuaternion = {0.0, 1.0, 0.0, 0.0};
       double[] ovrScale = {1.0, 1.0, 1.0};
       String[] ovrAssets = {"TestAsset1", "TestAsset2"};
       String clymanKey = crtRespBody.get("key").toString();
       ObjectDocument ovrObj = new ObjectDocument(clymanKey, "AeselTestObject11",
           "TestType", "TestSubtype", "TestOwner", "AeselTestScene11",
-          ovrTranslation, ovrRotationEuler, ovrScale, ovrAssets, null);
+          ovrTranslation, ovrRotationEuler, ovrRotationQuaternion, ovrScale, ovrAssets, null);
       ResponseEntity<Map> ovrResponse = this.testTemplate.postForEntity(
           "http://localhost:" + this.port + "/v1/object/" + clymanKey, ovrObj, Map.class);
       testLogger.println(ovrResponse.getStatusCode());
@@ -173,12 +176,13 @@ public class ObjectServerTest {
     final String testObjectUrl = "/v1/scene/MyFirstQueryScene/object/obj1";
     final String testObjectUrl2 = "/v1/scene/MyFirstQueryScene/object/obj2";
     double[] translation = {0.0, 0.0, 0.0};
-    double[] rotationEuler = {0.0, 1.0, 0.0, 0.0};
+    double[] rotationEuler = {0.0, 0.0, 0.0};
+    double[] rotationQuaternion = {0.0, 1.0, 0.0, 0.0};
     double[] scale = {1.0, 1.0, 1.0};
     String[] assets = {"TestAsset1", "TestAsset2"};
     ObjectDocument obj = new ObjectDocument("TestKey", "obj1",
         "TestType", "TestSubtype", "TestOwner", "MyFirstQueryScene",
-        translation, rotationEuler, scale, assets, null);
+        translation, rotationEuler, rotationQuaternion, scale, assets, null);
     // Post the Scene to the endpoint
     ResponseEntity<Map> createResponse = this.testTemplate.postForEntity(
         "http://localhost:" + this.port + testObjectUrl, obj, Map.class);
@@ -186,7 +190,7 @@ public class ObjectServerTest {
     Assert.assertTrue(createResponse.getStatusCode().is2xxSuccessful());
     ObjectDocument obj2 = new ObjectDocument("TestKey", "obj2",
         "TestType2", "TestSubtype2", "TestOwner2", "MyFirstQueryScene",
-        translation, rotationEuler, scale, assets, null);
+        translation, rotationEuler, rotationQuaternion, scale, assets, null);
     // Post the Scene to the endpoint
     ResponseEntity<Map> createResponse2 = this.testTemplate.postForEntity(
         "http://localhost:" + this.port + testObjectUrl2, obj2, Map.class);
@@ -239,12 +243,13 @@ public class ObjectServerTest {
     try {
       testLogger.println("Populating Data for Lock Tests");
       double[] translation = {0.0, 0.0, 0.0};
-      double[] rotationEuler = {0.0, 1.0, 0.0, 0.0};
+      double[] rotationEuler = {0.0, 0.0, 0.0};
+      double[] rotationQuaternion = {0.0, 1.0, 0.0, 0.0};
       double[] scale = {1.0, 1.0, 1.0};
       String[] assets = {"TestAsset1", "TestAsset2"};
       ObjectDocument obj = new ObjectDocument("TestKey", "obj1",
           "TestType", "TestSubtype", "TestOwner", "MyLockScene",
-          translation, rotationEuler, scale, assets, null);
+          translation, rotationEuler, rotationQuaternion, scale, assets, null);
       // Post the object to the endpoint
       ResponseEntity<Map> createResponse = this.testTemplate.postForEntity(
           "http://localhost:" + this.port + testObjectUrl, obj, Map.class);

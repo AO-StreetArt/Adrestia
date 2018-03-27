@@ -38,6 +38,8 @@ public class ObjectDocument {
   private double[] translation = new double[0];
   @JsonProperty("euler_rotation")
   private double[] rotationEuler = new double[0];
+  @JsonProperty("quaternion_rotation")
+  private double[] rotationQuaternion = new double[0];
   private double[] scale = new double[0];
   private String[] assets = new String[0];
   private double[] transform = new double[0];
@@ -58,13 +60,15 @@ public class ObjectDocument {
   * @param owner The owner of the Object
   * @param translation The current translation of the Object
   * @param rotationEuler The current rotation of the Object
+  * @param rotationQuaternion The current rotation of the Object
   * @param scale The scale of the Object
   * @param assets The asset list of the Object
   * @param transform The transform of the object
   */
   public ObjectDocument(String key, String name, String type, String subtype, String owner,
-      String scene, double[] translation, double[] rotationEuler, double[] scale,
-      String[] assets, double[] transform) {
+      String scene, double[] translation, double[] rotationEuler,
+      double[] rotationQuaternion, double[] scale, String[] assets,
+      double[] transform) {
     super();
     this.key = key;
     this.name = name;
@@ -74,6 +78,7 @@ public class ObjectDocument {
     this.scene = scene;
     this.translation = translation;
     this.rotationEuler = rotationEuler;
+    this.rotationQuaternion = rotationQuaternion;
     this.scale = scale;
     this.assets = assets;
     this.transform = transform;
@@ -149,6 +154,15 @@ public class ObjectDocument {
   @JsonGetter("euler_rotation")
   public double[] getRotationEuler() {
     return this.rotationEuler;
+  }
+
+  /**
+  * Returns value of rotationQuaternion.
+  * @return The current quaternion rotation of the object
+  */
+  @JsonGetter("quaternion_rotation")
+  public double[] getRotationQuaternion() {
+    return this.rotationQuaternion;
   }
 
   /**
@@ -247,6 +261,15 @@ public class ObjectDocument {
   @JsonSetter("euler_rotation")
   public void setRotationEuler(double[] rotationEuler) {
     this.rotationEuler = rotationEuler;
+  }
+
+  /**
+  * Sets new value of rotationQuaternion.
+  * @param rotationQuaternion The current rotation of the object
+  */
+  @JsonSetter("quaternion_rotation")
+  public void setRotationQuaternion(double[] rotationQuaternion) {
+    this.rotationQuaternion = rotationQuaternion;
   }
 
   /**

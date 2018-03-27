@@ -62,12 +62,13 @@ public class ObjectDaoTest {
     try {
       // Create test
       double[] translation = {0.0, 0.0, 0.0};
-      double[] rotationEuler = {0.0, 1.0, 0.0, 0.0};
+      double[] rotationEuler = {0.0, 0.0, 0.0};
+      double[] rotationQuaternion = {0.0, 1.0, 0.0, 0.0};
       double[] scale = {1.0, 1.0, 1.0};
       String[] assets = {"TestAsset1", "TestAsset2"};
       ObjectDocument testDocument = new ObjectDocument("TestKey", "TestName",
           "TestType", "TestSubtype", "TestOwner", "TestScene",
-          translation, rotationEuler, scale, assets, null);
+          translation, rotationEuler, rotationQuaternion, scale, assets, null);
       ObjectList crtResp = objData.create(testDocument);
       testLogger.println("Create Test Response: ");
       testLogger.println(crtResp);
@@ -100,11 +101,12 @@ public class ObjectDaoTest {
       // Overwrite Test
       double[] ovrTranslation = {1.0, 1.0, 1.0};
       double[] ovrRotationEuler = {0.0, 1.0, 0.0, 0.0};
+      double[] ovrRotationQuaternion = {0.0, 1.0, 0.0, 0.0};
       double[] ovrScale = {1.0, 1.0, 1.0};
       String[] ovrAssets = {"TestAsset1", "TestAsset2"};
       ObjectDocument overwriteTestDoc = new ObjectDocument(clymanKey, "TestName",
           "TestType", "TestSubtype", "TestOwner", "TestScene",
-          ovrTranslation, ovrRotationEuler, ovrScale, ovrAssets, null);
+          ovrTranslation, ovrRotationEuler, ovrRotationQuaternion, ovrScale, ovrAssets, null);
       ObjectList ovrResp = objData.overwrite(overwriteTestDoc);
       testLogger.println("Overwrite Test Response: ");
       testLogger.println(ovrResp.getErrorCode());
