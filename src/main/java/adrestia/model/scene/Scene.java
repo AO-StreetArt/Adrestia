@@ -31,6 +31,7 @@ public class Scene {
   private String key;
   private String name;
   private String region;
+  private boolean active;
   private double latitude;
   private double longitude;
   private double distance;
@@ -51,10 +52,39 @@ public class Scene {
     this.key = "";
     this.name = "";
     this.region = "";
+    this.active = false;
   }
 
   /**
   * Complete Scene constructor.
+  * @param key A Unique String Key for the Scene.
+  * @param name A Name for the scene, by which it is externally identified.
+  * @param region A String Region for the Scene.
+  * @param latitude The latitude of the scene.
+  * @param longitude The longitude of the scene.
+  * @param active Is the scene active or not.
+  * @param distance The distance from the provided lat/long, used for queries.
+  * @param assets A String Array of Asset ID's associated to the scene.
+  * @param tags A String Array of Tags for the scene, used for queries.
+  * @param devices An Array of User Devices registered to the scene.
+  */
+  public Scene(String key, String name, String region, double latitude,
+      double longitude, boolean active, double distance, String[] assets,
+      String[] tags, UserDevice[] devices) {
+    this.key = key;
+    this.name = name;
+    this.region = region;
+    this.latitude = latitude;
+    this.longitude = longitude;
+    this.distance = distance;
+    this.assets = assets;
+    this.tags = tags;
+    this.active = active;
+    this.deviceList = devices;
+  }
+
+  /**
+  * Partial Scene constructor.
   * @param key A Unique String Key for the Scene.
   * @param name A Name for the scene, by which it is externally identified.
   * @param region A String Region for the Scene.
@@ -76,6 +106,7 @@ public class Scene {
     this.distance = distance;
     this.assets = assets;
     this.tags = tags;
+    this.active = true;
     this.deviceList = devices;
   }
 
@@ -95,6 +126,24 @@ public class Scene {
   @JsonSetter("key")
   public void setKey(String newKey) {
     this.key = newKey;
+  }
+
+  /**
+  * Set value of active.
+  * @param newActive A boolean value representing if the scene is active.
+  */
+  @JsonSetter("active")
+  public void setActive(boolean newActive) {
+    this.active = newActive;
+  }
+
+  /**
+  * Returns value of active.
+  * @return True if the scene is active, otherwise false.
+  */
+  @JsonGetter("active")
+  public boolean getActive() {
+    return this.active;
   }
 
   /**
