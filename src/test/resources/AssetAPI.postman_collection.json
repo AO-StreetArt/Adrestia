@@ -148,7 +148,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"name\":\"assetScene\",\n    \"latitude\":124.0,\n    \"longitude\":122.0,\n    \"distance\":100.0,\n    \"region\":\"basicFlowRegion\",\n    \"asset_ids\":[\"{{ASSET_ID}}\"],\n    \"tags\":[\"basicTag\"]\n}"
+					"raw": "{\n    \"name\":\"assetScene\",\n    \"latitude\":124.0,\n    \"longitude\":122.0,\n    \"distance\":100.0,\n    \"region\":\"basicFlowRegion\",\n    \"assets\":[\"{{ASSET_ID}}\"],\n    \"tags\":[\"basicTag\"]\n}"
 				},
 				"url": {
 					"raw": "{{AESEL_URL}}/v1/scene/assetScene",
@@ -236,7 +236,7 @@
 							"",
 							"pm.test(\"Scene Asset Updated\", function () {",
 							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.asset_ids[0]).to.eql(pm.environment.get(\"ASSET_ID\"));",
+							"    pm.expect(jsonData.assets[0]).to.eql(pm.environment.get(\"ASSET_ID\"));",
 							"});"
 						]
 					}
@@ -255,7 +255,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"name\":\"assetScene\",\n    \"latitude\":124.0,\n    \"longitude\":122.0,\n    \"distance\":100.0,\n    \"region\":\"basicFlowRegion\",\n    \"asset_ids\":[\"{{ASSET_ID}}\"],\n    \"tags\":[\"basicTag\"]\n}"
+					"raw": "{\n    \"name\":\"assetScene\",\n    \"latitude\":124.0,\n    \"longitude\":122.0,\n    \"distance\":100.0,\n    \"region\":\"basicFlowRegion\",\n    \"assets\":[\"{{ASSET_ID}}\"],\n    \"tags\":[\"basicTag\"]\n}"
 				},
 				"url": {
 					"raw": "{{AESEL_URL}}/v1/scene/assetScene",
@@ -310,7 +310,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"name\":\"assetScene\",\n    \"latitude\":124.0,\n    \"longitude\":122.0,\n    \"distance\":100.0,\n    \"region\":\"basicFlowRegion\",\n    \"asset_ids\":[\"{{ASSET_ID}}\"],\n    \"tags\":[\"basicTag\"]\n}"
+					"raw": "{\n    \"name\":\"assetScene\",\n    \"latitude\":124.0,\n    \"longitude\":122.0,\n    \"distance\":100.0,\n    \"region\":\"basicFlowRegion\",\n    \"assets\":[\"{{ASSET_ID}}\"],\n    \"tags\":[\"basicTag\"]\n}"
 				},
 				"url": {
 					"raw": "{{AESEL_URL}}/v1/scene/assetScene/object/assetObject",
@@ -637,7 +637,7 @@
 							"",
 							"pm.test(\"Scene Asset Updated\", function () {",
 							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.asset_ids[0]).to.eql(pm.environment.get(\"ASSET_ID\"));",
+							"    pm.expect(jsonData.assets[0]).to.eql(pm.environment.get(\"ASSET_ID\"));",
 							"});"
 						]
 					}
@@ -656,7 +656,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"name\":\"assetScene\",\n    \"latitude\":124.0,\n    \"longitude\":122.0,\n    \"distance\":100.0,\n    \"region\":\"basicFlowRegion\",\n    \"asset_ids\":[\"{{ASSET_ID}}\"],\n    \"tags\":[\"basicTag\"]\n}"
+					"raw": "{\n    \"name\":\"assetScene\",\n    \"latitude\":124.0,\n    \"longitude\":122.0,\n    \"distance\":100.0,\n    \"region\":\"basicFlowRegion\",\n    \"assets\":[\"{{ASSET_ID}}\"],\n    \"tags\":[\"basicTag\"]\n}"
 				},
 				"url": {
 					"raw": "{{AESEL_URL}}/v1/scene/assetScene",
@@ -711,7 +711,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"name\":\"assetScene\",\n    \"latitude\":124.0,\n    \"longitude\":122.0,\n    \"distance\":100.0,\n    \"region\":\"basicFlowRegion\",\n    \"asset_ids\":[\"{{ASSET_ID}}\"],\n    \"tags\":[\"basicTag\"]\n}"
+					"raw": "{\n    \"name\":\"assetScene\",\n    \"latitude\":124.0,\n    \"longitude\":122.0,\n    \"distance\":100.0,\n    \"region\":\"basicFlowRegion\",\n    \"assets\":[\"{{ASSET_ID}}\"],\n    \"tags\":[\"basicTag\"]\n}"
 				},
 				"url": {
 					"raw": "{{AESEL_URL}}/v1/scene/assetScene/object/assetObject",

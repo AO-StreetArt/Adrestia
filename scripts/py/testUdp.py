@@ -25,7 +25,7 @@ test_scene_data = {
     "longitude":122.0,
     "distance":100.0,
     "region":"basicFlowRegion",
-    "asset_ids":["basicAsset"],
+    "assets":["basicAsset"],
     "tags":["basicTag"]
 }
 

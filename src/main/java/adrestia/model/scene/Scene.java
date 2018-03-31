@@ -35,7 +35,6 @@ public class Scene {
   private double latitude;
   private double longitude;
   private double distance;
-  @JsonProperty("asset_ids")
   private String[] assets = new String[0];
   private String[] tags = new String[0];
   @JsonProperty("devices")
@@ -240,7 +239,7 @@ public class Scene {
   * Returns the assets of the scene.
   * @return A String Array of Asset ID's associated to the scene.
   */
-  @JsonGetter("asset_ids")
+  @JsonGetter("assets")
   public String[] getAssets() {
     return this.assets;
   }
@@ -249,7 +248,7 @@ public class Scene {
   * Set the assets of the scene.
   * @param newAssets A String Array of Asset ID's associated to the scene.
   */
-  @JsonSetter("asset_ids")
+  @JsonSetter("assets")
   public void setAssets(String[] newAssets) {
     this.assets = newAssets;
   }

@@ -117,6 +117,7 @@ public class RegistrationServerTest {
   public void testSyncApi() throws Exception {
     String testSceneBaseUrl = "/v1/scene/synctest";
     String testSceneUrl = testSceneBaseUrl + "/registration";
+    String testSceneDeviceUrl = testSceneUrl + "?device_id=abc123";
     // Open up a file that we can write some test results to
     // Shouldn't be relied on for automated testing but good for debugging
     PrintWriter testLogger = new PrintWriter("logs/testSyncApi.txt", "UTF-8");
@@ -138,7 +139,7 @@ public class RegistrationServerTest {
       // Put the registration to the endpoint
       testLogger.println("Executing Query HTTP Request");
       this.testTemplate.put(
-          "http://localhost:" + this.port + testSceneUrl, transform);
+          "http://localhost:" + this.port + testSceneDeviceUrl, transform);
 
       // Now, execute a sync against that data
       // Build a new Transform
@@ -148,7 +149,7 @@ public class RegistrationServerTest {
       // Post the registration to the endpoint
       testLogger.println("Executing Query HTTP Request");
       ResponseEntity<Map> queryResponse2 = this.testTemplate.postForEntity(
-          "http://localhost:" + this.port + testSceneUrl, transform2, Map.class);
+          "http://localhost:" + this.port + testSceneDeviceUrl, transform2, Map.class);
       // Read the response
       testLogger.println("Sync Response Code:");
       testLogger.println(queryResponse2.getStatusCode());
