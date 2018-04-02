@@ -149,6 +149,7 @@ def execute_main():
 
     # Delete the Object
     r = requests.delete(aesel_addr + '/v1/scene/' + test_scene_data['name'] + '/object/' + updated_test_data['name'])
+    assert(r.status_code == requests.codes.ok)
 
     # Validate that the delete went through correctly
     r = requests.get(aesel_addr + '/v1/scene/' + test_scene_data['name'] + '/object/' + updated_test_data['name'])
