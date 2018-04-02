@@ -89,7 +89,7 @@ updated_test_data = {
 def execute_udp_flow(sock, udp_ip, udp_port, aesel_addr, test_data,
                      test_transform, updated_test_data, updated_test_transform):
     # Send the UDP Message
-    sock.sendto(json.dumps(updated_test_data), (udp_ip, udp_port))
+    sock.sendto(bytes(json.dumps(updated_test_data), 'UTF-8'), (udp_ip, udp_port))
     time.sleep(1)
     # Validate that the update went through correctly
     r = requests.get(aesel_addr + '/v1/scene/' + test_scene_data['name'] + '/object/' + updated_test_data['name'])
