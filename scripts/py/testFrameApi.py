@@ -17,7 +17,7 @@ log_level = logging.DEBUG
 # Test Scene Data
 test_scene_data = {
     "key":"",
-    "name":"basicFlowName",
+    "name":"frameFlow",
     "latitude":124.0,
     "longitude":122.0,
     "distance":100.0,
@@ -61,11 +61,11 @@ second_frame_transform = [2.0, 0.0, 0.0, 3.0,
 # Object data represented through each piece of the flow
 test_data = {
   "key": "",
-  "name": "basicTestObject",
+  "name": "frameTestObject",
   "type": "basicTestType",
   "subtype": "basicTestSubtype",
   "owner": "basicTestOwner",
-  "scene": "basicFlowName",
+  "scene": "frameFlow",
   "frame": 0,
   "translation": [0.0, 0.0, 0.0],
   "euler_rotation": [0.0, 0.0, 0.0],
@@ -75,11 +75,11 @@ test_data = {
 
 updated_test_data = {
   "key": "",
-  "name": "basicTestObject",
+  "name": "frameTestObject",
   "type": "Mesh",
   "subtype": "Cube",
   "owner": "Alex",
-  "scene": "basicFlowName",
+  "scene": "frameFlow",
   "frame": 0,
   "translation": [1.0, 1.0, 1.0],
   "euler_rotation": [0.0, 0.0, 0.0],
@@ -89,11 +89,11 @@ updated_test_data = {
 
 second_frame_data = {
   "key": "",
-  "name": "basicTestObject",
+  "name": "frameTestObject",
   "type": "Mesh",
   "subtype": "Cube",
   "owner": "Alex",
-  "scene": "basicFlowName",
+  "scene": "frameFlow",
   "frame": 10,
   "translation": [3.0, 0.0, 1.0],
   "euler_rotation": [0.0, 0.0, 0.0],
