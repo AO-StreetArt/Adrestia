@@ -5,22 +5,19 @@
 import logging
 import sys
 import json
-import copy
 import requests
 import socket
 import time
 
 # Basic Config
 aesel_addr = "http://127.0.0.1:5885"
-udp_ip = "127.0.0.1"
-udp_port = 5886
-log_file = 'logs/udpTest.log'
+log_file = 'logs/frameTest.log'
 log_level = logging.DEBUG
 
 # Test Scene Data
 test_scene_data = {
     "key":"",
-    "name":"basicFlowName",
+    "name":"frameFlow",
     "latitude":124.0,
     "longitude":122.0,
     "distance":100.0,
@@ -40,9 +37,6 @@ test_scene_data = {
 #        0.0, 1.0, 0.0, y.0,
 #        0.0, 0.0, 1.0, z.0,
 #        0.0, 0.0, 0.0, 1.0]
-# Rotation Matrix:
-#   For a rotation of theta degrees about the vector <x, y, z>, the rotation
-#   matrix can be found using https://www.andre-gaschler.com/rotationconverter/
 # Scale Matrix:
 #   For a scale <x, y, z>, the corresponding matrix is:
 #       [x.0, 0.0, 0.0, 0.0,
@@ -59,14 +53,20 @@ updated_test_transform = [2.0, 0.0, 0.0, 1.0,
                           0.0, 0.0, 2.0, 1.0,
                           0.0, 0.0, 0.0, 1.0]
 
+second_frame_transform = [2.0, 0.0, 0.0, 3.0,
+                          0.0, 2.0, 0.0, 0.0,
+                          0.0, 0.0, 2.0, 1.0,
+                          0.0, 0.0, 0.0, 1.0]
+
 # Object data represented through each piece of the flow
 test_data = {
   "key": "",
-  "name": "basicTestObject",
+  "name": "frameTestObject",
   "type": "basicTestType",
   "subtype": "basicTestSubtype",
   "owner": "basicTestOwner",
-  "scene": "basicFlowName",
+  "scene": "frameFlow",
+  "frame": 0,
   "translation": [0.0, 0.0, 0.0],
   "euler_rotation": [0.0, 0.0, 0.0],
   "scale": [1.0, 1.0, 1.0],
@@ -75,31 +75,31 @@ test_data = {
 
 updated_test_data = {
   "key": "",
-  "name": "basicTestObject",
+  "name": "frameTestObject",
   "type": "Mesh",
   "subtype": "Cube",
   "owner": "Alex",
-  "scene": "basicFlowName",
+  "scene": "frameFlow",
+  "frame": 0,
   "translation": [1.0, 1.0, 1.0],
   "euler_rotation": [0.0, 0.0, 0.0],
   "scale": [2.0, 2.0, 2.0],
   "assets": ["anotherAsset"]
 }
 
-def execute_udp_flow(sock, udp_ip, udp_port, aesel_addr, test_data,
-                     test_transform, updated_test_data, updated_test_transform):
-    # Send the UDP Message
-    sock.sendto(bytes(json.dumps(updated_test_data), 'UTF-8'), (udp_ip, udp_port))
-    time.sleep(1)
-    # Validate that the update went through correctly
-    r = requests.get(aesel_addr + '/v1/scene/' + test_scene_data['name'] + '/object/' + updated_test_data['name'])
-    assert(r.status_code == requests.codes.ok)
-    parsed_json = r.json()
-    if parsed_json is not None:
-        for i in range(0,16):
-            logging.debug("Validating Transform element: %s" % i)
-            assert(parsed_json["transform"][i] - updated_test_transform[i] < 0.01)
-
+second_frame_data = {
+  "key": "",
+  "name": "frameTestObject",
+  "type": "Mesh",
+  "subtype": "Cube",
+  "owner": "Alex",
+  "scene": "frameFlow",
+  "frame": 10,
+  "translation": [3.0, 0.0, 1.0],
+  "euler_rotation": [0.0, 0.0, 0.0],
+  "scale": [2.0, 2.0, 2.0],
+  "assets": ["anotherAsset"]
+}
 
 # Execute the actual tests
 def execute_main():
@@ -120,7 +120,7 @@ def execute_main():
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     logging.debug("Connected to UDP Socket")
 
-    # Create a Scene and Object through the HTTP API
+    # Create a Scene and Object
     r = requests.post(aesel_addr + '/v1/scene/' + test_scene_data['name'], json=test_scene_data)
     assert(r.status_code == requests.codes.ok)
     response_json = r.json()
@@ -131,13 +131,29 @@ def execute_main():
     test_data['key'] = response_json['key']
     updated_test_data['key'] = response_json['key']
 
-    # Execute each test with a deep copy of the data, so that it stays
-    # independent through each test
-    execute_udp_flow(sock, udp_ip, udp_port, aesel_addr,
-                      copy.deepcopy(test_data),
-                      copy.deepcopy(test_transform),
-                      copy.deepcopy(updated_test_data),
-                      copy.deepcopy(updated_test_transform))
+    # Send in an update on another frame
+    payload = {"frame": 10}
+    r = requests.post(aesel_addr + '/v1/scene/' + test_scene_data['name'] + "/object/" + test_data['name'],
+                      json=second_frame_data, params=payload)
+
+    # Validate that the update went through correctly
+    r = requests.get(aesel_addr + '/v1/scene/' + test_scene_data['name'] + '/object/' + updated_test_data['name'], params=payload)
+    assert(r.status_code == requests.codes.ok)
+    parsed_json = r.json()
+    if parsed_json is not None:
+        for i in range(0,16):
+            logging.debug("Validating Transform element: %s" % i)
+            assert(parsed_json["transform"][i] - second_frame_transform[i] < 0.01)
+    else:
+        assert(False)
+
+    # Delete the Object
+    r = requests.delete(aesel_addr + '/v1/scene/' + test_scene_data['name'] + '/object/' + updated_test_data['name'])
+    assert(r.status_code == requests.codes.ok)
+
+    # Validate that the delete went through correctly
+    r = requests.get(aesel_addr + '/v1/scene/' + test_scene_data['name'] + '/object/' + updated_test_data['name'])
+    assert(r.status_code != requests.codes.ok)
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:

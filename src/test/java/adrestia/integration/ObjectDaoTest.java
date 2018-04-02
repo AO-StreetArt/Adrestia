@@ -67,7 +67,7 @@ public class ObjectDaoTest {
       double[] scale = {1.0, 1.0, 1.0};
       String[] assets = {"TestAsset1", "TestAsset2"};
       ObjectDocument testDocument = new ObjectDocument("TestKey", "TestName",
-          "TestType", "TestSubtype", "TestOwner", "TestScene",
+          "TestType", "TestSubtype", "TestOwner", "TestScene", 0, 0,
           translation, rotationEuler, rotationQuaternion, scale, assets, null);
       ObjectList crtResp = objData.create(testDocument);
       testLogger.println("Create Test Response: ");
@@ -105,7 +105,7 @@ public class ObjectDaoTest {
       double[] ovrScale = {1.0, 1.0, 1.0};
       String[] ovrAssets = {"TestAsset1", "TestAsset2"};
       ObjectDocument overwriteTestDoc = new ObjectDocument(clymanKey, "TestName",
-          "TestType", "TestSubtype", "TestOwner", "TestScene",
+          "TestType", "TestSubtype", "TestOwner", "TestScene", 0, 0, 
           ovrTranslation, ovrRotationEuler, ovrRotationQuaternion, ovrScale, ovrAssets, null);
       ObjectList ovrResp = objData.overwrite(overwriteTestDoc);
       testLogger.println("Overwrite Test Response: ");

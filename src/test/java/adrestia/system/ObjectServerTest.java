@@ -72,7 +72,7 @@ public class ObjectServerTest {
       double[] scale = {1.0, 1.0, 1.0};
       String[] assets = {"TestAsset1", "TestAsset2"};
       ObjectDocument obj = new ObjectDocument("TestKey", "AeselTestObject11",
-          "TestType", "TestSubtype", "TestOwner", "AeselTestScene11",
+          "TestType", "TestSubtype", "TestOwner", "AeselTestScene11", 0, 0,
           translation, rotationEuler, rotationQuaternion, scale, assets, null);
 
       // Post the Object to the endpoint
@@ -107,7 +107,7 @@ public class ObjectServerTest {
       double[] scale2 = {2.0, 2.0, 2.0};
       String[] assets2 = {"TestAsset3", "TestAsset4"};
       ObjectDocument obj2 = new ObjectDocument("TestKey", "AeselTestObject11",
-          "TestType2", "TestSubtype2", "TestOwner2", "AeselTestScene11",
+          "TestType2", "TestSubtype2", "TestOwner2", "AeselTestScene11", 0, 0,
           translation2, rotationEuler2, rotationQuaternion2, scale2, assets2, null);
       // Post the Scene to the endpoint
       ResponseEntity<Map> updateResponse = this.testTemplate.postForEntity(
@@ -139,7 +139,7 @@ public class ObjectServerTest {
       String[] ovrAssets = {"TestAsset1", "TestAsset2"};
       String clymanKey = crtRespBody.get("key").toString();
       ObjectDocument ovrObj = new ObjectDocument(clymanKey, "AeselTestObject11",
-          "TestType", "TestSubtype", "TestOwner", "AeselTestScene11",
+          "TestType", "TestSubtype", "TestOwner", "AeselTestScene11", 0, 0,
           ovrTranslation, ovrRotationEuler, ovrRotationQuaternion, ovrScale, ovrAssets, null);
       ResponseEntity<Map> ovrResponse = this.testTemplate.postForEntity(
           "http://localhost:" + this.port + "/v1/object/" + clymanKey, ovrObj, Map.class);
@@ -181,7 +181,7 @@ public class ObjectServerTest {
     double[] scale = {1.0, 1.0, 1.0};
     String[] assets = {"TestAsset1", "TestAsset2"};
     ObjectDocument obj = new ObjectDocument("TestKey", "obj1",
-        "TestType", "TestSubtype", "TestOwner", "MyFirstQueryScene",
+        "TestType", "TestSubtype", "TestOwner", "MyFirstQueryScene", 0, 0,
         translation, rotationEuler, rotationQuaternion, scale, assets, null);
     // Post the Scene to the endpoint
     ResponseEntity<Map> createResponse = this.testTemplate.postForEntity(
@@ -189,7 +189,7 @@ public class ObjectServerTest {
     // Read the response
     Assert.assertTrue(createResponse.getStatusCode().is2xxSuccessful());
     ObjectDocument obj2 = new ObjectDocument("TestKey", "obj2",
-        "TestType2", "TestSubtype2", "TestOwner2", "MyFirstQueryScene",
+        "TestType2", "TestSubtype2", "TestOwner2", "MyFirstQueryScene", 0, 0,
         translation, rotationEuler, rotationQuaternion, scale, assets, null);
     // Post the Scene to the endpoint
     ResponseEntity<Map> createResponse2 = this.testTemplate.postForEntity(
@@ -248,7 +248,7 @@ public class ObjectServerTest {
       double[] scale = {1.0, 1.0, 1.0};
       String[] assets = {"TestAsset1", "TestAsset2"};
       ObjectDocument obj = new ObjectDocument("TestKey", "obj1",
-          "TestType", "TestSubtype", "TestOwner", "MyLockScene",
+          "TestType", "TestSubtype", "TestOwner", "MyLockScene", 0, 0,
           translation, rotationEuler, rotationQuaternion, scale, assets, null);
       // Post the object to the endpoint
       ResponseEntity<Map> createResponse = this.testTemplate.postForEntity(

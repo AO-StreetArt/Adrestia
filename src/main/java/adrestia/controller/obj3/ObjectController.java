@@ -78,6 +78,16 @@ public class ObjectController {
   }
 
   // Query Clyman
+  private ObjectList objectQuery(String sceneName, String objName, int objFrame) {
+    // Execute a query against Clyman
+    ObjectDocument queryObj = new ObjectDocument();
+    queryObj.setName(objName);
+    queryObj.setScene(sceneName);
+    queryObj.setFrame(objFrame);
+    return objData.query(queryObj);
+  }
+
+  // Query Clyman
   private ObjectList objectQuery(String sceneName, String objName) {
     // Execute a query against Clyman
     ObjectDocument queryObj = new ObjectDocument();
@@ -98,17 +108,21 @@ public class ObjectController {
   /**
   * Object Retrieval.
   * Object name & object name input as path variables, no Request Parameters accepted.
+  * Add New Query Parameter for frame, 0 by default.  Include frame in
+  *    CLyman messages
   */
   @RequestMapping(path = "scene/{scn_name}/object/{obj_name}", method = RequestMethod.GET)
   public ResponseEntity<ObjectDocument> getObject(@PathVariable("scn_name") String sceneName,
-      @PathVariable("obj_name") String objName) {
+      @PathVariable("obj_name") String objName,
+      @RequestParam(value = "frame", defaultValue = "0") int frame)
+    {
     logger.info("Responding to Object Get Request");
     // Set up our response objects
     ObjectDocument returnObj = new ObjectDocument();
     HttpStatus returnCode = HttpStatus.OK;
 
     // Retrieve the object requested
-    ObjectList clymanResponse = objectQuery(sceneName, objName);
+    ObjectList clymanResponse = objectQuery(sceneName, objName, frame);
 
     // If we have a successful response, then we pull the first value and
     // the error code
@@ -136,6 +150,8 @@ public class ObjectController {
   * Object Create/Update.
   * Object Name & Object name input as path variable, no Request Parameters accepted.
   * POST Data read in with Object data.
+  * If we are updating, update only the doc with a matching frame.
+  *    if we don't have a frame, set to frame 0
   */
   @RequestMapping(path = "scene/{scn_name}/object/{obj_name}",
       headers = "Content-Type=application/json",
@@ -143,12 +159,13 @@ public class ObjectController {
   public ResponseEntity<ObjectDocument> updateObject(
       @PathVariable("scn_name") String sceneName,
       @PathVariable("obj_name") String objName,
+      @RequestParam(value = "frame", defaultValue = "0") int frame,
       @RequestBody ObjectDocument inpObject) {
     logger.info("Responding to Object Save Request");
     ObjectDocument returnObj = new ObjectDocument();
 
     // See if we can find the Object requested
-    ObjectList clymanResponse = objectQuery(sceneName, objName);
+    ObjectList clymanResponse = objectQuery(sceneName, objName, frame);
 
     // If we have a successful response, then the Object exists
     boolean objectExists = false;
@@ -166,6 +183,7 @@ public class ObjectController {
     // Update the Object
     inpObject.setName(objName);
     inpObject.setScene(sceneName);
+    inpObject.setFrame(frame);
     ObjectList updateResponse = saveObject(inpObject, objectExists);
 
     // If we have a successful response, then we pull the first value
@@ -230,35 +248,39 @@ public class ObjectController {
       method = RequestMethod.DELETE)
   public ResponseEntity<ObjectDocument> deleteObject(
       @PathVariable("scn_name") String sceneName,
-      @PathVariable("obj_name") String objName) {
+      @PathVariable("obj_name") String objName,
+      @RequestParam(value = "frame", defaultValue = "-1") int frame) {
     logger.info("Responding to Object Delete Request");
     ObjectDocument returnObj = new ObjectDocument();
     HttpStatus returnCode = HttpStatus.OK;
 
     // See if we can find the Object requested
-    ObjectList clymanResponse = objectQuery(sceneName, objName);
+    ObjectList clymanResponse;
+    if (frame == -1) {
+      clymanResponse = objectQuery(sceneName, objName);
+    } else {
+      clymanResponse = objectQuery(sceneName, objName, frame);
+    }
 
-    // If we have a successful response, then the Object exists
-    boolean objectExists = false;
+    // If we have a successful response, then the Object(s) exist
     if (isSuccessResponse(clymanResponse)) {
-      objectExists = true;
-      logger.debug("Existing Object found in Clyman");
-      // Set the key on the input Object to the key from the response
-      String clymanRespKey = clymanResponse.getDocuments()[0].getKey();
-      if (clymanRespKey != null && !clymanRespKey.isEmpty()) {
-        logger.debug("Clyman Response Key: " + clymanRespKey);
-        ObjectList deleteResponse = objData.destroy(clymanRespKey);
-        returnCode = utils.translateDvsError(deleteResponse.getErrorCode());
-        // If we have a successful response, then set a success code
-        if (isSuccessResponse(deleteResponse)) {
-          returnObj = deleteResponse.getDocuments()[0];
+      for (int i = 0; i < clymanResponse.getDocuments().length; i++) {
+        String clymanRespKey = clymanResponse.getDocuments()[i].getKey();
+        if (clymanRespKey != null && !clymanRespKey.isEmpty()) {
+          logger.debug("Clyman Response Key: " + clymanRespKey);
+          ObjectList deleteResponse = objData.destroy(clymanRespKey);
+          returnCode = utils.translateDvsError(deleteResponse.getErrorCode());
+          // If we have a successful response, then set a success code
+          if (isSuccessResponse(deleteResponse)) {
+            returnObj = deleteResponse.getDocuments()[0];
+          } else {
+            logger.debug("Failure Registered.  Clyman Response Error Code and Length:");
+            logger.debug(deleteResponse.getNumRecords());
+            logger.debug(deleteResponse.getErrorCode());
+          }
         } else {
-          logger.debug("Failure Registered.  Clyman Response Error Code and Length:");
-          logger.debug(deleteResponse.getNumRecords());
-          logger.debug(deleteResponse.getErrorCode());
+          logger.error("Unable to find key in clyman response");
         }
-      } else {
-        logger.error("Unable to find key in clyman response");
       }
     } else {
       // Delete request for non-existing object
@@ -285,7 +307,8 @@ public class ObjectController {
       @PathVariable("scn_name") String sceneName,
       @RequestParam(value = "type", defaultValue = "") String type,
       @RequestParam(value = "subtype", defaultValue = "") String subtype,
-      @RequestParam(value = "owner", defaultValue = "") String owner) {
+      @RequestParam(value = "owner", defaultValue = "") String owner,
+      @RequestParam(value = "frame", defaultValue = "-9999") int frame) {
     logger.info("Responding to Object Query");
     ObjectDocument returnObj = new ObjectDocument();
 
@@ -300,6 +323,9 @@ public class ObjectController {
     }
     if (!(owner.isEmpty())) {
       queryObj.setOwner(owner);
+    }
+    if (frame != -9999) {
+      queryObj.setFrame(frame);
     }
     ObjectList clymanResponse = objData.query(queryObj);
 
@@ -325,10 +351,11 @@ public class ObjectController {
     ObjectDocument returnObj = new ObjectDocument();
     HttpStatus returnCode = HttpStatus.OK;
 
-    // Execute a query against Clyman
+    // Execute a query against Clyman with a frame of 9.
     ObjectDocument queryObj = new ObjectDocument();
     queryObj.setScene(sceneName);
     queryObj.setName(objName);
+    queryObj.setFrame(0);
     ObjectList clymanResponse = objData.query(queryObj);
 
     if (isSuccessResponse(clymanResponse)) {

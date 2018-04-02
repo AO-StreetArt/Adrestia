@@ -49,7 +49,7 @@ public class ObjTest {
       double[] transform = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
           0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
       ObjectDocument testDocument = new ObjectDocument("TestKey", "TestName",
-          "TestType", "TestSubtype", "TestOwner", "TestScene",
+          "TestType", "TestSubtype", "TestOwner", "TestScene", 0, 0,
           translation, rotationEuler, rotationQuaternion, scale, assets, transform);
       // Test the get methods
       Assert.assertTrue(testDocument.getKey().equals("TestKey"));
@@ -109,7 +109,7 @@ public class ObjTest {
       double[] scale = {0.0, 0.0, 0.0};
       String[] assets = {"TestAsset1", "TestAsset2"};
       ObjectDocument testDocument = new ObjectDocument("TestKey", "TestName",
-          "TestType", "TestSubtype", "TestOwner", "TestScene",
+          "TestType", "TestSubtype", "TestOwner", "TestScene", 0, 0, 
           translation, rotationEuler, rotationQuaternion, scale, assets, null);
 
       ObjectDocument[] docList = {testDocument};

@@ -35,6 +35,8 @@ public class ObjectDocument {
   private String subtype;
   private String owner;
   private String scene;
+  private int frame;
+  private int timestamp;
   private double[] translation = new double[0];
   @JsonProperty("euler_rotation")
   private double[] rotationEuler = new double[0];
@@ -65,10 +67,10 @@ public class ObjectDocument {
   * @param assets The asset list of the Object
   * @param transform The transform of the object
   */
-  public ObjectDocument(String key, String name, String type, String subtype, String owner,
-      String scene, double[] translation, double[] rotationEuler,
-      double[] rotationQuaternion, double[] scale, String[] assets,
-      double[] transform) {
+  public ObjectDocument(String key, String name, String type, String subtype,
+      String owner, String scene, int frame, int timestamp, double[] translation,
+      double[] rotationEuler, double[] rotationQuaternion, double[] scale,
+      String[] assets, double[] transform) {
     super();
     this.key = key;
     this.name = name;
@@ -76,6 +78,8 @@ public class ObjectDocument {
     this.subtype = subtype;
     this.owner = owner;
     this.scene = scene;
+    this.frame = frame;
+    this.timestamp = timestamp;
     this.translation = translation;
     this.rotationEuler = rotationEuler;
     this.rotationQuaternion = rotationQuaternion;
@@ -100,6 +104,24 @@ public class ObjectDocument {
   @JsonGetter("name")
   public String getName() {
     return this.name;
+  }
+
+  /**
+  * Returns value of frame.
+  * @return The frame of the object
+  */
+  @JsonGetter("frame")
+  public int getFrame() {
+    return this.frame;
+  }
+
+  /**
+  * Returns value of timestamp.
+  * @return The timestamp of the object
+  */
+  @JsonGetter("timestamp")
+  public int getTimestamp() {
+    return this.timestamp;
   }
 
   /**
@@ -207,6 +229,24 @@ public class ObjectDocument {
   @JsonSetter("name")
   public void setName(String name) {
     this.name = name;
+  }
+
+  /**
+  * Sets new value of frame.
+  * @param frame The frame of the object
+  */
+  @JsonSetter("frame")
+  public void setFrame(int frame) {
+    this.frame = frame;
+  }
+
+  /**
+  * Sets new value of timestamp.
+  * @param timestamp The timestamp of the object
+  */
+  @JsonSetter("timestamp")
+  public void setTimestamp(int timestamp) {
+    this.timestamp = timestamp;
   }
 
   /**
