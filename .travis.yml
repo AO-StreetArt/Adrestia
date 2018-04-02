@@ -29,7 +29,7 @@ before_install:
 - docker logs --tail 50 document-db
 - docker logs --tail 50 graph-db
 - npm install newman --global;
-- pip3 install requests
+- pip3 install requests --upgrade
 install:
 - gradle assemble
 script:
