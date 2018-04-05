@@ -200,33 +200,46 @@ public class ObjectList {
     for (int i = 0; i < this.documents.length; i++) {
       returnString = returnString.concat("{\"key\": \"")
           .concat(this.documents[i].getKey())
-          .concat("\", \"translation\": [")
-          .concat(Double.toString(this.documents[i].getTranslation()[0]))
-          .concat(", ")
-          .concat(Double.toString(this.documents[i].getTranslation()[1]))
-          .concat(", ")
-          .concat(Double.toString(this.documents[i].getTranslation()[2]))
-          .concat("], \"euler_rotation\": [")
-          .concat(Double.toString(this.documents[i].getRotationEuler()[0]))
-          .concat(", ")
-          .concat(Double.toString(this.documents[i].getRotationEuler()[1]))
-          .concat(", ")
-          .concat(Double.toString(this.documents[i].getRotationEuler()[2]))
-          .concat("], \"quaternion_rotation\": [")
-          .concat(Double.toString(this.documents[i].getRotationQuaternion()[0]))
-          .concat(", ")
-          .concat(Double.toString(this.documents[i].getRotationQuaternion()[1]))
-          .concat(", ")
-          .concat(Double.toString(this.documents[i].getRotationQuaternion()[2]))
-          .concat(", ")
-          .concat(Double.toString(this.documents[i].getRotationQuaternion()[3]))
-          .concat("], \"scale\": [")
-          .concat(Double.toString(this.documents[i].getScale()[0]))
-          .concat(", ")
-          .concat(Double.toString(this.documents[i].getScale()[1]))
-          .concat(", ")
-          .concat(Double.toString(this.documents[i].getScale()[2]))
-          .concat("]}");
+          .concat("\"");
+      if (this.documents[i].getTranslation().length > 2) {
+        returnString = returnString.concat(", \"translation\": [")
+            .concat(Double.toString(this.documents[i].getTranslation()[0]))
+            .concat(", ")
+            .concat(Double.toString(this.documents[i].getTranslation()[1]))
+            .concat(", ")
+            .concat(Double.toString(this.documents[i].getTranslation()[2]))
+            .concat("]");
+      }
+      if (this.documents[i].getRotationEuler().length > 2) {
+        returnString = returnString.concat(", \"euler_rotation\": [")
+            .concat(Double.toString(this.documents[i].getRotationEuler()[0]))
+            .concat(", ")
+            .concat(Double.toString(this.documents[i].getRotationEuler()[1]))
+            .concat(", ")
+            .concat(Double.toString(this.documents[i].getRotationEuler()[2]))
+            .concat("]");
+      }
+      if (this.documents[i].getRotationQuaternion().length > 3) {
+        returnString = returnString.concat(", \"quaternion_rotation\": [")
+            .concat(Double.toString(this.documents[i].getRotationQuaternion()[0]))
+            .concat(", ")
+            .concat(Double.toString(this.documents[i].getRotationQuaternion()[1]))
+            .concat(", ")
+            .concat(Double.toString(this.documents[i].getRotationQuaternion()[2]))
+            .concat(", ")
+            .concat(Double.toString(this.documents[i].getRotationQuaternion()[3]))
+            .concat("]");
+      }
+      if (this.documents[i].getScale().length > 2) {
+        returnString = returnString.concat(", \"scale\": [")
+            .concat(Double.toString(this.documents[i].getScale()[0]))
+            .concat(", ")
+            .concat(Double.toString(this.documents[i].getScale()[1]))
+            .concat(", ")
+            .concat(Double.toString(this.documents[i].getScale()[2]))
+            .concat("]");
+      }
+      returnString = returnString.concat("}");
       if (i < this.documents.length - 1) {
         returnString = returnString.concat(",");
       }

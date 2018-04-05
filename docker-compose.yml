@@ -143,6 +143,7 @@ services:
     image: aostreetart/adrestia:latest
     container_name: adrestia
     ports:
+      - "5886:5886/udp"
       - "5885:5885"
     logging:
       driver: gelf
@@ -152,4 +153,4 @@ services:
       registry:
         condition: service_healthy
     environment:
-      SPRING_APPLICATION_JSON: '{"logging":{"level":{"org":{"springframework":"INFO","mongodb":"INFO","hibernate":"INFO","apache":{"http":"INFO"}}}},"server":{"port":"5885","mongo":{"host":"document-db","port":"27017"},"zmq":{"redlist":{"duration":"10"},"greylist":{"duration":"10"},"blacklist":{"duration":"10"},"retries":"3","timeout":"10000"}},"management":{"port":"5885","address":"127.0.0.1"},"spring":{"application":{"name":"Adrestia"},"profiles":{"active":"dev"},"cloud":{"consul":{"host":"registry","discovery":{"preferIpAddress":false}}},"http":{"multipart":{"max-file-size":"128MB","max-request-size":"128MB"}}}}'
+      SPRING_APPLICATION_JSON: '{"logging":{"level":{"org":{"springframework":"INFO","mongodb":"INFO","hibernate":"INFO","apache":{"http":"INFO"}}}},"server":{"port":"5885","udp":{"port":"5886"},"mongo":{"host":"document-db","port":"27017"},"zmq":{"redlist":{"duration":"10"},"greylist":{"duration":"10"},"blacklist":{"duration":"10"},"retries":"3","timeout":"10000"}},"management":{"port":"5885","address":"127.0.0.1"},"spring":{"application":{"name":"Adrestia"},"profiles":{"active":"dev"},"cloud":{"consul":{"host":"registry","discovery":{"preferIpAddress":false}}},"http":{"multipart":{"max-file-size":"128MB","max-request-size":"128MB"}}}}'
