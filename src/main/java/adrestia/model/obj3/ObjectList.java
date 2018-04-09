@@ -200,6 +200,8 @@ public class ObjectList {
     for (int i = 0; i < this.documents.length; i++) {
       returnString = returnString.concat("{\"key\": \"")
           .concat(this.documents[i].getKey())
+          .concat("\", \"name\": \"")
+          .concat(this.documents[i].getName())
           .concat("\", \"scene\": \"")
           .concat(this.documents[i].getScene())
           .concat("\"");
