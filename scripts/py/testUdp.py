@@ -92,7 +92,7 @@ def execute_udp_flow(sock, udp_ip, udp_port, aesel_addr, test_data,
     sock.sendto(bytes(json.dumps(updated_test_data), 'UTF-8'), (udp_ip, udp_port))
     time.sleep(1)
     # Validate that the update went through correctly
-    r = requests.get(aesel_addr + '/v1/scene/' + test_scene_data['name'] + '/object/' + updated_test_data['name'])
+    r = requests.get(aesel_addr + '/v1/scene/' + updated_test_data['scene'] + '/object/' + updated_test_data['name'])
     assert(r.status_code == requests.codes.ok)
     parsed_json = r.json()
     if parsed_json is not None:
