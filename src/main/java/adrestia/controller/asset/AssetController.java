@@ -275,7 +275,7 @@ public class AssetController {
           logger.debug(updateResponse.getErrorCode());
         } else {
           // Execute a secondary update to remove the original asset from the scene
-          ObjectDocument removalUpdateObj = buildUpdateObject(clymanRespKey, oldAssetId);
+          ObjectDocument removalUpdateObj = buildUpdateObject(clymanRespKey, oldAssetId, clymanRespOwner);
           returnCode = executeObjectUpdate(removalUpdateObj, false);
         }
       }
@@ -293,9 +293,10 @@ public class AssetController {
       logger.debug("Existing Object found in Clyman");
       // Set the key on the input Object to the key from the response
       String clymanRespKey = existingDoc.getKey();
+      String clymanRespOwner = existingDoc.getOwner();
       if (clymanRespKey != null && !clymanRespKey.isEmpty()) {
         logger.debug("Clyman Response Key: " + clymanRespKey);
-        ObjectDocument updateObj = buildUpdateObject(clymanRespKey, assetId);
+        ObjectDocument updateObj = buildUpdateObject(clymanRespKey, assetId, clymanRespOwner);
         returnCode = executeObjectUpdate(updateObj, true);
       }
     } else {
