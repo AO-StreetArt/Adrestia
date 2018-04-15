@@ -18,6 +18,16 @@ services:
     container_name: document-db
     ports:
       - "27017:27017"
+  graphdb:
+    image: neo4j
+    container_name: graph-db
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    volumes:
+      - ${HOME}/neo4j/data:/data
+    environment:
+      NEO4J_AUTH: none
   queue:
     image: spotify/kafka
     container_name: queue

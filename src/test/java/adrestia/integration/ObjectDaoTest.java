@@ -67,7 +67,7 @@ public class ObjectDaoTest {
       double[] scale = {1.0, 1.0, 1.0};
       String[] assets = {"TestAsset1", "TestAsset2"};
       ObjectDocument testDocument = new ObjectDocument("TestKey", "TestName",
-          "TestType", "TestSubtype", "TestOwner", "TestScene", 0, 0,
+          "TestType", "TestSubtype", "", "TestScene", 0, 0,
           translation, rotationEuler, rotationQuaternion, scale, assets, null);
       ObjectList crtResp = objData.create(testDocument);
       testLogger.println("Create Test Response: ");
@@ -83,12 +83,12 @@ public class ObjectDaoTest {
       Assert.assertTrue(getResp.getNumRecords() > 0);
       testLogger.println(getResp);
       Assert.assertTrue(getResp.getDocuments()[0].getType().equals("TestType"));
-      Assert.assertTrue(getResp.getDocuments()[0].getOwner().equals("TestOwner"));
+      Assert.assertTrue(getResp.getDocuments()[0].getOwner().equals(""));
 
       // Update test
       testDocument.setKey(clymanKey);
       testDocument.setType("TestType2");
-      testDocument.setOwner("TestOwner2");
+      testDocument.setOwner("");
       ObjectList updResp = objData.update(testDocument);
       Assert.assertTrue(updResp.getErrorCode() == 100);
       ObjectList getResp2 = objData.get(clymanKey);
@@ -96,7 +96,7 @@ public class ObjectDaoTest {
       Assert.assertTrue(getResp2.getErrorCode() == 100);
       Assert.assertTrue(getResp2.getNumRecords() > 0);
       Assert.assertTrue(getResp2.getDocuments()[0].getType().equals("TestType2"));
-      Assert.assertTrue(getResp2.getDocuments()[0].getOwner().equals("TestOwner2"));
+      Assert.assertTrue(getResp2.getDocuments()[0].getOwner().equals(""));
 
       // Overwrite Test
       double[] ovrTranslation = {1.0, 1.0, 1.0};
@@ -105,7 +105,7 @@ public class ObjectDaoTest {
       double[] ovrScale = {1.0, 1.0, 1.0};
       String[] ovrAssets = {"TestAsset1", "TestAsset2"};
       ObjectDocument overwriteTestDoc = new ObjectDocument(clymanKey, "TestName",
-          "TestType", "TestSubtype", "TestOwner", "TestScene", 0, 0, 
+          "TestType", "TestSubtype", "", "TestScene", 0, 0,
           ovrTranslation, ovrRotationEuler, ovrRotationQuaternion, ovrScale, ovrAssets, null);
       ObjectList ovrResp = objData.overwrite(overwriteTestDoc);
       testLogger.println("Overwrite Test Response: ");

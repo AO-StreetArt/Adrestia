@@ -216,6 +216,7 @@ public class AssetController {
   private ObjectDocument findObject(String sceneName, String objectName) {
     ObjectDocument queryObj = new ObjectDocument();
     queryObj.setName(objectName);
+    queryObj.setOwner(null);
     queryObj.setScene(sceneName);
     ObjectList clymanResponse = objData.query(queryObj);;
 
@@ -241,12 +242,13 @@ public class AssetController {
     return returnCode;
   }
 
-  private ObjectDocument buildUpdateObject(String inpKey, String assetId) {
+  private ObjectDocument buildUpdateObject(String inpKey, String assetId, String clymanRespOwner) {
     ObjectDocument updateObj = new ObjectDocument();
     updateObj.setKey(inpKey);
     String[] newAssets = new String[1];
     newAssets[0] = assetId;
     updateObj.setAssets(newAssets);
+    updateObj.setOwner(clymanRespOwner);
     return updateObj;
   }
 
@@ -259,9 +261,10 @@ public class AssetController {
       logger.debug("Existing Object found in Clyman");
       // Set the key on the input Object to the key from the response
       String clymanRespKey = existingDoc.getKey();
+      String clymanRespOwner = existingDoc.getOwner();
       if (clymanRespKey != null && !clymanRespKey.isEmpty()) {
         logger.debug("Clyman Response Key: " + clymanRespKey);
-        ObjectDocument updateObj = buildUpdateObject(clymanRespKey, assetId);
+        ObjectDocument updateObj = buildUpdateObject(clymanRespKey, assetId, clymanRespOwner);
         ObjectList updateResponse = objData.update(updateObj, true);
         returnCode = utils.translateDvsError(updateResponse.getErrorCode());
         if (updateResponse.getNumRecords() <= 0
