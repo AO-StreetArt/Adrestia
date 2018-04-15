@@ -24,7 +24,6 @@ before_install:
 - sleep 10
 - docker ps -a
 - docker logs --tail 50 registry
-- docker logs --tail 50 cache
 - docker logs --tail 50 document-db
 - docker logs --tail 50 graph-db
 - npm install newman --global;
