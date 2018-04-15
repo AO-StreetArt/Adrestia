@@ -13,19 +13,6 @@ services:
     command: ./populate_consul.sh registry
     depends_on:
       - "registry"
-  cache:
-    image: redis
-    container_name: cache
-  graphdb:
-    image: neo4j
-    container_name: graph-db
-    ports:
-      - "7474:7474"
-      - "7687:7687"
-    volumes:
-      - ${HOME}/neo4j/data:/data
-    environment:
-      NEO4J_AUTH: none
   documentdb:
     image: mongo
     container_name: document-db
