@@ -13,9 +13,11 @@ services:
     command: ./populate_consul.sh registry
     depends_on:
       - "registry"
-  cache:
-    image: redis
-    container_name: cache
+  documentdb:
+    image: mongo
+    container_name: document-db
+    ports:
+      - "27017:27017"
   graphdb:
     image: neo4j
     container_name: graph-db
@@ -26,11 +28,6 @@ services:
       - ${HOME}/neo4j/data:/data
     environment:
       NEO4J_AUTH: none
-  documentdb:
-    image: mongo
-    container_name: document-db
-    ports:
-      - "27017:27017"
   queue:
     image: spotify/kafka
     container_name: queue
@@ -48,7 +45,6 @@ services:
     command: -consul-addr=registry:8500 -ip=localhost -port=5555 -log-conf=CrazyIvan/log4cpp.properties -wait=9
     depends_on:
       - "graphdb"
-      - "cache"
       - "registry"
       - "config"
       - "queue"
@@ -60,7 +56,6 @@ services:
     command: -consul-addr=registry:8500 -ip=localhost -port=5556 -log-conf=CLyman/log4cpp.properties -wait=9
     depends_on:
       - "documentdb"
-      - "cache"
       - "registry"
       - "config"
       - "queue"

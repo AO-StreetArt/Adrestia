@@ -179,6 +179,7 @@ public class ClymanConnector implements ObjectDao {
   public ObjectList get(String docKey) {
     ObjectDocument obj = new ObjectDocument();
     obj.setKey(docKey);
+    obj.setOwner(null);
     return crudTransaction(obj, 2, 10);
   }
 

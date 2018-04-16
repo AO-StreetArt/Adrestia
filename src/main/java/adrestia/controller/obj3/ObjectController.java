@@ -355,6 +355,7 @@ public class ObjectController {
     ObjectDocument queryObj = new ObjectDocument();
     queryObj.setScene(sceneName);
     queryObj.setName(objName);
+    queryObj.setOwner(null);
     queryObj.setFrame(0);
     ObjectList clymanResponse = objData.query(queryObj);
 
