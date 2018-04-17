@@ -4,6 +4,9 @@ build/*
 *.jar
 *.war
 *.class
+.classpath
+.project
+.settings/*
 logs/*
 docs/_build/*
 docs/_static/*

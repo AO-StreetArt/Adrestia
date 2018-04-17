@@ -1,3 +1,4 @@
+
 /*
 Apache2 License Notice
 Copyright 2017 Alex Barry
@@ -15,14 +16,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package adrestia;
+package adrestia.dao.zmq;
 
-import java.util.List;
-import java.util.concurrent.Semaphore;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicLong;
-
-import javax.annotation.PreDestroy;
+import adrestia.dao.service.ServiceManagerInterface;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -31,7 +27,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.stereotype.Component;
 
-import org.zeromq.ZMQ.Socket;
 import org.zeromq.ZMQ;
 import org.zeromq.ZPoller;
 
@@ -176,9 +171,7 @@ public class ZmqConnector implements ZmqConnection {
   public String send(String msg, int timeout, int retries, String serviceName) {
     // Find a ZMQ Socket
     ZmqSocketContainer transactionSocket = findService(serviceName);
-    if (transactionSocket != null) {
-      ZMQ.Socket socket = transactionSocket.getSocket();
-    } else {
+    if (transactionSocket == null) {
       return null;
     }
     // Actually try to send the message

@@ -15,25 +15,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package adrestia;
+package adrestia.controller.obj3;
 
-import com.fasterxml.jackson.core.JsonGenerationException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.util.List;
-import java.util.concurrent.Semaphore;
-import java.util.concurrent.atomic.AtomicLong;
-
-import javax.annotation.PreDestroy;
+import adrestia.dao.obj3.ObjectDao;
+import adrestia.model.obj3.ObjectDocument;
+import adrestia.model.obj3.ObjectList;
+import adrestia.utils.UtilityProviderInterface;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cloud.client.ServiceInstance;
-import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -114,8 +106,7 @@ public class ObjectController {
   @RequestMapping(path = "scene/{scn_name}/object/{obj_name}", method = RequestMethod.GET)
   public ResponseEntity<ObjectDocument> getObject(@PathVariable("scn_name") String sceneName,
       @PathVariable("obj_name") String objName,
-      @RequestParam(value = "frame", defaultValue = "0") int frame)
-    {
+      @RequestParam(value = "frame", defaultValue = "0") int frame) {
     logger.info("Responding to Object Get Request");
     // Set up our response objects
     ObjectDocument returnObj = new ObjectDocument();
@@ -310,7 +301,6 @@ public class ObjectController {
       @RequestParam(value = "owner", defaultValue = "") String owner,
       @RequestParam(value = "frame", defaultValue = "-9999") int frame) {
     logger.info("Responding to Object Query");
-    ObjectDocument returnObj = new ObjectDocument();
 
     // Execute a query against Clyman
     ObjectDocument queryObj = new ObjectDocument();

@@ -15,13 +15,16 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package adrestia;
+package adrestia.unit;
+
+import adrestia.model.obj3.ObjectDocument;
+import adrestia.model.obj3.ObjectList;
 
 import java.io.PrintWriter;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 /**
@@ -109,7 +112,7 @@ public class ObjTest {
       double[] scale = {0.0, 0.0, 0.0};
       String[] assets = {"TestAsset1", "TestAsset2"};
       ObjectDocument testDocument = new ObjectDocument("TestKey", "TestName",
-          "TestType", "TestSubtype", "TestOwner", "TestScene", 0, 0, 
+          "TestType", "TestSubtype", "TestOwner", "TestScene", 0, 0,
           translation, rotationEuler, rotationQuaternion, scale, assets, null);
 
       ObjectDocument[] docList = {testDocument};

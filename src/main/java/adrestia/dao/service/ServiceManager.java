@@ -12,21 +12,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package adrestia;
+package adrestia.dao.service;
 
-import com.fasterxml.jackson.core.JsonGenerationException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
+import adrestia.utils.UtilityProviderInterface;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
 import java.util.List;
-import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicLong;
-
-import javax.annotation.PreDestroy;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -35,15 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
-
-import org.zeromq.ZContext;
-import org.zeromq.ZMQ.PollItem;
-import org.zeromq.ZMQ.Poller;
-import org.zeromq.ZMQ.Socket;
-import org.zeromq.ZMQ;
-import org.zeromq.ZPoller;
 
 /**
 * Uses the Consul Discovery Client to find Service Instances.

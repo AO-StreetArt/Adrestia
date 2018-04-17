@@ -15,10 +15,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package adrestia;
+package adrestia.dao.obj3;
 
-import adrestia.ObjectDocument;
-import adrestia.ObjectList;
+import adrestia.model.obj3.ObjectDocument;
+import adrestia.model.obj3.ObjectList;
 
 import org.springframework.stereotype.Service;
 

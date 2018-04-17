@@ -15,11 +15,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package adrestia;
+package adrestia.dao.zmq;
 
 import org.springframework.cloud.client.ServiceInstance;
 
-import org.zeromq.ZMQ.Socket;
 import org.zeromq.ZMQ;
 
 /**

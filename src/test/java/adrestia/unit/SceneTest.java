@@ -15,13 +15,19 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package adrestia;
+package adrestia.unit;
+
+import adrestia.model.scene.Scene;
+import adrestia.model.scene.SceneList;
+import adrestia.model.scene.Transform;
+import adrestia.model.scene.UserDevice;
 
 import java.io.PrintWriter;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.test.context.TestPropertySource;
+
 import org.springframework.test.context.junit4.SpringRunner;
 
 /**

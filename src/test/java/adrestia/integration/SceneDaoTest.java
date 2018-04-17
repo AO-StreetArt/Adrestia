@@ -15,27 +15,22 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package adrestia;
+package adrestia.integration;
 
-import adrestia.CrazyIvanConnector;
-import adrestia.SceneDao;
+import adrestia.dao.scene.SceneDao;
+import adrestia.model.scene.Scene;
+import adrestia.model.scene.SceneList;
+import adrestia.model.scene.Transform;
+import adrestia.model.scene.UserDevice;
+
 import java.io.PrintWriter;
-import java.util.Properties;
+
 import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.cloud.client.DefaultServiceInstance;
-import org.springframework.cloud.client.ServiceInstance;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 /**

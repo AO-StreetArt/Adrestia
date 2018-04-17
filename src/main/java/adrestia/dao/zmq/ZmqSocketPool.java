@@ -15,13 +15,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package adrestia;
+package adrestia.dao.zmq;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.Semaphore;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicLong;
 
 import javax.annotation.PreDestroy;
 
@@ -29,12 +26,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cloud.client.ServiceInstance;
-import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.stereotype.Component;
 
-import org.zeromq.ZMQ.Socket;
 import org.zeromq.ZMQ;
 
 /**
@@ -54,9 +47,6 @@ public class ZmqSocketPool {
 
   // List of currently used Socket Containers
   private ArrayList<ZmqSocketContainer> usedSockets = new ArrayList<ZmqSocketContainer>();
-
-  // Crazy Ivan ZMQ Socket
-  private ZMQ.Socket socket = null;
 
   // Mutex to ensure that one thread is updating the socket list at a time
   private Semaphore socketMutex = new Semaphore(1);

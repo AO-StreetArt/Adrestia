@@ -15,8 +15,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package adrestia;
+package adrestia.dao.scene;
 
+import adrestia.model.scene.Scene;
+import adrestia.model.scene.SceneList;
+import adrestia.model.scene.Transform;
 import org.springframework.stereotype.Service;
 
 /**

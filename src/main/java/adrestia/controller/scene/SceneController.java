@@ -15,25 +15,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package adrestia;
+package adrestia.controller.scene;
 
-import com.fasterxml.jackson.core.JsonGenerationException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.util.List;
-import java.util.concurrent.Semaphore;
-import java.util.concurrent.atomic.AtomicLong;
-
-import javax.annotation.PreDestroy;
+import adrestia.dao.scene.SceneDao;
+import adrestia.model.scene.Scene;
+import adrestia.model.scene.SceneList;
+import adrestia.utils.UtilityProviderInterface;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cloud.client.ServiceInstance;
-import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,7 +33,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -229,7 +220,6 @@ public class SceneController {
       method = RequestMethod.POST)
   public ResponseEntity<SceneList> queryScene(@RequestBody Scene inpScene) {
     logger.info("Responding to Scene Query Request");
-    Scene returnScn = new Scene();
     HttpStatus returnCode = HttpStatus.OK;
 
     // Send the Scene to Crazy Ivan and get the response

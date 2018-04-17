@@ -15,7 +15,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package adrestia;
+package adrestia.controller.asset;
+
+import adrestia.dao.asset.AssetHistoryRepository;
+import adrestia.dao.obj3.ObjectDao;
+import adrestia.dao.scene.SceneDao;
+import adrestia.model.asset.AssetHistory;
+import adrestia.model.obj3.ObjectList;
+import adrestia.model.obj3.ObjectDocument;
+import adrestia.model.scene.Scene;
+import adrestia.model.scene.SceneList;
+import adrestia.utils.UtilityProviderInterface;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
