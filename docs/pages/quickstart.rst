@@ -15,25 +15,16 @@ which are especially valuable for experimenting with the server and/or setting u
 development environments.
 
 To stand up all of Adrestia's dependencies, as well as the Adrestia Docker image,
-run the following from the main folder of the repository:
+run the following from the 'scripts/linux' folder:
 
-``docker-compose up``
+``./start_dev_cluster.sh``
 
-The Kibana UI will be available at http://127.0.0.1:5601, and logs will be available there.  Note that logs sent prior to the logstash endpoint being available will not be seen.
-
-To stand up only Adrestia's dependencies, without standing up Adrestia itself,
-run the following from the 'scripts/deps' folder of the repository:
-
-``docker-compose up``
-
-In both cases, the following UI's will be available:
+The following Web UI's will be available in your browser:
 
 Consul - http://localhost:8500/ui
 Neo4j - http://localhost:7474
 
 I recommend `MongoDB Compass <https://www.mongodb.com/products/compass>__`, Community Edition for a Mongo UI, which can connect on localhost:27017
-
-
 
 Building from Source
 --------------------
