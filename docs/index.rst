@@ -5,7 +5,6 @@
    :caption: Contents:
 
    pages/quickstart.rst
-   pages/retryDesign.rst
 
 .. include:: ../README.rst
 

@@ -9,12 +9,18 @@ Overview
 
 Adrestia is the Gateway Service for the Aesel Distributed Visualization platform.
 
-This service is intended to fill a small role within a larger
-architecture designed to synchronize 3D objects across different client
-programs. It is highly scalable, and many instances can run in parallel
-to support increasing load.
+An Aesel cluster consists of:
 
-Full Documentation for Adrestia is available `here <http://adrestia.readthedocs.io/en/latest/>`__.
+* One or more instances of CLyman
+* One or more instances of Crazy Ivan
+* A Mongo Cluster
+
+Different clusters manage disparate scenes (or groups of renderable objects),
+and Adrestia abstracts away these clusters into a single transactional plane,
+which can be accessed by typical transactional services, and end users.  It
+can be scaled horizontally, and runs against a Mongo Cluster itself.
+
+Full Documentation for Adrestia is available `here <http://adrestia.readthedocs.io/en/v2/>`__.
 Repository for Adrestia is available at `here <https://github.com/AO-StreetArt/Adrestia>`__.
 
 Full Documentation for the Aesel Distributed Visualization Platform, including the HTTP API
@@ -23,13 +29,10 @@ for Adrestia, can be found `here <http://aesel.readthedocs.io/en/latest/>`__.
 Features
 --------
 
-- Expose HTTP API to devices and translate between underlying programs
-- Connect to other services over Zero MQ using JSON.
-- Scalable microservice design
+- Edge Proxy for HTTP communications with end users
+- Cluster-based routing driven by Scenes (data stored in Crazy Ivan)
+- Internal Service mesh for transactional services to communicate with Aesel clusters
 
 Adrestia is a part of the AO Aesel Project, along with
 `Crazy Ivan <https://github.com/AO-StreetArt/CrazyIvan>`__
-& `CLyman <https://github.com/AO-StreetArt/CLyman>`__.  It therefore
-utilizes the `DVS Interface
-library <https://github.com/AO-StreetArt/DvsInterface>`__, also
-available on github.
+& `CLyman <https://github.com/AO-StreetArt/CLyman>`__.

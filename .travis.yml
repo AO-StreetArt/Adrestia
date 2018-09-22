@@ -1,6 +1,8 @@
 language: java
 jdk:
-- oraclejdk8
+  - oraclejdk8
+  - oraclejdk9
+  - openjdk8
 addons:
   apt:
     packages:
@@ -8,65 +10,24 @@ addons:
     - python3
     - python3-pip
 services:
-- docker
+  - docker
 before_install:
-- docker network create dvs
-- docker run -d -p 8500:8500 --name=registry --network=dvs consul agent --dev -ui
-  -client=0.0.0.0
-- scripts/linux/populate_consul.sh localhost docker
-- docker run -i -t -d -p 2181:2181 -p 9092:9092 --env ADVERTISED_PORT=9092 --env ADVERTISED_HOST=queue --name=queue --network=dvs spotify/kafka
-- docker run -d --publish=7474:7474 --publish=7687:7687 --env=NEO4J_AUTH=none --volume=/home/abarry/neo4j/data:/data
-  --network=dvs --name=graph-db neo4j
-- docker run -p 27017:27017 --name document-db -d --network=dvs mongo
-- sleep 3
-- docker run --name crazyivan --network=dvs -p 5555:5555 -d aostreetart/crazyivan:latest -consul-addr=registry:8500 -ip=localhost -port=5555 -log-conf=CrazyIvan/log4cpp.properties
-- docker run --name clyman --network=dvs -p 5556:5556 -d aostreetart/clyman:latest -consul-addr=registry:8500 -ip=localhost -port=5556 -log-conf=CLyman/log4cpp.properties
-- sleep 10
-- docker ps -a
-- docker logs --tail 50 registry
-- docker logs --tail 50 document-db
-- docker logs --tail 50 graph-db
-- npm install newman --global;
-- pip3 install requests --upgrade --user
+  - npm install newman --global;
+  - pip3 install --user docker-compose
+  - export NETWORK_INTERFACE_NAME=$(route | grep '^default' | grep -o '[^ ]*$')
+  - export NETWORK_INTERFACE_ADDRESS=$(ip addr show $NETWORK_INTERFACE_NAME | grep -Po 'inet \K[\d.]+')
 install:
-- gradle assemble
+  - ./gradlew check
+  - ./gradlew build
+  - docker build -t aostreetart/adrestia:v2 .
+  - docker-compose up &
 script:
-- gradle check
-- gradle bootRun &
-- sleep 60
-- curl http://localhost:5885/health
-- cd $TRAVIS_BUILD_DIR/src/test/resources && newman run AssetAPI.postman_collection.json -e AeselTest.postman_environment.json
-- cd $TRAVIS_BUILD_DIR && python3 scripts/py/testUdp.py
-- cd $TRAVIS_BUILD_DIR && python3 scripts/py/testFrameApi.py
+  - cd $TRAVIS_BUILD_DIR/src/test/resources && newman run Adrestia.postman_collection.json -e AdrestiaTest.postman_environment.json
+  - docker stop $(docker ps -aq)
+  - docker rm $(docker ps -aq)
 after_success:
-# Build and push the Docker image for Adrestia
-- cd $TRAVIS_BUILD_DIR/scripts/linux && ./build_docker.sh $DOCKER_MAIL $DOCKER_UN $DOCKER_PW $TRAVIS_BRANCH
-# Build and push the convenience image used by the Docker Compose File
-- cd $TRAVIS_BUILD_DIR && scripts/docker/build_config_docker_image.sh $TRAVIS_BRANCH
-after_failure:
-- cd $TRAVIS_BUILD_DIR && docker logs --tail 150 crazyivan
-- docker logs --tail 150 clyman
-- cd $TRAVIS_BUILD_DIR && cat logs/testUtils.txt
-- cat logs/testModel_obj.txt
-- cat logs/testModel_transform.txt
-- cat logs/testModel_device.txt
-- cat logs/testModel_scene.txt
-- cat logs/testModel_sceneList.txt
-- cat logs/testDao_obj.txt
-- cat logs/testDao_sceneCrt.txt
-- cat logs/testDao_sceneUpd.txt
-- cat logs/testDao_sceneGet.txt
-- cat logs/testDao_sceneDel.txt
-- cat logs/testDao_sceneReg.txt
-- cat logs/testDao_sceneSync.txt
-- cat logs/testDao_sceneDereg.txt
-- cat logs/testSceneCrudApi.txt
-- cat logs/testSceneQueryApi.txt
-- cat logs/testObjectCrudApi.txt
-- cat logs/testObjectQueryApi.txt
-- cat logs/testObjectLockApi.txt
-- cat logs/adrestia.log | grep ERROR
-- cat logs/udpTest.log
+  - scripts/linux/push_docker.sh $DOCKER_MAIL $DOCKER_UN $DOCKER_PW $TRAVIS_BRANCH
 notifications:
   slack:
-    secure: AfMTl+Si4xHctYyrB8GaV5a5fJYEuX18Ow5/NRwpZuRoGfcFU/CkX/SKNHNMSpUyXdMDiTXuylnt3KtscwSTn2pJdfqlx91n5wuIcx7uO+Hv0pLsxKhHJ/3WLYVrPK9GKEVHbsKpR+gxw8Bu/HTGqLBL8k9TAjGl97m1h39k3ovIbAjxzKhSlUSVlxcdqmD18CEnD2szH1qSZ4IlsIraYJ0F7rZtr8mdAESPPU9Q9BAWSVNF2wQ40c3PPYZb6l/zaKEYN3BqHsBGEJHRzH+Aa+ZXtFfgtj6voqiigMVw3FTPl66jPaDx7TI8mJFFBWUGOOImrwNYliIiGyo/b+q3N4OYVWADHp1RaLQEZqwQzCqRfoqgIUCagDF5wjOP6hQCobBT61o2wDSE2xHT73yKnr03AHp7An0flD0+/SYl9J2OOIe9vLgluVUEPa/jyiApldpKoH+JH0ZhvdMhz40Eu3iV9XtBdl0emT9gSeY5cKu3LSuA1AHIaGQz4VpsEokF14ebVSbxKx6rYjaNOViM56vwpBOT0eS9lD/NNduu5OBcijoifpBc5oAAUuK1t4VuoXDtBMaMdoqcxExRcfuRK/H63pUgDt1RkXKRysvg68EJMPLZosCrBwit5jsVbyWn9svLH7D1Kew437rHccD6KXsFjUOrp2Vc+0ppuDAvSCk=
+    secure:
+      AfMTl+Si4xHctYyrB8GaV5a5fJYEuX18Ow5/NRwpZuRoGfcFU/CkX/SKNHNMSpUyXdMDiTXuylnt3KtscwSTn2pJdfqlx91n5wuIcx7uO+Hv0pLsxKhHJ/3WLYVrPK9GKEVHbsKpR+gxw8Bu/HTGqLBL8k9TAjGl97m1h39k3ovIbAjxzKhSlUSVlxcdqmD18CEnD2szH1qSZ4IlsIraYJ0F7rZtr8mdAESPPU9Q9BAWSVNF2wQ40c3PPYZb6l/zaKEYN3BqHsBGEJHRzH+Aa+ZXtFfgtj6voqiigMVw3FTPl66jPaDx7TI8mJFFBWUGOOImrwNYliIiGyo/b+q3N4OYVWADHp1RaLQEZqwQzCqRfoqgIUCagDF5wjOP6hQCobBT61o2wDSE2xHT73yKnr03AHp7An0flD0+/SYl9J2OOIe9vLgluVUEPa/jyiApldpKoH+JH0ZhvdMhz40Eu3iV9XtBdl0emT9gSeY5cKu3LSuA1AHIaGQz4VpsEokF14ebVSbxKx6rYjaNOViM56vwpBOT0eS9lD/NNduu5OBcijoifpBc5oAAUuK1t4VuoXDtBMaMdoqcxExRcfuRK/H63pUgDt1RkXKRysvg68EJMPLZosCrBwit5jsVbyWn9svLH7D1Kew437rHccD6KXsFjUOrp2Vc+0ppuDAvSCk=

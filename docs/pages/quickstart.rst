@@ -42,11 +42,11 @@ Once you've got the required backend services started, build and execute the tes
 for the repository.  Please note that integration tests will fail unless you
 have instances of the required backend services running:
 
-``gradle check``
+``./gradlew check``
 
 And, finally, start Adrestia:
 
-``gradle bootRun``
+``./gradlew bootRun``
 
 Using the Latest Release
 ------------------------
@@ -55,4 +55,4 @@ Adrestia can also be downloaded as a runnable JAR for the latest release from `h
 
 When using a JAR, unzip the downloaded package, move to the main directory from a terminal, and run:
 
-``java -jar build/libs/adrestia-0.1.0.jar``
+``java -jar build/libs/adrestia-0.2.0.jar``
