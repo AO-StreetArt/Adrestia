@@ -21,7 +21,7 @@ services:
     volumes:
       - ${HOME}/neo4j/data:/data
     environment:
-      NEO4J_AUTH: none
+      - NEO4J_AUTH=none
   documentdb:
     image: mongo
     container_name: document-db
@@ -34,8 +34,8 @@ services:
       - "8766:8766"
       - "8764:8764/udp"
     environment:
-      - IVAN_PROD_NEO4J: "neo4j://graph-db:7687"
-      - IVAN_PROD_HTTP_HOST: "crazyivan"
+      - IVAN_PROD_NEO4J=neo4j://graph-db:7687
+      - IVAN_PROD_HTTP_HOST=crazyivan
     command: consul=http://registry:8500
     depends_on:
       registry:
@@ -47,10 +47,10 @@ services:
       - "8768:8768"
       - "8762:8762/udp"
     environment:
-      - CLYMAN_PROD_MONGO: "mongodb://document-db:27017"
-      - CLYMAN_PROD_HTTP_HOST: "clyman"
-      - CLYMAN_PROD_EVENT_DESTINATION_HOST: "${NETWORK_INTERFACE_ADDRESS}"
-      - CLYMAN_PROD_EVENT_DESTINATION_PORT: 8764
+      - CLYMAN_PROD_MONGO=mongodb://document-db:27017
+      - CLYMAN_PROD_HTTP_HOST=clyman
+      - CLYMAN_PROD_EVENT_DESTINATION_HOST=${NETWORK_INTERFACE_ADDRESS}
+      - CLYMAN_PROD_EVENT_DESTINATION_PORT=8764
     command: consul=http://registry:8500
     depends_on:
       registry:
