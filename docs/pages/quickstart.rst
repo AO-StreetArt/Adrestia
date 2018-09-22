@@ -19,12 +19,6 @@ into your instance of Postman.
 Docker
 ------
 
-Adrestia depends on a number of other services, a full list of which can be found at `The Aesel Component List <http://aesel.readthedocs.io/en/latest/pages/components.html>`__.
-
-Adrestia provides several `Docker Compose <https://docs.docker.com/compose/>`__ scripts to stand up dependencies automatically,
-which are especially valuable for experimenting with the server and/or setting up
-development environments.
-
 To stand up all of Adrestia's dependencies, as well as the Adrestia Docker image,
 run the following from the 'scripts/linux' folder:
 
