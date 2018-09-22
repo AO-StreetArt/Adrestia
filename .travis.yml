@@ -16,10 +16,12 @@ before_install:
   - pip3 install --user docker-compose
   - export NETWORK_INTERFACE_NAME=$(route | grep '^default' | grep -o '[^ ]*$')
   - export NETWORK_INTERFACE_ADDRESS=$(ip addr show $NETWORK_INTERFACE_NAME | grep -Po 'inet \K[\d.]+')
+  - docker run -d -p 8500:8500 --name=consul --network=dvs consul agent --dev
 install:
   - ./gradlew check
   - ./gradlew build
   - docker build -t aostreetart/adrestia:v2 .
+  - docker stop consul
   - docker-compose up &
 script:
   - cd $TRAVIS_BUILD_DIR/src/test/resources && newman run Adrestia.postman_collection.json -e AdrestiaTest.postman_environment.json
