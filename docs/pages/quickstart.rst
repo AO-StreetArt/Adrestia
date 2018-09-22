@@ -5,6 +5,17 @@ Getting Started with Adrestia
 
 :ref:`Go Home <index>`
 
+Adrestia is primarily a Reverse Proxy server, which means that without it's
+dependent services (ie. Crazy Ivan and CLyman), it does not do much.  For this
+reason, Docker is the recommended method of experimenting with Adrestia, as it
+requires minimal effort to get a basic, development cluster standing up.
+
+Regardless of how you start Adrestia and it's dependent services, the easiest
+way to explore the API currently provided by the cluster is by using
+`Postman <https://www.getpostman.com/>`__.  You'll find an environment and
+collection JSON in the src/test/json folder, which can be imported directly
+into your instance of Postman.
+
 Docker
 ------
 
