@@ -293,7 +293,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"num_records\": 1,\n  \"objects\":[\n    {\n\t\t\"name\": \"Test Object 123464\"\n\t}\n  ]\n}\n"
+					"raw": "{\n  \"num_records\": 1,\n  \"objects\":[\n    {\n\t\t\"name\": \"Test Object 123464\", \"frame\": 0\n\t}\n  ]\n}\n"
 				},
 				"url": {
 					"raw": "{{AESEL_URL}}/v1/scene/12345/object/query/",
@@ -616,11 +616,11 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "23a9edc3-0272-4caa-b5c7-432cafccf9d6",
+						"id": "7ea86b7d-5f3a-47d3-a72d-47537c618d2e",
 						"type": "text/javascript",
 						"exec": [
-							"pm.test(\"Response time is less than 200ms\", function () {",
-							"    pm.expect(pm.response.responseTime).to.be.below(200);",
+							"pm.test(\"Response time is less than 500ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(500);",
 							"});",
 							"",
 							"pm.test(\"Status code is 200\", function () {",
@@ -682,7 +682,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "9a5de387-8575-4c87-9e3f-3ad669fa716e",
+						"id": "a60170f0-2f56-4b22-9cfb-6b26567f66a5",
 						"type": "text/javascript",
 						"exec": [
 							"pm.test(\"Response time is less than 200ms\", function () {",
@@ -700,9 +700,7 @@
 							"var jsonData = pm.response.json();",
 							"",
 							"pm.test(\"Check Response Body\", function () {",
-							"    pm.expect(jsonData.err_code).to.eql(100);",
-							"    pm.expect(jsonData.num_records).to.eql(1);",
-							"});"
+							"    pm.expect(jsonData.err_code).to.eql(100);"
 						]
 					}
 				}
@@ -976,11 +974,11 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "4d87ff4e-8f89-4694-94cf-59077b761784",
+						"id": "5f7dc3a8-55b2-4516-9ec6-f8e6b1cdb790",
 						"type": "text/javascript",
 						"exec": [
-							"pm.test(\"Response time is less than 200ms\", function () {",
-							"    pm.expect(pm.response.responseTime).to.be.below(200);",
+							"pm.test(\"Response time is less than 500ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(500);",
 							"});",
 							"",
 							"pm.test(\"Status code is 200\", function () {",
@@ -1038,11 +1036,11 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "4d87ff4e-8f89-4694-94cf-59077b761784",
+						"id": "ffe04bc0-6e2e-4ffa-9859-4cd326331bfd",
 						"type": "text/javascript",
 						"exec": [
-							"pm.test(\"Response time is less than 200ms\", function () {",
-							"    pm.expect(pm.response.responseTime).to.be.below(200);",
+							"pm.test(\"Response time is less than 500ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(500);",
 							"});",
 							"",
 							"pm.test(\"Status code is 200\", function () {",
@@ -1131,19 +1129,7 @@
 			],
 			"request": {
 				"auth": {
-					"type": "basic",
-					"basic": [
-						{
-							"key": "password",
-							"value": "test",
-							"type": "string"
-						},
-						{
-							"key": "username",
-							"value": "test",
-							"type": "string"
-						}
-					]
+					"type": "noauth"
 				},
 				"method": "POST",
 				"header": [
@@ -1256,11 +1242,11 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "87992778-9149-412a-b4a4-4f38bef364be",
+						"id": "e5bdb42a-12c8-48dc-99cb-2fac458987f4",
 						"type": "text/javascript",
 						"exec": [
-							"pm.test(\"Response time is less than 200ms\", function () {",
-							"    pm.expect(pm.response.responseTime).to.be.below(200);",
+							"pm.test(\"Response time is less than 500ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(500);",
 							"});",
 							"",
 							"pm.test(\"Status code is 200\", function () {",
