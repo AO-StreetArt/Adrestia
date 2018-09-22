@@ -619,8 +619,8 @@
 						"id": "7ea86b7d-5f3a-47d3-a72d-47537c618d2e",
 						"type": "text/javascript",
 						"exec": [
-							"pm.test(\"Response time is less than 500ms\", function () {",
-							"    pm.expect(pm.response.responseTime).to.be.below(500);",
+							"pm.test(\"Response time is less than 1000ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(1000);",
 							"});",
 							"",
 							"pm.test(\"Status code is 200\", function () {",
@@ -978,8 +978,8 @@
 						"id": "5f7dc3a8-55b2-4516-9ec6-f8e6b1cdb790",
 						"type": "text/javascript",
 						"exec": [
-							"pm.test(\"Response time is less than 500ms\", function () {",
-							"    pm.expect(pm.response.responseTime).to.be.below(500);",
+							"pm.test(\"Response time is less than 1000ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(1000);",
 							"});",
 							"",
 							"pm.test(\"Status code is 200\", function () {",
@@ -1040,8 +1040,8 @@
 						"id": "ffe04bc0-6e2e-4ffa-9859-4cd326331bfd",
 						"type": "text/javascript",
 						"exec": [
-							"pm.test(\"Response time is less than 500ms\", function () {",
-							"    pm.expect(pm.response.responseTime).to.be.below(500);",
+							"pm.test(\"Response time is less than 1000ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(1000);",
 							"});",
 							"",
 							"pm.test(\"Status code is 200\", function () {",
@@ -1225,8 +1225,8 @@
 						"id": "e5bdb42a-12c8-48dc-99cb-2fac458987f4",
 						"type": "text/javascript",
 						"exec": [
-							"pm.test(\"Response time is less than 500ms\", function () {",
-							"    pm.expect(pm.response.responseTime).to.be.below(500);",
+							"pm.test(\"Response time is less than 1000ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(1000);",
 							"});",
 							"",
 							"pm.test(\"Status code is 200\", function () {",
