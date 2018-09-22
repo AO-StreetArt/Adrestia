@@ -22,7 +22,8 @@ install:
   - ./gradlew build
   - docker build -t aostreetart/adrestia:v2 .
   - docker stop consul
-  - docker-compose up &
+  - cd $TRAVIS_BUILD_DIR/scripts/linux && ./start_dev_cluster &
+  - sleep 10
 script:
   - cd $TRAVIS_BUILD_DIR/src/test/json && newman run Adrestia.postman_collection.json -e AdrestiaTest.postman_environment.json
   - docker stop $(docker ps -aq)

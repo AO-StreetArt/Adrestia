@@ -64,4 +64,9 @@ services:
       registry:
         condition: service_healthy
     environment:
-      SPRING_APPLICATION_JSON: '{"server":{"port":8080,"mongo":{"host":"localhost","port":27017}},"cache":{"max_scenes":500},"service":{"static":{"cluster":"test"},"refresh":{"interval":2500},"discovery":{"active":"false"},"ivan":{"name":"CrazyIvan","host":"crazyivan","port":8766},"clyman":{"name":"Clyman","host":"clyman","port":8768},"avc":{"name":"Avc","host":"avc","port":5635}},"management":{"port":5635,"address":"127.0.0.1"},"spring":{"application":{"name":"Adrestia"},"profiles":{"active":"dev"},"cloud":{"consul":{"discovery":{"host":"registry","port":8500,"preferIpAdress":"false"}}}},"zuul":{"routes":{"scene":{"url":"http://localhost:8090"},"object":{"url":"http://localhost:8090"},"property":{"url":"http://localhost:8090"},"asset":{"url":"http://localhost:8090"}}},"logging":{"level":{"org":{"springframework":"INFO","apache":{"http":"INFO"}}}},"ribbon":{"eureka":{"enabled":false}}}'
+      - SERVER_MONGO_HOST=document-db
+      - SERVICE_STATIC_CLUSTER=test
+      - SERVICE_IVAN_HOST=crazyivan
+      - SERVICE_CLYMAN_HOST=clyman
+      - SPRING_CLOUD_CONSUL_HOST=registry
+      - SPRING_CLOUD_CONSUL_DISCOVERY_PREFERIPADDRESS=true
