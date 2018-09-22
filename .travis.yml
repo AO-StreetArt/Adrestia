@@ -17,6 +17,7 @@ before_install:
   - export NETWORK_INTERFACE_NAME=$(route | grep '^default' | grep -o '[^ ]*$')
   - export NETWORK_INTERFACE_ADDRESS=$(ip addr show $NETWORK_INTERFACE_NAME | grep -Po 'inet \K[\d.]+')
   - docker run -d -p 8500:8500 --name=consul consul agent --dev
+  - sleep 5
 install:
   - ./gradlew check
   - ./gradlew build
