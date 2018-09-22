@@ -682,7 +682,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "a60170f0-2f56-4b22-9cfb-6b26567f66a5",
+						"id": "dd0ce3f1-300f-499e-925b-839fea53e482",
 						"type": "text/javascript",
 						"exec": [
 							"pm.test(\"Response time is less than 200ms\", function () {",
@@ -700,7 +700,8 @@
 							"var jsonData = pm.response.json();",
 							"",
 							"pm.test(\"Check Response Body\", function () {",
-							"    pm.expect(jsonData.err_code).to.eql(100);"
+							"    pm.expect(jsonData.err_code).to.eql(100);",
+							"});"
 						]
 					}
 				}
@@ -1098,11 +1099,11 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "d94a1be1-b785-46d9-b97b-35e6d581f846",
+						"id": "8d14a85c-b8e2-443a-99bf-52560d461495",
 						"type": "text/javascript",
 						"exec": [
-							"pm.test(\"Response time is less than 200ms\", function () {",
-							"    pm.expect(pm.response.responseTime).to.be.below(200);",
+							"pm.test(\"Response time is less than 2000ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);",
 							"});",
 							"",
 							"pm.test(\"Status code is 200\", function () {",
@@ -1118,11 +1119,7 @@
 							"pm.test(\"Check Response Body\", function () {",
 							"    pm.expect(jsonData.err_code).to.eql(100);",
 							"    pm.expect(jsonData.num_records).to.eql(1);",
-							"});",
-							"",
-							"pm.environment.unset(\"SCENE_ID\");",
-							"",
-							"pm.environment.set(\"SCENE_ID\", jsonData.scenes[0].key);"
+							"});"
 						]
 					}
 				}
@@ -1164,11 +1161,11 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "d94a1be1-b785-46d9-b97b-35e6d581f846",
+						"id": "7f0bec85-4c92-42c2-b6fc-b7e71d289abc",
 						"type": "text/javascript",
 						"exec": [
-							"pm.test(\"Response time is less than 200ms\", function () {",
-							"    pm.expect(pm.response.responseTime).to.be.below(200);",
+							"pm.test(\"Response time is less than 2000ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);",
 							"});",
 							"",
 							"pm.test(\"Status code is 200\", function () {",
@@ -1184,30 +1181,14 @@
 							"pm.test(\"Check Response Body\", function () {",
 							"    pm.expect(jsonData.err_code).to.eql(100);",
 							"    pm.expect(jsonData.num_records).to.eql(1);",
-							"});",
-							"",
-							"pm.environment.unset(\"SCENE_ID\");",
-							"",
-							"pm.environment.set(\"SCENE_ID\", jsonData.scenes[0].key);"
+							"});"
 						]
 					}
 				}
 			],
 			"request": {
 				"auth": {
-					"type": "basic",
-					"basic": [
-						{
-							"key": "password",
-							"value": "test",
-							"type": "string"
-						},
-						{
-							"key": "username",
-							"value": "test",
-							"type": "string"
-						}
-					]
+					"type": "noauth"
 				},
 				"method": "POST",
 				"header": [
@@ -1312,11 +1293,11 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "d94a1be1-b785-46d9-b97b-35e6d581f846",
+						"id": "4dd96193-5e6a-4750-86bb-3e9b3893773a",
 						"type": "text/javascript",
 						"exec": [
-							"pm.test(\"Response time is less than 200ms\", function () {",
-							"    pm.expect(pm.response.responseTime).to.be.below(200);",
+							"pm.test(\"Response time is less than 2000ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);",
 							"});",
 							"",
 							"pm.test(\"Status code is 200\", function () {",
@@ -1332,11 +1313,7 @@
 							"pm.test(\"Check Response Body\", function () {",
 							"    pm.expect(jsonData.err_code).to.eql(100);",
 							"    pm.expect(jsonData.num_records).to.eql(1);",
-							"});",
-							"",
-							"pm.environment.unset(\"SCENE_ID\");",
-							"",
-							"pm.environment.set(\"SCENE_ID\", jsonData.scenes[0].key);"
+							"});"
 						]
 					}
 				}

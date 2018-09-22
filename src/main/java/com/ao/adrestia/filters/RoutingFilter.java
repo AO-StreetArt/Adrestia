@@ -117,7 +117,7 @@ public class RoutingFilter extends ZuulFilter {
         // Remove the Scene URL elements before routing to CLyman
         if (routeMatched) {
           log.info("Removing Scene from URL");
-          newTail = "/" + stripSceneUrlElements(urlPathList, parsedUrlList);
+          newTail = stripSceneUrlElements(urlPathList, parsedUrlList);
         } else {
           // We have a Scene Request, so route to Crazy Ivan
           ServiceInstance targetInstance = discoveryClient.findCrazyIvan();
@@ -131,7 +131,7 @@ public class RoutingFilter extends ZuulFilter {
             // We need to strip out the scene url elements if we hit
             // the registration API's
             if (urlPathList[3].equals("register") || urlPathList[3].equals("deregister") || urlPathList[3].equals("align")) {
-              newTail = stripSceneUrlElements(urlPathList, parsedUrlList);
+              newTail = "/" + stripSceneUrlElements(urlPathList, parsedUrlList);
             }
           }
         }
