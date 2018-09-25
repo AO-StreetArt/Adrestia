@@ -29,7 +29,7 @@ script:
   - docker stop $(docker ps -aq)
   - docker rm $(docker ps -aq)
 after_success:
-  - scripts/linux/push_docker.sh $DOCKER_MAIL $DOCKER_UN $DOCKER_PW $TRAVIS_BRANCH
+  - cd $TRAVIS_BUILD_DIR && scripts/linux/push_docker.sh $DOCKER_MAIL $DOCKER_UN $DOCKER_PW $TRAVIS_BRANCH
 notifications:
   slack:
     secure:
