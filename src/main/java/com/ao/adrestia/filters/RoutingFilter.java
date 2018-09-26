@@ -135,7 +135,7 @@ public class RoutingFilter extends ZuulFilter {
             }
           }
         }
-      } else if (urlPathList[1].equals("asset")) {
+      } else if (urlPathList[1].equals("asset") || urlPathList[1].equals("asset-history")) {
         // We have an asset request, so route to AVC
         ServiceInstance targetInstance = discoveryClient.findAvc();
         if (targetInstance != null) {
