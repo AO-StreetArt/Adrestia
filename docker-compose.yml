@@ -55,6 +55,18 @@ services:
     depends_on:
       registry:
         condition: service_healthy
+  kelona:
+    image: aostreetart/kelona:latest
+    container_name: kelona
+    ports:
+      - "5635:5635"
+    depends_on:
+      registry:
+        condition: service_healthy
+    environment:
+      - SERVER_MONGO_HOST=document-db
+      - SPRING_CLOUD_CONSUL_HOST=registry
+      - SPRING_CLOUD_CONSUL_DISCOVERY_PREFERIPADDRESS=true
   adrestia:
     image: aostreetart/adrestia:v2
     container_name: adrestia
@@ -68,5 +80,6 @@ services:
       - SERVICE_STATIC_CLUSTER=test
       - SERVICE_IVAN_HOST=crazyivan
       - SERVICE_CLYMAN_HOST=clyman
+      - SERVICE_AVC_HOST=kelona
       - SPRING_CLOUD_CONSUL_HOST=registry
       - SPRING_CLOUD_CONSUL_DISCOVERY_PREFERIPADDRESS=true
