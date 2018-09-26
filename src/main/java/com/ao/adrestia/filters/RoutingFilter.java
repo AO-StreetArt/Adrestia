@@ -94,7 +94,7 @@ public class RoutingFilter extends ZuulFilter {
     String hostname = "localhost";
     int port = 9000;
     boolean routeMatched = false;
-    if (urlPathList.length > 2) {
+    if (urlPathList.length > 1) {
 
       // Look for the scene root
       if (urlPathList[1].equals("scene")) {
