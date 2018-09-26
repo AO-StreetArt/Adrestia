@@ -83,3 +83,4 @@ services:
       - SERVICE_AVC_HOST=kelona
       - SPRING_CLOUD_CONSUL_HOST=registry
       - SPRING_CLOUD_CONSUL_DISCOVERY_PREFERIPADDRESS=true
+      - SPRING_CLOUD_CONSUL_DISCOVERY_HEALTHCHECKURL=http://adrestia:8080/actuator/health
