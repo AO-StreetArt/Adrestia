@@ -139,7 +139,8 @@
 					"formdata": [
 						{
 							"key": "file",
-							"type": "file"
+							"type": "file",
+							"src": "testupload.json"
 						},
 						{
 							"key": "scene",
