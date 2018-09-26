@@ -1,10 +1,208 @@
 {
 	"info": {
-		"_postman_id": "72429bbd-1d0a-4948-93f0-98973947549e",
+		"_postman_id": "7befeed9-d609-4da3-85e2-1aefbfda0108",
 		"name": "Adrestia",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
+		{
+			"name": "Upload Asset",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "30c16872-3e8d-407d-b85d-fdf1ad924cc4",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Response time is less than 5000ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(5000);",
+							"});",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.environment.unset(\"ASSET_ID\");",
+							"",
+							"pm.environment.set(\"ASSET_ID\", pm.response.text());",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "testupload.json"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{AESEL_URL}}/v1/asset",
+					"host": [
+						"{{AESEL_URL}}"
+					],
+					"path": [
+						"v1",
+						"asset"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Asset",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ddef8b6f-f259-45cf-a66e-4a1af69ce1f7",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Response time is less than 5000ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(5000);",
+							"});",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{AESEL_URL}}/v1/asset/{{ASSET_ID}}",
+					"host": [
+						"{{AESEL_URL}}"
+					],
+					"path": [
+						"v1",
+						"asset",
+						"{{ASSET_ID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Asset",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "22915957-5168-40db-bb6d-a96ca545ae15",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Response time is less than 5000ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(5000);",
+							"});",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.environment.unset(\"ASSET_ID\");",
+							"",
+							"pm.environment.set(\"ASSET_ID\", pm.response.text());",
+							"",
+							"pm.environment.unset(\"OLD_ASSET_ID\");",
+							"",
+							"pm.environment.set(\"OLD_ASSET_ID\", pm.response.text());"
+						]
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file"
+						},
+						{
+							"key": "scene",
+							"value": "assetScene",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{AESEL_URL}}/v1/asset/{{ASSET_ID}}",
+					"host": [
+						"{{AESEL_URL}}"
+					],
+					"path": [
+						"v1",
+						"asset",
+						"{{ASSET_ID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Asset",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "17228248-7ee8-444e-8f49-7d94cdcba892",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Response time is less than 5000ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(5000);",
+							"});",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{AESEL_URL}}/v1/asset/{{ASSET_ID}}",
+					"host": [
+						"{{AESEL_URL}}"
+					],
+					"path": [
+						"v1",
+						"asset",
+						"{{ASSET_ID}}"
+					]
+				}
+			},
+			"response": []
+		},
 		{
 			"name": "Scene Create",
 			"event": [
