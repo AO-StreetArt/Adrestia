@@ -91,7 +91,7 @@ public class AeselDiscoveryComponent implements AeselDiscoveryService, CommandLi
   @Value("${service.refresh.interval}")
   private int refreshInterval;
 
-  private static Logger log = LoggerFactory.getLogger(AeselDiscoveryComponent.class);
+  private static Logger log = LoggerFactory.getLogger("adrestia.AeselDiscoveryComponent");
 
   // Consul Connection
   @Autowired

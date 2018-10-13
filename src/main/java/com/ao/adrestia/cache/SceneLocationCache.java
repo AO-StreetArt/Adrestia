@@ -41,7 +41,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class SceneLocationCache {
 
-  private static Logger log = LoggerFactory.getLogger(SceneLocationCache.class);
+  private static Logger log = LoggerFactory.getLogger("adrestia.SceneLocationCache");
 
   @Autowired
   SceneLocationRepository dbScenes;

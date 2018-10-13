@@ -52,7 +52,7 @@ import org.springframework.web.client.RestTemplate;
  */
 public class PersistenceFilter extends ZuulFilter {
 
-  private static Logger log = LoggerFactory.getLogger(PersistenceFilter.class);
+  private static Logger log = LoggerFactory.getLogger("adrestia.PersistenceFilter");
 
   RestTemplate restTemplate = new RestTemplate();
 

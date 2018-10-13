@@ -58,7 +58,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class SceneLocationController {
 
   private static Logger log =
-      LoggerFactory.getLogger(SceneLocationController.class);
+      LoggerFactory.getLogger("adrestia.SceneLocationController");
 
   @Autowired
   SceneLocationRepository sceneLocations;
@@ -77,7 +77,8 @@ public class SceneLocationController {
     responseHeaders.set("Content-Type", "application/json");
 
     // Find cluster locations
-    List<SceneLocation> clusterLocations = sceneLocations.findByClusterIdentifier(cluster);
+    List<SceneLocation> clusterLocations =
+        sceneLocations.findByClusterIdentifier(cluster);
     List<String> clusterScenes = new ArrayList<String>();
     for (SceneLocation loc : clusterLocations) {
       if (!(clusterScenes.contains(loc.sceneIdentifier))) {
