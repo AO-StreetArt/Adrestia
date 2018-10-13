@@ -40,7 +40,7 @@ import org.springframework.stereotype.Component;
  */
 public class RoutingFilter extends ZuulFilter {
 
-  private static Logger log = LoggerFactory.getLogger(RoutingFilter.class);
+  private static Logger log = LoggerFactory.getLogger("adrestia.RoutingFilter");
 
   @Autowired
   AeselDiscoveryService discoveryClient;
@@ -135,7 +135,7 @@ public class RoutingFilter extends ZuulFilter {
             }
           }
         }
-      } else if (urlPathList[1].equals("asset") || urlPathList[1].equals("asset-history")) {
+      } else if (urlPathList[1].equals("asset") || urlPathList[1].equals("history") || urlPathList[1].equals("relationship")) {
         // We have an asset request, so route to AVC
         ServiceInstance targetInstance = discoveryClient.findAvc();
         if (targetInstance != null) {

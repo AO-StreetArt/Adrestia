@@ -5,6 +5,7 @@
    :caption: Contents:
 
    pages/quickstart.rst
+   pages/authentication.rst
 
 .. include:: ../README.rst
 

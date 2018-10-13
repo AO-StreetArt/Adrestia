@@ -20,6 +20,10 @@ and Adrestia abstracts away these clusters into a single transactional plane,
 which can be accessed by typical transactional services, and end users.  It
 can be scaled horizontally, and runs against a Mongo Cluster itself.
 
+Adrestia also forms a security layer on top of it's dependent services.  It provides
+a number of additional HTTP security features, including a full-scale authentication
+flow powered by Auth0.
+
 Full Documentation for Adrestia is available `here <http://adrestia.readthedocs.io/en/v2/>`__.
 Repository for Adrestia is available at `here <https://github.com/AO-StreetArt/Adrestia>`__.
 
@@ -30,6 +34,7 @@ Features
 --------
 
 - Edge Proxy for HTTP communications with end users
+- Authentication supported by Auth0 integration
 - Cluster-based routing driven by Scenes (data stored in Crazy Ivan)
 - Internal Service mesh for transactional services to communicate with Aesel clusters
 

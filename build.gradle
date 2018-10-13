@@ -32,18 +32,39 @@ repositories {
 	mavenCentral()
 }
 
-
 ext {
+  springBootAdminVersion = '2.0.2'
 	springCloudVersion = 'Finchley.SR1'
+}
+
+configurations {
+  all*.exclude module : 'spring-boot-starter-logging'
 }
 
 dependencies {
 	compile('org.springframework.boot:spring-boot-starter-actuator')
 	compile('org.springframework.boot:spring-boot-starter-web')
 	compile('org.springframework.boot:spring-boot-starter-data-mongodb')
+  compile('org.springframework.boot:spring-boot-starter-log4j2')
+  compile 'org.springframework.boot:spring-boot-starter-security:1.5.6.RELEASE'
+
 	compile('org.springframework.cloud:spring-cloud-starter-consul-discovery')
+  compile('org.springframework.cloud:spring-cloud-starter-consul-config')
 	compile('org.springframework.cloud:spring-cloud-starter-netflix-zuul')
+
+  compile('org.springframework.retry:spring-retry')
+
+  compile('org.springframework.cloud:spring-cloud-starter-vault-config')
+  compile('org.springframework.cloud:spring-cloud-vault-config-consul')
+
+  compile 'com.auth0:mvc-auth-commons:1.+'
+
+  runtime 'org.apache.tomcat.embed:tomcat-embed-jasper:8.5.20'
 	runtime('org.springframework.boot:spring-boot-devtools')
+  runtime 'org.springframework.boot:spring-boot-starter-tomcat:1.5.6.RELEASE'
+  runtime 'org.springframework.security:spring-security-taglibs:4.2.3.RELEASE'
+  runtime 'javax.servlet:jstl:1.2'
+
 	testCompile('org.springframework.boot:spring-boot-starter-test')
   errorprone 'com.google.errorprone:error_prone_core:2.2.0'
 }
@@ -55,6 +76,7 @@ tasks.withType(JavaCompile) {
 
 dependencyManagement {
 	imports {
+    mavenBom "de.codecentric:spring-boot-admin-dependencies:${springBootAdminVersion}"
 		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
 	}
 }
