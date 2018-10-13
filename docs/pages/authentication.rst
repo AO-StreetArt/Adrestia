@@ -11,7 +11,8 @@ latest documentation to obtain a better understanding of how this all functions.
 
 Adrestia provides JWT authentication with Spring Security, so is capable of
 authenticating from User Databases, social log-ins, etc.  To test out authentication,
-you can visit `the login portal <http://aesel-address:8080/portal/home>`__.
+you can visit http://adrestia-address:8080/login, making sure to replace 'adrestia-address'
+with the address of your instance.
 
 You can follow `this guide <https://auth0.com/docs/quickstart/webapp/java-spring-security-mvc/01-login>`__
 to setup your Auth0 account to integrate with Adrestia correctly.  The configuration

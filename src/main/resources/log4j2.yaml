@@ -37,6 +37,9 @@ Configuration:
         - name: adrestia.SceneLocationController
           level: debug
       Logger:
+        - name: adrestia.AuthController
+          level: debug
+      Logger:
         - name: adrestia.SceneLocationCache
           level: debug
       Logger:
