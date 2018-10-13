@@ -21,24 +21,30 @@ import java.io.IOException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.web.servlet.error.ErrorController;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @SuppressWarnings("unused")
 @Controller
 public class AdrestiaErrorController implements ErrorController {
 
-  private final Logger logger = LoggerFactory.getLogger(this.getClass());
+  private final Logger logger = LoggerFactory.getLogger("adrestia.AuthController");
 
   private static final String PATH = "/error";
 
   @RequestMapping("/error")
-  protected String error(final RedirectAttributes redirectAttributes) throws IOException {
-    logger.error("Handling error");
-    redirectAttributes.addFlashAttribute("error", true);
-    return "redirect:/login";
+  protected ResponseEntity<String> error(final RedirectAttributes redirectAttributes) throws IOException {
+    // Set up a failure response code
+    HttpStatus returnCode = HttpStatus.UNAUTHORIZED;
+    // Set up a response header to return a valid HTTP Response
+    HttpHeaders responseHeaders = new HttpHeaders();
+    responseHeaders.set("Content-Type", "application/json");
+    return new ResponseEntity<String>("{\"authentication\": \"failed\"}", responseHeaders, returnCode);
   }
 
   @Override

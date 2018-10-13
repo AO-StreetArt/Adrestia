@@ -60,7 +60,7 @@ public class AdrestiaApplication extends WebSecurityConfigurerAdapter {
   * This is your auth0 domain
   * (tenant you have created when registering with auth0 - account name).
   */
-  @Value(value = "${com.auth0.domain:}")
+  @Value(value = "${com.auth0.domain:aesel.auth0.com}")
   private String domain;
 
   /**

@@ -38,7 +38,7 @@ public class LoginController {
   private AuthenticationController controller;
   @Value(value = "${com.auth0.domain}")
   private String domain;
-  private final Logger logger = LoggerFactory.getLogger(this.getClass());
+  private final Logger logger = LoggerFactory.getLogger("adrestia.AuthController");
 
   @RequestMapping(value = "/login", method = RequestMethod.GET)
   protected String login(final HttpServletRequest req) {

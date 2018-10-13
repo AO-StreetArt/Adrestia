@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 public class LogoutController {
 
-  private final Logger logger = LoggerFactory.getLogger(this.getClass());
+  private final Logger logger = LoggerFactory.getLogger("adrestia.AuthController");
 
   @RequestMapping(value = "/logout", method = RequestMethod.GET)
   protected String logout(final HttpServletRequest req) {
