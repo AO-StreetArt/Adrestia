@@ -103,7 +103,7 @@ public class AdrestiaApplication extends WebSecurityConfigurerAdapter {
 
     if (httpAuthActive) {
       http.authorizeRequests()
-          .antMatchers("/callback", "/login").permitAll()
+          .antMatchers("/callback", "/login", "/health").permitAll()
           .antMatchers("/**").authenticated()
           .and()
           .logout().permitAll();

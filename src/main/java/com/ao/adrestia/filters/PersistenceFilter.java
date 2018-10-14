@@ -22,7 +22,9 @@ import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -67,6 +69,17 @@ public class PersistenceFilter extends ZuulFilter {
 
   @Autowired
   AeselDiscoveryService discoveryClient;
+
+  // Ivan (Scene Service) username
+  @Value(value = "${service.ivan.username:}")
+  private String ivanUsername;
+
+  // Ivan (Scene Service) password
+  @Value(value = "${service.ivan.password:}")
+  private String ivanPassword;
+
+  @Value("${server.auth.active:false}")
+  private boolean httpAuthActive;
 
   @Override
   public String filterType() {
@@ -123,7 +136,7 @@ public class PersistenceFilter extends ZuulFilter {
         }
 
         // If we have a dev cluster, we're going to add the cluster name manually
-        if (discoveryActive.equals("false") && clusterId == null) {
+        if (discoveryActive.equals("false")) {
           clusterId = staticCluster;
         }
 
@@ -135,6 +148,12 @@ public class PersistenceFilter extends ZuulFilter {
                 + ":" + instance.getPort() + "/v1/scene/cache/" + urlPathList[2];
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
+            if (httpAuthActive) {
+              String credentialsString = "";
+              credentialsString =
+                  Base64.getEncoder().encodeToString((ivanUsername + ":" + ivanPassword).getBytes(StandardCharsets.ISO_8859_1));
+              headers.add("Authorization", "Basic " + credentialsString);
+            }
             HttpEntity<String> entity = new HttpEntity<String>("", headers);
             ResponseEntity<String> response =
                 restTemplate.exchange(cacheUrl, HttpMethod.PUT, entity, String.class);
