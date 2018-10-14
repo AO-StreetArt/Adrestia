@@ -20,7 +20,9 @@ import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -30,6 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.stereotype.Component;
@@ -44,6 +47,33 @@ public class RoutingFilter extends ZuulFilter {
 
   @Autowired
   AeselDiscoveryService discoveryClient;
+
+  // Ivan (Scene Service) username
+  @Value(value = "${service.ivan.username:}")
+  private String ivanUsername;
+
+  // Ivan (Scene Service) password
+  @Value(value = "${service.ivan.password:}")
+  private String ivanPassword;
+
+  // CLyman (Object Service) username
+  @Value(value = "${service.clyman.username:}")
+  private String clymanUsername;
+
+  // CLyman (Object Service) password
+  @Value(value = "${service.clyman.password:}")
+  private String clymanPassword;
+
+  // Asset Version Control username
+  @Value(value = "${service.avc.username:}")
+  private String avcUsername;
+
+  // Asset Version Control password
+  @Value(value = "${service.avc.password:}")
+  private String avcPassword;
+
+  @Value("${server.auth.active:false}")
+  private boolean httpAuthActive;
 
   @Override
   public String filterType() {
@@ -93,7 +123,9 @@ public class RoutingFilter extends ZuulFilter {
     }
     String hostname = "localhost";
     int port = 9000;
-    boolean routeMatched = false;
+    boolean isIvanRequest = false;
+    boolean isClymanRequest = false;
+    boolean isAvcRequest = false;
     if (urlPathList.length > 1) {
 
       // Look for the scene root
@@ -109,13 +141,13 @@ public class RoutingFilter extends ZuulFilter {
               log.info("Routing Request to {}", targetInstance.getHost());
               hostname = targetInstance.getHost();
               port = targetInstance.getPort();
-              routeMatched = true;
+              isClymanRequest = true;
             }
           }
         }
 
         // Remove the Scene URL elements before routing to CLyman
-        if (routeMatched) {
+        if (isClymanRequest) {
           log.info("Removing Scene from URL");
           newTail = stripSceneUrlElements(urlPathList, parsedUrlList);
         } else {
@@ -125,7 +157,7 @@ public class RoutingFilter extends ZuulFilter {
             log.info("Routing Request to {}", targetInstance.getHost());
             hostname = targetInstance.getHost();
             port = targetInstance.getPort();
-            routeMatched = true;
+            isIvanRequest = true;
           }
           if (urlPathList.length == 4) {
             // We need to strip out the scene url elements if we hit
@@ -135,6 +167,7 @@ public class RoutingFilter extends ZuulFilter {
             }
           }
         }
+
       } else if (urlPathList[1].equals("asset") || urlPathList[1].equals("history") || urlPathList[1].equals("relationship")) {
         // We have an asset request, so route to AVC
         ServiceInstance targetInstance = discoveryClient.findAvc();
@@ -142,16 +175,18 @@ public class RoutingFilter extends ZuulFilter {
           log.info("Routing Request to {}", targetInstance.getHost());
           hostname = targetInstance.getHost();
           port = targetInstance.getPort();
-          routeMatched = true;
+          isAvcRequest = true;
         }
       }
     }
-    if (!routeMatched) {
+
+    if (!(isAvcRequest || isIvanRequest || isClymanRequest)) {
       log.warn("Unable to parse URL Path: {}", parsedUrlList[0]);
       for (String pathElt : urlPathList) {
         log.warn(pathElt);
       }
     }
+
     try {
       // Set the URL of the request to a new URL with the existing protocol
       log.info("Returning final URL {}://{}:{}/{}", currentUrl.getProtocol(), hostname, port, newTail);
@@ -159,6 +194,22 @@ public class RoutingFilter extends ZuulFilter {
       context.put("requestURI", newTail);
     } catch (Exception e) {
       log.error("Error setting service URL", e);
+    }
+
+    // If Authentication is enabled, then inject Basic Auth credentials
+    if (httpAuthActive) {
+      String credentialsString = "";
+      if (isAvcRequest) {
+        credentialsString =
+            Base64.getEncoder().encodeToString((avcUsername + ":" + avcPassword).getBytes(StandardCharsets.ISO_8859_1));
+      } else if (isClymanRequest) {
+        credentialsString =
+            Base64.getEncoder().encodeToString((clymanUsername + ":" + clymanPassword).getBytes(StandardCharsets.ISO_8859_1));
+      } else if (isIvanRequest) {
+        credentialsString =
+            Base64.getEncoder().encodeToString((ivanUsername + ":" + ivanPassword).getBytes(StandardCharsets.ISO_8859_1));
+      }
+      context.addZuulRequestHeader("Authorization", "Basic " + credentialsString);
     }
     return null;
   }
