@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Home Page</title>
+    <title>Aesel Browser</title>
     <link rel="stylesheet" type="text/css" href="/css/bootstrap.css">
     <link rel="stylesheet" type="text/css" href="/css/jumbotron-narrow.css">
     <link rel="stylesheet" type="text/css" href="/css/home.css">
@@ -22,10 +22,11 @@
         <nav>
             <ul class="nav nav-pills pull-right">
                 <li class="active" id="home"><a href="#">Home</a></li>
+                <li id="sceneBrowser"><a href="/sceneBrowser">Scene Browser</a></li>
+                <li id="assetBrowser"><a href="/assetBrowser">Asset Browser</a></li>
                 <li id="qsLogoutBtn"><a href="#">Logout</a></li>
             </ul>
         </nav>
-        <h3 class="text-muted">App.com</h3>
     </div>
     <div class="jumbotron">
         <h3>Hello ${userId}!</h3>
@@ -49,9 +50,6 @@
 </div>
 
 <script type="text/javascript">
-    $(function () {
-        $.growl({title: "Hello ${userId}", message: "Welcome to Aesel!"});
-    });
     $("#qsLogoutBtn").click(function(e) {
         e.preventDefault();
         $("#qsLogoutBtn").removeClass("active");
