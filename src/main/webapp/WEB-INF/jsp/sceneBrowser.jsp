@@ -27,9 +27,8 @@
   <body>
     <div class="container-fluid" style="height:100%;">
       <div class="row">
-        <h1 style="text-align: center;">Asset Browser</h1>
+        <h1 style="text-align: center;">Scene Browser</h1>
       </div>
-      <!-- TO-DO: Add another table, so we have one for scenes and one for objects -->
       <div class="row" style="height:50%;">
         <div class="col">
           <input id="keyinp" type="text" name="ID" style="z-index:265" placeholder="ID"></input>
@@ -130,24 +129,28 @@
         var queryDist = document.getElementById('distanceinp').value;
 
         // Create the scene query data
-        sceneListData = {num_records: 100, scenes: []}
+        sceneListData = {"num_records": 100, "scenes": []}
         sceneData = {}
-        if (queryKey) query_params["key"] = queryKey;
-        if (queryName) query_params["name"] = queryName;
-        if (queryRegion) query_params["region"] = queryRegion;
-        if (queryLong) query_params["longitude"] = queryLong;
-        if (queryLat) query_params["latitutde"] = queryLat;
-        if (queryDist) query_params["distance"] = queryDist;
+        if (queryKey) sceneData["key"] = queryKey;
+        if (queryName) sceneData["name"] = queryName;
+        if (queryRegion) sceneData["region"] = queryRegion;
+        if (queryLong) sceneData["longitude"] = queryLong;
+        if (queryLat) sceneData["latitutde"] = queryLat;
+        if (queryDist) sceneData["distance"] = queryDist;
         sceneListData["scenes"].push(sceneData);
 
         // Execute an HTTP call to get the available asset metadata
         // and populate it into the scene list
-        $.ajax({url: "v1/scene/query", type: 'POST', data: sceneListData, success: scn_query_return});
+        $.ajax({url: "v1/scene/query",
+                type: 'POST',
+                data: JSON.stringify(sceneListData),
+                contentType: "application/json; charset=utf-8",
+                success: scn_query_return});
 
       // Load the objects in the selected scene into the object list
       } else if (event.target.id == "load") {
         // Get selected data from list
-        var selectedNodes = gridOptions.api.getSelectedNodes()
+        var selectedNodes = scnGridOptions.api.getSelectedNodes()
         var selectedData = selectedNodes.map( function(node) { return node.data })
         if (selectedData.length > 0) {
           var sceneKey = selectedData[0].key;
@@ -157,7 +160,11 @@
 
           // Execute an HTTP call to get the available asset metadata
           // and populate it into the object list
-          $.ajax({url: "v1/object/query", type: 'POST', data: objListData, success: obj_query_return});
+          $.ajax({url: "v1/object/query",
+                  type: 'POST',
+                  data: JSON.stringify(objListData),
+                  contentType: "application/json; charset=utf-8",
+                  success: obj_query_return});
         }
       }
     }
@@ -166,13 +173,15 @@
     window.addEventListener('DOMContentLoaded', function(){
 
       // Create the scene query data
-      sceneListData = {num_records: 100, scenes: []}
-      sceneData = {}
-      sceneListData["scenes"].push(sceneData);
+      sceneListData = {"num_records": 100, "scenes": [{}]}
 
       // Execute an HTTP call to get the available asset metadata
       // and populate it into the list
-      $.ajax({url: "v1/scene/query", type: 'POST', data: query_params, success: query_return});
+      $.ajax({url: "v1/scene/query",
+              type: 'POST',
+              data: JSON.stringify(sceneListData),
+              contentType: "application/json; charset=utf-8",
+              success: scn_query_return});
 
       // Setup the button callbacks into the Javascript
       var buttons = document.getElementsByTagName("button");

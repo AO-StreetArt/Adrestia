@@ -24,6 +24,7 @@
                 <li class="active" id="home"><a href="#">Home</a></li>
                 <li id="sceneBrowser"><a href="/sceneBrowser">Scene Browser</a></li>
                 <li id="assetBrowser"><a href="/assetBrowser">Asset Browser</a></li>
+                <li id="docs"><a href="https://aesel.readthedocs.io/en/latest/index.html">Documentation</a></li>
                 <li id="qsLogoutBtn"><a href="#">Logout</a></li>
             </ul>
         </nav>
@@ -35,11 +36,6 @@
         <div class="col-lg-6">
             <h4>Logged In!</h4>
             <p>If you're seeing this message, then you've successfully logged into Aesel.</p>
-        </div>
-
-        <div class="col-lg-6">
-            <h4>Use this Info</h4>
-            <p>You can copy this information into your Aesel client.</p>
         </div>
     </div>
 
