@@ -44,6 +44,12 @@ public interface AeselDiscoveryService {
   public ServiceInstance findAvc();
 
   /**
+  * Find an instance of the Project Service.
+  * @return A ServiceInstance object with the instance details found
+  */
+  public ServiceInstance findProjectService();
+
+  /**
   * Find instances of Crazy Ivan in a particular cluster.
   * @return A ServiceInstance object with the instance details found
   */

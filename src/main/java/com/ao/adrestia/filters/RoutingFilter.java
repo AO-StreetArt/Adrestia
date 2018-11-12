@@ -72,6 +72,14 @@ public class RoutingFilter extends ZuulFilter {
   @Value(value = "${service.avc.password:}")
   private String avcPassword;
 
+  // Projects Service username
+  @Value(value = "${service.projects.username:}")
+  private String projectsUsername;
+
+  // Projects Service password
+  @Value(value = "${service.projects.password:}")
+  private String projectsPassword;
+
   @Value("${server.auth.active:false}")
   private boolean httpAuthActive;
 
@@ -126,6 +134,7 @@ public class RoutingFilter extends ZuulFilter {
     boolean isIvanRequest = false;
     boolean isClymanRequest = false;
     boolean isAvcRequest = false;
+    boolean isProjectRequest = false;
     if (urlPathList.length > 1) {
 
       // Look for the scene root
@@ -168,7 +177,7 @@ public class RoutingFilter extends ZuulFilter {
           }
         }
 
-      } else if (urlPathList[1].equals("asset") || urlPathList[1].equals("history") || urlPathList[1].equals("relationship")) {
+      } else if (urlPathList[1].equals("asset") || urlPathList[1].equals("history") || urlPathList[1].equals("relationship") || urlPathList[1].equals("collection")) {
         // We have an asset request, so route to AVC
         ServiceInstance targetInstance = discoveryClient.findAvc();
         if (targetInstance != null) {
@@ -177,10 +186,19 @@ public class RoutingFilter extends ZuulFilter {
           port = targetInstance.getPort();
           isAvcRequest = true;
         }
+      } else if (urlPathList[1].equals("project")) {
+        // We have a project request, so route to the Projects service
+        ServiceInstance targetInstance = discoveryClient.findProjectService();
+        if (targetInstance != null) {
+          log.info("Routing Request to {}", targetInstance.getHost());
+          hostname = targetInstance.getHost();
+          port = targetInstance.getPort();
+          isProjectRequest = true;
+        }
       }
     }
 
-    if (!(isAvcRequest || isIvanRequest || isClymanRequest)) {
+    if (!(isAvcRequest || isIvanRequest || isClymanRequest || isProjectRequest)) {
       log.warn("Unable to parse URL Path: {}", parsedUrlList[0]);
       for (String pathElt : urlPathList) {
         log.warn(pathElt);
@@ -208,6 +226,9 @@ public class RoutingFilter extends ZuulFilter {
       } else if (isIvanRequest) {
         credentialsString =
             Base64.getEncoder().encodeToString((ivanUsername + ":" + ivanPassword).getBytes(StandardCharsets.ISO_8859_1));
+      } else if (isProjectRequest) {
+        credentialsString =
+            Base64.getEncoder().encodeToString((projectsUsername + ":" + projectsPassword).getBytes(StandardCharsets.ISO_8859_1));
       }
       context.addZuulRequestHeader("Authorization", "Basic " + credentialsString);
     }

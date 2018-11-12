@@ -46,6 +46,7 @@ public class AeselDiscoveryComponent implements AeselDiscoveryService, CommandLi
   private AtomicInteger ivanIndex = new AtomicInteger(0);
   private AtomicInteger clymanIndex = new AtomicInteger(0);
   private AtomicInteger avcIndex = new AtomicInteger(0);
+  private AtomicInteger projectsIndex = new AtomicInteger(0);
 
   // Activate Service Discovery
   @Value("${service.discovery.active}")
@@ -86,6 +87,18 @@ public class AeselDiscoveryComponent implements AeselDiscoveryService, CommandLi
   // Avc Service Port
   @Value("${service.avc.port}")
   private int avcServicePort;
+
+  // Projects Service Name
+  @Value("${service.projects.name}")
+  private String projectsServiceName;
+
+  // Projects Service Host
+  @Value("${service.projects.host}")
+  private String projectsServiceHost;
+
+  // Projects Service Port
+  @Value("${service.projects.port}")
+  private int projectsServicePort;
 
   // Refresh Interval
   @Value("${service.refresh.interval}")
@@ -256,6 +269,38 @@ public class AeselDiscoveryComponent implements AeselDiscoveryService, CommandLi
       return instances.get(targetIndex);
     } else {
       return new DefaultServiceInstance(avcServiceName, avcServiceHost, avcServicePort, false);
+    }
+  }
+
+  /**
+  * Find an instance of the Project Service.
+  * @return A ServiceInstance object with the instance details found
+  */
+  public ServiceInstance findProjectService() {
+    log.info("Finding Project Service Instance");
+
+    if (discoveryActive.equals("true")) {
+      // Find a list of Crazy Ivan instances from Consul
+      List<ServiceInstance> instances = consulClient.getInstances(projectsServiceName);
+
+      if (instances.size() == 0) {
+        log.error("No Instances found");
+        return null;
+      }
+
+      // Determine the target index
+      int targetIndex = projectsIndex.getAndIncrement();
+      if (projectsIndex.compareAndSet(instances.size(), 0)) {
+        targetIndex = projectsIndex.getAndIncrement();
+      }
+
+      // Return the targeted value
+      return instances.get(targetIndex);
+    } else {
+      return new DefaultServiceInstance(projectsServiceName,
+                                        projectsServiceHost,
+                                        projectsServicePort,
+                                        false);
     }
   }
 
