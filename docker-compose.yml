@@ -93,6 +93,7 @@ services:
       - SERVICE_IVAN_HOST=crazyivan
       - SERVICE_CLYMAN_HOST=clyman
       - SERVICE_AVC_HOST=kelona
+      - SERVICE_PROJECTS_HOST=projects
       - SPRING_CLOUD_CONSUL_HOST=registry
       - SPRING_CLOUD_CONSUL_DISCOVERY_PREFERIPADDRESS=true
       - SPRING_CLOUD_CONSUL_DISCOVERY_HEALTHCHECKURL=http://adrestia:8080/actuator/health
