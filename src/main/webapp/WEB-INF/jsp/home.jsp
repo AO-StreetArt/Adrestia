@@ -22,6 +22,7 @@
         <nav>
             <ul class="nav nav-pills pull-right">
                 <li class="active" id="home"><a href="#">Home</a></li>
+                <li id="projectBrowser"><a href="/projectBrowser">Project Browser</a></li>
                 <li id="sceneBrowser"><a href="/sceneBrowser">Scene Browser</a></li>
                 <li id="assetBrowser"><a href="/assetBrowser">Asset Browser</a></li>
                 <li id="docs"><a href="https://aesel.readthedocs.io/en/latest/index.html">Documentation</a></li>

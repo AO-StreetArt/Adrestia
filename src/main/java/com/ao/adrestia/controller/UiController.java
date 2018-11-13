@@ -47,4 +47,11 @@ public class UiController {
     return "sceneBrowser";
   }
 
+  @RequestMapping(value = "/projectBrowser", method = RequestMethod.GET)
+  protected String projectBrowser(final Map<String, Object> model, final Principal principal) {
+    logger.info("Request for Project Browser");
+    model.put("test", "test");
+    return "projectBrowser";
+  }
+
 }
