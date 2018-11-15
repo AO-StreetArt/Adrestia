@@ -30,7 +30,7 @@
   <body>
     <div class="container-fluid" style="height:100%;">
       <div class="row">
-        <h1 style="text-align: center;">Asset Browser</h1>
+        <h1 style="text-align: center;">Project Browser</h1>
       </div>
       <div class="row">
     		<div class="col-md-8">
@@ -117,7 +117,6 @@
       animateRows: true,
       columnDefs: columnDefs,
       rowData: [],
-      enableSorting: true,
       enableFilter: true,
       rowSelection: 'single',
       pagination: true,
