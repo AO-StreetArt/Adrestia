@@ -12,7 +12,7 @@
 
   <head>
     <meta http-equiv="Content-Type" content="text/html" charset="utf-8"/>
-    <title>Aesel Asset Browser</title>
+    <title>Aesel Scene Browser</title>
     <!--- Ag-grid-community --->
     <script src="https://unpkg.com/ag-grid-community/dist/ag-grid-community.min.noStyle.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/ag-grid-community/dist/styles/ag-grid.css">
@@ -28,24 +28,34 @@
     </style>
   </head>
   <body>
+    <div class="pre-scrollable" style="height:100%;max-height: 100%;">
     <div class="container-fluid" style="height:100%;">
       <div class="row">
         <h1 style="text-align: center;">Scene Browser</h1>
       </div>
       <div class="row">
         <div class="col align-self-left">
-          <input id="keyinp" type="text" name="ID" style="z-index:265" placeholder="ID"></input>
-          <input id="nameinp" type="text" name="Name" style="z-index:265" placeholder="Name"></input>
-          <input id="regioninp" type="text" name="Region" style="z-index:265" placeholder="Region"></input>
-          <input id="latitudeinp" type="text" name="Latitude" style="z-index:265" placeholder="Latitude"></input>
-          <input id="longitudeinp" type="text" name="Longitude" style="z-index:265" placeholder="Longitude"></input>
-          <input id="distanceinp" type="text" name="Distance" style="z-index:265" placeholder="Distance"></input>
-          <button id="query" style="z-index:265">Query</button>
+          <input id="keyinp" type="text" name="ID" placeholder="ID"></input>
+          <input id="nameinp" type="text" name="Name" placeholder="Name"></input>
+          <input id="regioninp" type="text" name="Region" placeholder="Region"></input>
+          <input id="latitudeinp" type="text" name="Latitude" placeholder="Latitude"></input>
+          <input id="longitudeinp" type="text" name="Longitude" placeholder="Longitude"></input>
+          <input id="distanceinp" type="text" name="Distance" placeholder="Distance"></input>
+          <input id="taginp" type="text" name="Tag" placeholder="Tag"></input>
+          <button id="query">Query</button>
         </div>
         <div class="col align-self-center">
-          <button id="firstPage" style="z-index:265">First Page</button>
-          <button id="prevPage" style="z-index:265">Previous Page</button>
-          <button id="nextPage" style="z-index:265">Next Page</button>
+          <button id="firstPage">First Page</button>
+          <button id="prevPage">Previous Page</button>
+          <button id="nextPage">Next Page</button>
+        </div>
+        <div class="col align-self-right">
+          <button id="editScene">Edit Scene</button>
+          <button id="createScene">Create Scene</button>
+          <button id="deleteScene">Delete Scene</button>
+          <button id="editObject">Edit Object</button>
+          <button id="createObject">Create Object</button>
+          <button id="deleteObject">Delete Object</button>
         </div>
       </div>
       <div class="row" style="height:50%;">
@@ -62,8 +72,11 @@
           <p> &copy; 2018 AO Labs</p>
       </footer>
     </div>
+    </div>
     <script>
-    console.log("Creating Tables");
+    // The Scene Key is injected here by the server before
+    // it returns the page
+    var sceneKeys = "${sceneKeys}";
 
     // specify the columns for the scene table
     var scnColumnDefs = [
@@ -196,23 +209,33 @@
       var queryLat = document.getElementById('latitudeinp').value;
       var queryLong = document.getElementById('longitudeinp').value;
       var queryDist = document.getElementById('distanceinp').value;
+      var queryTag = document.getElementById('taginp').value;
       if (queryKey) sceneData["key"] = queryKey;
       if (queryName) sceneData["name"] = queryName;
       if (queryRegion) sceneData["region"] = queryRegion;
       if (queryLong) sceneData["longitude"] = queryLong;
       if (queryLat) sceneData["latitutde"] = queryLat;
       if (queryDist) sceneData["distance"] = queryDist;
+      if (queryTag) sceneData["tags"] = [queryTag];
       if ("key" in filterModel) sceneData["key"] = filterModel.key.filter;
       if ("name" in filterModel) sceneData["name"] = filterModel.name.filter;
       if ("region" in filterModel) sceneData["region"] = filterModel.region.filter;
       if ("latitude" in filterModel) sceneData["latitude"] = filterModel.latitude.filter;
       if ("longitude" in filterModel) sceneData["longitude"] = filterModel.longitude.filter;
-      sceneData["num_records"] = scnGridOptions.api.paginationGetPageSize();
-      sceneData["start_record"] = (scnGridOptions.api.paginationGetCurrentPage() * scnGridOptions.api.paginationGetPageSize()) + scnGridOptions.api.paginationGetPageSize();
 
       // Create the scene query data
-      sceneListData = {"num_records": 100, "scenes": []}
-      sceneListData["scenes"].push(sceneData);
+      sceneListData = {"scenes": []}
+      sceneListData["num_records"] = scnGridOptions.api.paginationGetPageSize();
+      sceneListData["start_record"] = (scnGridOptions.api.paginationGetCurrentPage() * scnGridOptions.api.paginationGetPageSize()) + scnGridOptions.api.paginationGetPageSize();
+
+      if (sceneKeys == "") {
+        sceneListData["scenes"].push(sceneData);
+      } else {
+        var sceneList = sceneKeys.split(",");
+        for (var i = 0; i < sceneList.length; i++) {
+          sceneListData["scenes"].push({"key": sceneList[i]});
+        }
+      }
 
       // Execute an HTTP call to get the available scenes
       // and populate it into the scene list
@@ -222,6 +245,31 @@
               contentType: "application/json; charset=utf-8",
               success: scn_query_return});
     };
+
+    function deleteSelectedObj() {
+      var selectedRow = scnGridOptions.api.getSelectedNodes()[0].data;
+      var selectedObj = objGridOptions.api.getSelectedNodes()[0].data;
+      var sceneKey = selectedRow.key;
+      var objKey = selectedObj.key;
+      $.ajax({url: "v1/scene/" + sceneKey + "/object/" + objKey,
+              type: 'DELETE',
+              success: function(data) {
+                console.log("Deleted Object");
+              }});
+    }
+
+    function deleteSelectedScene() {
+      var selectedNodes = scnGridOptions.api.getSelectedNodes()
+      var selectedData = selectedNodes.map( function(node) { return node.data })
+      if (selectedData.length > 0) {
+        var sceneKey = selectedData[0].key;
+        $.ajax({url: "v1/scene/" + sceneKey,
+                type: 'DELETE',
+                success: function(data) {
+                  console.log("Deleted Scene");
+                }});
+      }
+    }
 
     // Button Callback
     function onButtonClick(event) {
@@ -236,6 +284,18 @@
       } else if (event.target.id == "nextPage") {
         var currentPage = scnGridOptions.api.paginationGetCurrentPage();
         scnGridOptions.api.paginationGoToPage(currentPage-1);
+      } else if (event.target.id == "createScene") {
+        window.location.replace("editScene");
+      } else if (event.target.id == "editScene") {
+        var selectedRow = scnGridOptions.api.getSelectedNodes()[0].data;
+        window.location.replace("editScene?key=" + selectedRow.key);
+      } else if (event.target.id == "createObject") {
+        var selectedRow = scnGridOptions.api.getSelectedNodes()[0].data;
+        window.location.replace("editObject?sceneKey=" + selectedRow.key);
+      } else if (event.target.id == "editObject") {
+        var selectedRow = scnGridOptions.api.getSelectedNodes()[0].data;
+        var selectedObj = objGridOptions.api.getSelectedNodes()[0].data;
+        window.location.replace("editObject?sceneKey=" + selectedRow.key + "&objKey=" + selectedObj.key);
       }
       updateSceneGridData({});
     }
@@ -261,12 +321,14 @@
     // Callback to populate the scene table
     var scn_query_return = function(data) {
       console.log("Updating Scene Table Data")
+      console.log(data.scenes)
       scnGridOptions.api.setRowData(data.scenes);
     }
 
     // Callback to populate the object table
     var obj_query_return = function(data) {
-      console.log("Updating Object Table Data")
+      console.log("Updating Object Table Data");
+      console.log(data.objects)
       objGridOptions.api.setRowData(data.objects);
     }
 

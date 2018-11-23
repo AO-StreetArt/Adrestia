@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @SuppressWarnings("unused")
 @Controller
@@ -41,9 +42,12 @@ public class UiController {
   }
 
   @RequestMapping(value = "/sceneBrowser", method = RequestMethod.GET)
-  protected String sceneBrowser(final Map<String, Object> model, final Principal principal) {
+  protected String sceneBrowser(
+      final Map<String, Object> model,
+      final Principal principal,
+      @RequestParam(value = "keys", defaultValue = "") String sceneKeys) {
     logger.info("Request for Scene Browser");
-    model.put("test", "test");
+    model.put("sceneKeys", sceneKeys);
     return "sceneBrowser";
   }
 
@@ -52,6 +56,48 @@ public class UiController {
     logger.info("Request for Project Browser");
     model.put("test", "test");
     return "projectBrowser";
+  }
+
+  @RequestMapping(value = "/editProject", method = RequestMethod.GET)
+  protected String createProjectUi(
+      final Map<String, Object> model,
+      final Principal principal,
+      @RequestParam(value = "key", defaultValue = "") String projKey) {
+    logger.info("Request for Project Edit UI");
+    model.put("projKey", projKey);
+    return "projectEdit";
+  }
+
+  @RequestMapping(value = "/editScene", method = RequestMethod.GET)
+  protected String createSceneUi(
+      final Map<String, Object> model,
+      final Principal principal,
+      @RequestParam(value = "key", defaultValue = "") String sceneKey) {
+    logger.info("Request for Scene Edit UI");
+    model.put("sceneKey", sceneKey);
+    return "sceneEdit";
+  }
+
+  @RequestMapping(value = "/editAsset", method = RequestMethod.GET)
+  protected String createAssetUi(
+      final Map<String, Object> model,
+      final Principal principal,
+      @RequestParam(value = "key", defaultValue = "") String assetKey) {
+    logger.info("Request for Asset Edit UI");
+    model.put("assetKey", assetKey);
+    return "assetEdit";
+  }
+
+  @RequestMapping(value = "/editObj", method = RequestMethod.GET)
+  protected String createObjUi(
+      final Map<String, Object> model,
+      final Principal principal,
+      @RequestParam(value = "sceneKey", defaultValue = "") String sceneKey,
+      @RequestParam(value = "objKey", defaultValue = "") String objKey) {
+    logger.info("Request for Scene Edit UI");
+    model.put("sceneKey", sceneKey);
+    model.put("objKey", objKey);
+    return "objEdit";
   }
 
 }

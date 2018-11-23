@@ -12,7 +12,7 @@
 
   <head>
     <meta http-equiv="Content-Type" content="text/html" charset="utf-8"/>
-    <title>Aesel Project Browser</title>
+    <title>Aesel Project</title>
     <!--- Ag-grid-community --->
     <script src="https://unpkg.com/ag-grid-community/dist/ag-grid-community.min.noStyle.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/ag-grid-community/dist/styles/ag-grid.css">
@@ -47,6 +47,9 @@
           <button id="firstPage" style="z-index:265">First Page</button>
           <button id="prevPage" style="z-index:265">Previous Page</button>
           <button id="nextPage" style="z-index:265">Next Page</button>
+          <button id="editProj" style="z-index:265">Edit Project</button>
+          <button id="createProj" style="z-index:265">Create Project</button>
+          <button id="delete" style="z-index:265">Delete Project</button>
         </div>
       </div>
       <div class="row" style="height:60%;">
@@ -145,6 +148,19 @@
       gridOptions.api.setRowData(data);
     }
 
+    function delete_selected() {
+      var selectedNodes = gridOptions.api.getSelectedNodes()
+      var selectedData = selectedNodes.map( function(node) { return node.data })
+      if (selectedData.length > 0) {
+        var assetKey = selectedData[0].key;
+        $.ajax({url: "v1/project/" + assetKey,
+                type: 'DELETE',
+                success: function(data) {
+                  console.log("Deleted Project");
+                }});
+      }
+    }
+
     // Button Callback
     function onButtonClick(event) {
       console.log("Detected button click");
@@ -158,6 +174,13 @@
       } else if (event.target.id == "nextPage") {
         var currentPage = gridOptions.api.paginationGetCurrentPage();
         gridOptions.api.paginationGoToPage(currentPage-1);
+      } else if (event.target.id == "createProj") {
+        window.location.replace("editProject");
+      } else if (event.target.id == "editProj") {
+        var selectedRow = gridOptions.api.getSelectedNodes()[0].data;
+        window.location.replace("editProject?key=" + selectedRow.id);
+      } else if (event.target.id == "delete") {
+        delete_selected();
       }
       updateGridData({});
     }

@@ -50,6 +50,9 @@
           <button id="prevPage" style="z-index:265">Previous Page</button>
           <button id="nextPage" style="z-index:265">Next Page</button>
           <button id="download" style="z-index:265">Download</button>
+          <button id="edit" style="z-index:265">Edit Asset</button>
+          <button id="create" style="z-index:265">Create Asset</button>
+          <button id="delete" style="z-index:265">Delete Asset</button>
         </div>
       </div>
       <div class="row" style="height:40%;">
@@ -176,7 +179,21 @@
     // let the grid know which columns and what data to use
     var query_return = function(data) {
       console.log("Updating Table Data")
+      console.log(data);
       gridOptions.api.setRowData(data);
+    }
+
+    function delete_selected() {
+      var selectedNodes = gridOptions.api.getSelectedNodes()
+      var selectedData = selectedNodes.map( function(node) { return node.data })
+      if (selectedData.length > 0) {
+        var assetKey = selectedData[0].key;
+        $.ajax({url: "v1/asset/" + assetKey,
+                type: 'DELETE',
+                success: function(data) {
+                  console.log("Deleted Asset");
+                }});
+      }
     }
 
     // The Active Asset in the browser
@@ -195,6 +212,11 @@
           console.log(assetId)
             window.open("/v1/asset/" + assetId, "_blank");
         }
+      } else if (event.target.id == "create") {
+        window.location.replace("editAsset");
+      } else if (event.target.id == "edit") {
+        var selectedRow = gridOptions.api.getSelectedNodes()[0].data;
+        window.location.replace("editAsset?key=" + selectedRow.key);
       } else {
         // Logic to update the scene list based on the input query
         if (event.target.id == "firstPage") {
@@ -205,6 +227,8 @@
         } else if (event.target.id == "nextPage") {
           var currentPage = gridOptions.api.paginationGetCurrentPage();
           gridOptions.api.paginationGoToPage(currentPage-1);
+        } else if (event.target.id == "delete") {
+          delete_selected();
         }
         updateGridData({});
       }
