@@ -22,6 +22,7 @@ before_install:
 install:
   - ./gradlew check
   - ./gradlew build
+  - docker login -u $DOCKER_UN -p $DOCKER_PW
   - docker build -t aostreetart/adrestia:v2 .
   - docker stop consul
   - cd $TRAVIS_BUILD_DIR/scripts/linux && ./start_dev_cluster.sh &

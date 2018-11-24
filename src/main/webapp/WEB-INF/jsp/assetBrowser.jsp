@@ -28,6 +28,10 @@
       margin  : 0;
       padding : 0;
     }
+    .col-centered{
+      float: none;
+      margin: 0 auto;
+    }
 
     #renderCanvas {
       width   : 100%;
@@ -37,6 +41,7 @@
     </style>
   </head>
   <body>
+    <div class="pre-scrollable" style="height:100%;max-height: 100%;">
     <div class="container-fluid" style="height:100%;">
       <div class="row">
         <h1 style="text-align: center;">Asset Browser</h1>
@@ -45,14 +50,16 @@
         <canvas id="renderCanvas"></canvas>
       </div>
       <div class="row">
-        <div class="col align-self-center">
-          <button id="firstPage" style="z-index:265">First Page</button>
-          <button id="prevPage" style="z-index:265">Previous Page</button>
-          <button id="nextPage" style="z-index:265">Next Page</button>
-          <button id="download" style="z-index:265">Download</button>
-          <button id="edit" style="z-index:265">Edit Asset</button>
-          <button id="create" style="z-index:265">Create Asset</button>
-          <button id="delete" style="z-index:265">Delete Asset</button>
+        <div class="col-md-6 col-md-offset-3">
+          <div class="btn-toolbar col-centered" role="toolbar" aria-label="Asset Toolbar">
+            <div class="btn-group" role="group" aria-label="Asset Toolbar">
+              <button id="view" type="button" class="btn btn-secondary" style="z-index:265">View</button>
+              <button id="download" type="button" class="btn btn-secondary" style="z-index:265">Download</button>
+              <button id="edit" type="button" class="btn btn-secondary" style="z-index:265">Edit Asset</button>
+              <button id="create" type="button" class="btn btn-secondary" style="z-index:265">Create Asset</button>
+              <button id="delete" type="button" class="btn btn-secondary" style="z-index:265">Delete Asset</button>
+            </div>
+          </div>
         </div>
       </div>
       <div class="row" style="height:40%;">
@@ -60,9 +67,21 @@
           <div id="myGrid" style="height:100%;" class="ag-theme-balham"></div>
         </div>
       </div>
+      <div class="row">
+        <div class="col-md-4 col-md-offset-4">
+          <div class="btn-toolbar col-centered" role="toolbar" aria-label="Asset Toolbar">
+            <div class="btn-group" role="group" aria-label="Asset Pagination">
+              <button id="firstPage" type="button" class="btn btn-secondary" style="z-index:265">First Page</button>
+              <button id="prevPage" type="button" class="btn btn-secondary" style="z-index:265">Previous Page</button>
+              <button id="nextPage" type="button" class="btn btn-secondary" style="z-index:265">Next Page</button>
+            </div>
+          </div>
+        </div>
+      </div>
       <footer class="footer">
           <p> &copy; 2018 AO Labs</p>
       </footer>
+    </div>
     </div>
     <script>
     // Global WegGL variables to access in callbacks
@@ -119,6 +138,22 @@
       }
     ];
 
+    function viewSelectedAsset() {
+      // Get selected data from list
+      var selectedNodes = gridOptions.api.getSelectedNodes()
+      var selectedData = selectedNodes.map( function(node) { return node.data })
+      if (selectedData.length > 0) {
+        var assetId = selectedData[0]["key"]
+        var assetFileType = selectedData[0]["fileType"]
+        console.log(assetId)
+        // Replace the information stored in the Babylon scene
+        activeAsset.dispose();
+        BABYLON.SceneLoader.Append("/v1/asset/" + assetId + "/", "file." + assetFileType, scene, function (scene) {
+          console.log("Asset Loaded")
+        });
+      }
+    }
+
     // specify the grid options
     var gridOptions = {
       animateRows: true,
@@ -130,19 +165,7 @@
       suppressPaginationPanel: true,
       onRowDoubleClicked: function(event) {
         console.log("Row Double Clicked:");
-        // Get selected data from list
-        var selectedNodes = gridOptions.api.getSelectedNodes()
-        var selectedData = selectedNodes.map( function(node) { return node.data })
-        if (selectedData.length > 0) {
-          var assetId = selectedData[0]["key"]
-          var assetFileType = selectedData[0]["fileType"]
-          console.log(assetId)
-          // Replace the information stored in the Babylon scene
-          activeAsset.dispose();
-          BABYLON.SceneLoader.Append("/v1/asset/" + assetId + "/", "file." + assetFileType, scene, function (scene) {
-            console.log("Asset Loaded")
-          });
-        }
+        viewSelectedAsset();
       },
       onFilterChanged: updateGridData
     };
@@ -211,6 +234,8 @@
       } else if (event.target.id == "edit") {
         var selectedRow = gridOptions.api.getSelectedNodes()[0].data;
         window.location.replace("editAsset?key=" + selectedRow.key);
+      } else if (event.target.id == "view") {
+        viewSelectedAsset();
       } else {
         // Logic to update the scene list based on the input query
         if (event.target.id == "firstPage") {

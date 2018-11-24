@@ -6,6 +6,5 @@ DOCKER_PASS=$3
 BRANCH_NAME=$4
 
 if [ "$BRANCH_NAME" == "v2" ]; then
-  docker login -u $DOCKER_USER -p $DOCKER_PASS
   docker push aostreetart/adrestia:v2
 fi
