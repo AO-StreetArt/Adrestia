@@ -61,6 +61,14 @@
       </div>
       <div class="row">
         <div class="col-md-2">
+          Parent:
+        </div>
+        <div class="col-md-10" class="tooltip" title="The parent Object from which this inherits attributes.">
+          <input id="parentinp" type="text" name="Parent" placeholder="Parent"></input>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-2">
           Type:
         </div>
         <div class="col-md-10" class="tooltip" title="The human-readable name of the Object.">
@@ -153,16 +161,26 @@
     </div>
     </div>
     <script>
-    // The Project Key is injected here by the server before
-    // it returns the page
+    // The Scene and Object Keys are injected here by
+    // the server before it returns the page
     var sceneKey = "${sceneKey}";
     var objKey = "${objKey}";
+
+    function stringToFloatArray(str) {
+      var stringList = str.split(",");
+      var returnList = [];
+      for (var i = 0; i < stringList.length; i++) {
+        returnList.push(parseFloat(stringList[i]));
+      }
+      return returnList;
+    }
 
     // Button click logic (save and cancel)
     function onButtonClick(event) {
       if (event.target.id == "save") {
         var newKey = document.getElementById('keyinp').value;
         var newName = document.getElementById('nameinp').value;
+        var newParent = document.getElementById('parentinp').value;
         var newType = document.getElementById('typeinp').value;
         var newSubtype = document.getElementById('subtypeinp').value;
         var newOwner = document.getElementById('ownerinp').value;
@@ -173,18 +191,19 @@
         var newQRotation = document.getElementById('qrotinp').value;
         var newScale = document.getElementById('scaleinp').value;
         var newTransform = document.getElementById('transforminp').value;
-        objData = {}
+        objData = {scene: sceneKey}
         if (newName) objData["name"] = newName;
+        if (newParent) objData["parent"] = newParent;
         if (newType) objData["type"] = newType;
         if (newSubtype) objData["subtype"] = newSubtype;
         if (newOwner) objData["owner"] = newOwner;
-        if (newFrame) objData["frame"] = newFrame;
-        if (newTime) objData["time"] = newTime;
-        if (newTranslation) objData["translation"] = newTranslation;
-        if (newERotation) objData["euler_rotation"] = newERotation;
-        if (newQRotation) objData["quaternion_rotation"] = newQRotation;
-        if (newScale) objData["scale"] = newScale;
-        if (newTransform) objData["transform"] = newTransform;
+        if (newFrame) objData["frame"] = parseInt(newFrame, 10);
+        if (newTime) objData["time"] = parseInt(newTime, 10);
+        if (newTranslation) objData["translation"] = stringToFloatArray(newTranslation);
+        if (newERotation) objData["euler_rotation"] = stringToFloatArray(newERotation);
+        if (newQRotation) objData["quaternion_rotation"] = stringToFloatArray(newQRotation);
+        if (newScale) objData["scale"] = stringToFloatArray(newScale);
+        if (newTransform) objData["transform"] = stringToFloatArray(newTransform);
         var objUrl = "v1/object/";
         if (newKey) {
           objData["key"] = newKey;
@@ -198,7 +217,6 @@
                 success: function(data) {
                   console.log(data);
                 }});
-        };
       } else if (event.target.id == "cancel") {
         window.history.back();
       }
@@ -210,6 +228,7 @@
       console.log(data);
       document.getElementById('keyinp').value = data.objects[0].key;
       document.getElementById('nameinp').value = data.objects[0].name;
+      document.getElementById('parentinp').value = data.objects[0].parent;
       document.getElementById('typeinp').value = data.objects[0].type;
       document.getElementById('subtypeinp').value = data.objects[0].subtype;
       document.getElementById('ownerinp').value = data.objects[0].owner;

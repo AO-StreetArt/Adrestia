@@ -57,14 +57,6 @@
       </div>
       <div class="row">
         <div class="col-md-2">
-          Description:
-        </div>
-        <div class="col-md-10" class="tooltip" title="The human-readable name of the Scene.">
-          <input id="descriptioninp" type="text" name="Description" placeholder="Description"></input>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-2">
           Content Type:
         </div>
         <div class="col-md-10" class="tooltip" title="The latitude of the Scene for distance queries.">
@@ -171,7 +163,7 @@
             url = url + "&";
           }
           isStarted = true;
-          url = url + "tags=" + ctype;
+          url = url + "tags=" + tags;
         }
       }
       console.log(url);
@@ -204,7 +196,6 @@
       console.log(data);
       document.getElementById('keyinp').value = data[0].key;
       document.getElementById('nameinp').value = data[0].name;
-      document.getElementById('descriptioninp').value = data[0].description;
       document.getElementById('ctypeinp').value = data[0].contentType;
       document.getElementById('ftypeinp').value = data[0].fileType;
       document.getElementById('atypeinp').value = data[0].assetType;
@@ -213,11 +204,9 @@
 
     window.addEventListener('DOMContentLoaded', function(){
 
-      // Setup the button callbacks into the Javascript
-      var buttons = document.getElementsByTagName("button");
-      for (let i = 0; i < buttons.length; i++) {
-        buttons[i].addEventListener("click", onButtonClick, false);
-      };
+      // Setup the cancel button callback
+      var cancelButton = document.getElementById('cancel');
+      cancelButton.addEventListener("click", onButtonClick, false);
 
       // Activate JBox Tooltips
       new jBox('Tooltip', {

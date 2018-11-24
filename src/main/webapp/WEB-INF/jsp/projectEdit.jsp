@@ -121,7 +121,7 @@
     // it returns the page
     var projectKey = "${projKey}";
 
-    var currentProject = {};
+    var currentProject = {sceneGroups: []};
     var isAssetDeleted = false;
     var selectedGroup = "";
 
@@ -196,8 +196,8 @@
       currentProject["name"] = document.getElementById('nameinp').value;
       currentProject["description"] = document.getElementById('descinp').value;
       currentProject["category"] = document.getElementById('categoryinp').value;
-      currentProject["tags"] = [document.getElementById('tagsinp').value];
-      currentProject["assetCollectionIds"] = [document.getElementById('collectionsinp').value];
+      currentProject["tags"] = document.getElementById('tagsinp').value.split(",");
+      currentProject["assetCollectionIds"] = document.getElementById('collectionsinp').value.split(",");
 
       // Persist the Project
       var url = "v1/project";
@@ -209,8 +209,6 @@
         contentType: "application/json; charset=utf-8",
         success: function(data) {
           console.log("Project Saved");
-          // Route back to the previous page after saving the project
-          window.history.back();
         }
       });
     }
@@ -269,14 +267,18 @@
       } else if (event.target.id == "saveSg") {
         // Save Scene Group Button
         // See if we are updating an existing group
+        // Use selected data in grid if no selectedGroup is available
         var groupExists = false;
-        for (var i = 0; i < currentProject.sceneGroups.length; i++) {
-          if (currentProject.sceneGroups[i].name == selectedGroup) {
-            groupExists = true;
-            currentProject.sceneGroups[i].name = document.getElementById('sgnameinp').value;
-            currentProject.sceneGroups[i].description = document.getElementById('sgdescinp').value;
-            currentProject.sceneGroups[i].category = document.getElementById('sgcategoryinp').value;
-            currentProject.sceneGroups[i].scenes = [document.getElementById('sgscenesinp').value]
+        if (selectedGroup) {
+          var selectedRow = gridOptions.api.getSelectedNodes()[0].data;
+          for (var i = 0; i < currentProject.sceneGroups.length; i++) {
+            if (currentProject.sceneGroups[i].name == selectedGroup) {
+              groupExists = true;
+              currentProject.sceneGroups[i].name = document.getElementById('sgnameinp').value;
+              currentProject.sceneGroups[i].description = document.getElementById('sgdescinp').value;
+              currentProject.sceneGroups[i].category = document.getElementById('sgcategoryinp').value;
+              currentProject.sceneGroups[i].scenes = [document.getElementById('sgscenesinp').value]
+            }
           }
         }
 
@@ -289,7 +291,7 @@
             scenes: [document.getElementById('sgscenesinp').value]
           });
         }
-
+        console.log(currentProject);
         // Update the scene grid with the new data
         gridOptions.api.setRowData(currentProject.sceneGroups);
       } else if (event.target.id == "clearSg") {
@@ -301,18 +303,29 @@
         selectedGroup = "";
       } else if (event.target.id == "deleteSg") {
         for (var i = 0; i < currentProject.sceneGroups.length; i++) {
-          if (currentProject.sceneGroups[i].name == selectedGroup) {
+          var selectedRow = gridOptions.api.getSelectedNodes()[0].data;
+          if (currentProject.sceneGroups[i].name == selectedRow.name) {
             // Remove the group
             currentProject.sceneGroups.splice(i, 1);
           }
         }
-        gridOptions.api.setRowData(currentProject.sceneGroups);
+        console.log(currentProject);
+        gridOptions.api.updateRowData({remove: [selectedRow]});
       } else if (event.target.id == "viewSg") {
         // Redirect to the Scene Browser with the list of scene ids
         //        as a query parameter
+        // Use selected data in grid if no selectedGroup is available
+        var groupToView = "";
+        if (gridOptions.api.getSelectedNodes().length > 0) {
+          var selectedRow = gridOptions.api.getSelectedNodes()[0].data;
+          groupToView = selectedRow.name;
+        } else if (selectedGroup) {
+          groupToView = selectedGroup;
+        }
+
         var sceneIdList = "";
         for (var i = 0; i < currentProject.sceneGroups.length; i++) {
-          if (currentProject.sceneGroups[i].name == selectedGroup) {
+          if (currentProject.sceneGroups[i].name == groupToView) {
             // Get the Scene ID List
             for (var j = 0; j < currentProject.sceneGroups[i].scenes.length; j++) {
               sceneIdList = sceneIdList.push(currentProject.sceneGroups[i].scenes[j]);

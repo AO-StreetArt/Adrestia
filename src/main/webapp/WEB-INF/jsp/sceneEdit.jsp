@@ -125,9 +125,9 @@
         sceneData = {}
         if (newName) sceneData["name"] = newName;
         if (newRegion) sceneData["region"] = newRegion;
-        if (newLong) sceneData["longitude"] = newLong;
-        if (newLat) sceneData["latitutde"] = newLat;
-        if (newTags) sceneData["tags"] = newTags;
+        if (newLong) sceneData["longitude"] = parseFloat(newLong);
+        if (newLat) sceneData["latitude"] = parseFloat(newLat);
+        if (newTags) sceneData["tags"] = newTags.split(",");
         sceneListMethodType = "POST";
         if (newKey) {
           sceneListMethodType = "PUT";
@@ -135,12 +135,12 @@
         }
         sceneUrl = "v1/scene/" + newKey;
         sceneListData = JSON.stringify({"scenes": [sceneData]});
+        console.log(sceneListData);
         $.ajax({url: sceneUrl,
                 type: sceneListMethodType,
                 data: sceneListData,
                 contentType: "application/json; charset=utf-8",
                 success: sceneReturn});
-        };
       } else if (event.target.id == "cancel") {
         window.history.back();
       }

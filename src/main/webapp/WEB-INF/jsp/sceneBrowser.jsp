@@ -25,16 +25,20 @@
       margin  : 0;
       padding : 0;
     }
+    .col-centered{
+      float: none;
+      margin: 0 auto;
+    }
     </style>
   </head>
   <body>
     <div class="pre-scrollable" style="height:100%;max-height: 100%;">
     <div class="container-fluid" style="height:100%;">
       <div class="row">
-        <h1 style="text-align: center;">Scene Browser</h1>
+        <h1 style="text-align: center;">Scenes</h1>
       </div>
       <div class="row">
-        <div class="col align-self-left">
+        <div class="col-md-10  col-md-offset-1">
           <input id="keyinp" type="text" name="ID" placeholder="ID"></input>
           <input id="nameinp" type="text" name="Name" placeholder="Name"></input>
           <input id="regioninp" type="text" name="Region" placeholder="Region"></input>
@@ -44,28 +48,45 @@
           <input id="taginp" type="text" name="Tag" placeholder="Tag"></input>
           <button id="query">Query</button>
         </div>
-        <div class="col align-self-center">
-          <button id="firstPage">First Page</button>
-          <button id="prevPage">Previous Page</button>
-          <button id="nextPage">Next Page</button>
-        </div>
-        <div class="col align-self-right">
-          <button id="editScene">Edit Scene</button>
-          <button id="createScene">Create Scene</button>
-          <button id="deleteScene">Delete Scene</button>
-          <button id="editObject">Edit Object</button>
-          <button id="createObject">Create Object</button>
-          <button id="deleteObject">Delete Object</button>
-        </div>
       </div>
       <div class="row" style="height:50%;">
         <div class="col" style="height:100%;">
           <div id="sceneGrid" style="height:100%;" class="ag-theme-balham"></div>
         </div>
       </div>
-      <div class="row" style="height:40%;">
+      <div class="row">
+        <div class="col-md-6  col-md-offset-3">
+          <div class="btn-toolbar col-centered" role="toolbar" aria-label="Scenes Toolbar">
+            <div class="btn-group" role="group" aria-label="Scene Pagination">
+              <button id="firstPage" type="button" class="btn btn-secondary">First Page</button>
+              <button id="prevPage" type="button" class="btn btn-secondary">Previous Page</button>
+              <button id="nextPage" type="button" class="btn btn-secondary">Next Page</button>
+            </div>
+            <div class="btn-group" role="group" aria-label="Scene Pagination">
+              <button id="editScene" type="button" class="btn btn-secondary">Edit Scene</button>
+              <button id="createScene" type="button" class="btn btn-secondary">Create Scene</button>
+              <button id="deleteScene" type="button" class="btn btn-secondary">Delete Scene</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <h1 style="text-align: center;">Objects</h1>
+      </div>
+      <div class="row" style="height:50%;">
         <div class="col" style="height:100%;">
           <div id="objGrid" style="height:100%;" class="ag-theme-balham"></div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4  col-md-offset-4">
+          <div class="btn-toolbar col-centered" role="toolbar" aria-label="Object Toolbar">
+            <div class="btn-group" role="group" aria-label="Object Toolbar">
+              <button id="editObject" type="button" class="btn btn-secondary">Edit Object</button>
+              <button id="createObject" type="button" class="btn btn-secondary">Create Object</button>
+              <button id="deleteObject" type="button" class="btn btn-secondary">Delete Object</button>
+            </div>
+          </div>
         </div>
       </div>
       <footer class="footer">
@@ -133,6 +154,13 @@
         headerName: "Name",
         field: "name",
         pinned: 'left',
+        filter: "agTextColumnFilter",
+        filterParams: { applyButton: true, clearButton:true, filterOptions:["equals"], suppressAndOrCondition:true, caseSensitive:true },
+        editable: false
+      },
+      {
+        headerName: "Parent",
+        field: "parent",
         filter: "agTextColumnFilter",
         filterParams: { applyButton: true, clearButton:true, filterOptions:["equals"], suppressAndOrCondition:true, caseSensitive:true },
         editable: false
@@ -214,9 +242,9 @@
       if (queryName) sceneData["name"] = queryName;
       if (queryRegion) sceneData["region"] = queryRegion;
       if (queryLong) sceneData["longitude"] = queryLong;
-      if (queryLat) sceneData["latitutde"] = queryLat;
+      if (queryLat) sceneData["latitude"] = queryLat;
       if (queryDist) sceneData["distance"] = queryDist;
-      if (queryTag) sceneData["tags"] = [queryTag];
+      if (queryTag) sceneData["tags"] = queryTag.split(",");
       if ("key" in filterModel) sceneData["key"] = filterModel.key.filter;
       if ("name" in filterModel) sceneData["name"] = filterModel.name.filter;
       if ("region" in filterModel) sceneData["region"] = filterModel.region.filter;
@@ -226,7 +254,7 @@
       // Create the scene query data
       sceneListData = {"scenes": []}
       sceneListData["num_records"] = scnGridOptions.api.paginationGetPageSize();
-      sceneListData["start_record"] = (scnGridOptions.api.paginationGetCurrentPage() * scnGridOptions.api.paginationGetPageSize()) + scnGridOptions.api.paginationGetPageSize();
+      sceneListData["start_record"] = (scnGridOptions.api.paginationGetCurrentPage() * scnGridOptions.api.paginationGetPageSize());
 
       if (sceneKeys == "") {
         sceneListData["scenes"].push(sceneData);
@@ -236,11 +264,13 @@
           sceneListData["scenes"].push({"key": sceneList[i]});
         }
       }
+      console.log(sceneListData);
 
       // Execute an HTTP call to get the available scenes
       // and populate it into the scene list
       $.ajax({url: "v1/scene/query",
               type: 'POST',
+              cache: false,
               data: JSON.stringify(sceneListData),
               contentType: "application/json; charset=utf-8",
               success: scn_query_return});
@@ -255,6 +285,7 @@
               type: 'DELETE',
               success: function(data) {
                 console.log("Deleted Object");
+                objGridOptions.api.updateRowData({remove: [selectedObj]});
               }});
     }
 
@@ -267,6 +298,7 @@
                 type: 'DELETE',
                 success: function(data) {
                   console.log("Deleted Scene");
+                  scnGridOptions.api.updateRowData({remove: [selectedData[0]]});
                 }});
       }
     }
@@ -278,26 +310,44 @@
       // Logic to update the scene list based on the input query
       if (event.target.id == "firstPage") {
         scnGridOptions.api.paginationGoToPage(0);
+        updateSceneGridData({});
+
       } else if (event.target.id == "prevPage") {
         var currentPage = scnGridOptions.api.paginationGetCurrentPage();
         scnGridOptions.api.paginationGoToPage(currentPage+1);
+        updateSceneGridData({});
+
       } else if (event.target.id == "nextPage") {
         var currentPage = scnGridOptions.api.paginationGetCurrentPage();
         scnGridOptions.api.paginationGoToPage(currentPage-1);
+        updateSceneGridData({});
+
+      } else if (event.target.id == "query") {
+        updateSceneGridData({});
+
+      // CRUD Operations
       } else if (event.target.id == "createScene") {
         window.location.replace("editScene");
+
       } else if (event.target.id == "editScene") {
         var selectedRow = scnGridOptions.api.getSelectedNodes()[0].data;
         window.location.replace("editScene?key=" + selectedRow.key);
+
+      } else if (event.target.id == "deleteScene") {
+        deleteSelectedScene();
+
       } else if (event.target.id == "createObject") {
         var selectedRow = scnGridOptions.api.getSelectedNodes()[0].data;
-        window.location.replace("editObject?sceneKey=" + selectedRow.key);
+        window.location.replace("editObj?sceneKey=" + selectedRow.key);
+
       } else if (event.target.id == "editObject") {
         var selectedRow = scnGridOptions.api.getSelectedNodes()[0].data;
         var selectedObj = objGridOptions.api.getSelectedNodes()[0].data;
-        window.location.replace("editObject?sceneKey=" + selectedRow.key + "&objKey=" + selectedObj.key);
+        window.location.replace("editObj?sceneKey=" + selectedRow.key + "&objKey=" + selectedObj.key);
+
+      } else if (event.target.id == "deleteObject") {
+        deleteSelectedObj();
       }
-      updateSceneGridData({});
     }
 
     // specify the grid options for the Object List
@@ -337,7 +387,7 @@
 
       updateSceneGridData({});
 
-      // Setup the button callbacks into the Javascript
+      // Setup the button callbacks
       var buttons = document.getElementsByTagName("button");
       for (let i = 0; i < buttons.length; i++) {
         buttons[i].addEventListener("click", onButtonClick, false);

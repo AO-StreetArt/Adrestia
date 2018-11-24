@@ -91,12 +91,6 @@
         editable: false
       },
       {
-        headerName: "Description",
-        field: "description",
-        suppressFilter: true,
-        editable: false
-      },
-      {
         headerName: "Content Type",
         field: "contentType",
         filter: "agTextColumnFilter",
