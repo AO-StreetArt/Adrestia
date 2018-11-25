@@ -1,6 +1,6 @@
 #!/bin/bash
 
-BRANCH_NAME=$(git branch | grep \* | cut -d ' ' -f2)
+BRANCH_NAME=$TRAVIS_BRANCH
 echo "Branch Name: $BRANCH_NAME"
 
 if [ "$BRANCH_NAME" == "v2" ]; then
