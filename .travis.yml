@@ -23,7 +23,7 @@ install:
   - ./gradlew check
   - ./gradlew build
   - docker login -u $DOCKER_UN -p $DOCKER_PW
-  - docker build -t aostreetart/adrestia:$TRAVIS_BRANCH .
+  - docker build -t aostreetart/adrestia:v2 .
   - docker stop consul
   - cd $TRAVIS_BUILD_DIR/scripts/linux && ./start_dev_cluster.sh &
   - sleep 480
@@ -31,7 +31,7 @@ script:
   - cd $TRAVIS_BUILD_DIR/src/test/json && newman run Adrestia.postman_collection.json -e AdrestiaTest.postman_environment.json
   - docker stop $(docker ps -aq)
 after_success:
-  - docker push aostreetart/adrestia:$TRAVIS_BRANCH
+  - cd $TRAVIS_BUILD_DIR && scripts/linux/push_docker.sh
 notifications:
   slack:
     secure:
