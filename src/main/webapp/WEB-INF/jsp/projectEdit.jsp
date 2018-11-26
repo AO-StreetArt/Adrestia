@@ -7,7 +7,7 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <!-- Bootstrap -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.1.3/sandstone/bootstrap.min.css">
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
   <!-- JBox -->
   <script src="https://cdn.jsdelivr.net/gh/StephanWagner/jBox@v0.5.1/dist/jBox.all.min.js"></script>
@@ -34,53 +34,111 @@
     html {
       overflow-y: hidden;
     }
+    .center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      width: 25%;
+    }
     </style>
   </head>
   <body>
     <div class="pre-scrollable" style="height:100%;max-height: 100%;">
     <div class="container-fluid" style="height:100%;">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <a class="navbar-brand" href="#">Aesel</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarColor01">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="/portal/home">Home</a>
+            </li>
+            <li class="nav-item"><a class="nav-link" href="#">|</a></li>
+            <li class="nav-item active" id="projectBrowser">
+              <a class="nav-link" href="#">Projects <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item" id="sceneBrowser">
+              <a class="nav-link" href="/sceneBrowser">Scenes</a>
+            </li>
+            <li class="nav-item" id="assetBrowser">
+              <a class="nav-link" href="/assetBrowser">Assets</a>
+            </li>
+            <li class="nav-item"><a class="nav-link" href="#">|</a></li>
+            <li class="nav-item" id="docs">
+              <a class="nav-link" href="https://aesel.readthedocs.io/en/latest/index.html">Documentation</a>
+            </li>
+          </ul>
+        </div>
+      </nav>
       <div class="row">
-        <h1 style="text-align: center;">Project</h1>
-      </div>
-      <div class="row">
-        <div class="col-md-12" class="tooltip" title="The human-readable name of the Project.">
-          <input id="keyinp" type="text" name="Key" placeholder="Key"></input>
+        <div class="col-md-12">
+          <h1 style="text-align: center;">Project</h1>
         </div>
       </div>
       <div class="row">
-        <div class="col-md-12" class="tooltip" title="The human-readable name of the Project.">
-          <input id="nameinp" type="text" name="Name" placeholder="Name"></input>
+        <div class="col-md-2">
+          Key:
+        </div>
+        <div class="col-md-10" class="tooltip" title="The unique identifier of the Project.">
+          <input id="keyinp" type="text" class="form-control-plaintext" name="Key" placeholder="Key"></input>
         </div>
       </div>
       <div class="row">
-        <div class="col-md-12" class="tooltip" title="The human-readable name of the Project.">
-          <input id="descinp" type="text" name="Description" placeholder="Description"></input>
+        <div class="col-md-2">
+          Name:
+        </div>
+        <div class="col-md-10" class="tooltip" title="The human-readable name of the Project.">
+          <input id="nameinp" type="text" class="form-control-plaintext" name="Name" placeholder="Name"></input>
         </div>
       </div>
       <div class="row">
-        <div class="col-md-12" class="tooltip" title="The human-readable name of the Project.">
-          <input id="categoryinp" type="text" name="Category" placeholder="Category"></input>
+        <div class="col-md-2">
+          Description:
+        </div>
+        <div class="col-md-10" class="tooltip" title="A Description of the Project.">
+          <input id="descinp" type="text" class="form-control-plaintext" name="Description" placeholder="Description"></input>
         </div>
       </div>
       <div class="row">
-        <div class="col-md-12" class="tooltip" title="The human-readable name of the Project.">
-          <input id="tagsinp" type="text" name="Tags" placeholder="Tags"></input>
+        <div class="col-md-2">
+          Category:
+        </div>
+        <div class="col-md-10" class="tooltip" title="The category of the Project.">
+          <input id="categoryinp" type="text" class="form-control-plaintext" name="Category" placeholder="Category"></input>
         </div>
       </div>
       <div class="row">
-        <div class="col-md-12" class="tooltip" title="The human-readable name of the Project.">
-          <input id="collectionsinp" type="text" name="Asset Collections" placeholder="Asset Collections"></input>
+        <div class="col-md-2">
+          Tags:
+        </div>
+        <div class="col-md-10" class="tooltip" title="Searchable tags on the Project.">
+          <input id="tagsinp" type="text" class="form-control-plaintext" name="Tags" placeholder="Tags"></input>
         </div>
       </div>
       <div class="row">
-        <div class="col-md-4" class="tooltip" title="The human-readable name of the Project.">
-          <input name="file" type="file" id="uploadThumbnail"></button>
+        <div class="col-md-2">
+          Collections:
         </div>
-        <div class="col-md-4" class="tooltip" title="The human-readable name of the Project.">
-          <button id="deleteThumbnail">Delete Thumbnail</button>
+        <div class="col-md-10" class="tooltip" title="Searchable tags on the Project.">
+          <input id="collectionsinp" type="text" class="form-control-plaintext" name="Asset Collections" placeholder="Asset Collections"></input>
         </div>
-        <div class="col-md-4" class="tooltip" title="The human-readable name of the Project.">
-          <img id="projectThumbnail" alt="No Thumbnail Available" src="https://www.layoutit.com/img/sports-q-c-140-140-3.jpg" class="rounded" />
+      </div>
+      <div class="row">
+        <div class="col-md-2">
+          Thumbnail:
+        </div>
+        <div class="col-md-10" class="tooltip" title="The human-readable name of the Project.">
+          <input name="file" type="file" id="uploadThumbnail" class="form-control-file"></button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6" class="tooltip" title="A thumbnail image representing the project.">
+          <img id="projectThumbnail" alt="No Thumbnail Available" src="https://www.layoutit.com/img/sports-q-c-140-140-3.jpg" class="rounded center" />
+        </div>
+        <div class="col-md-6" class="tooltip" title="The human-readable name of the Project.">
+          <button id="deleteThumbnail" type="button" class="btn btn-primary btn-sm">Delete Thumbnail</button>
         </div>
       </div>
       <div class="row">
@@ -93,22 +151,26 @@
           <div id="myGrid" style="height:100%;" class="ag-theme-balham"></div>
         </div>
         <div class="col-md-6">
-          <input id="sgnameinp" type="text" name="Name" placeholder="Name"></input>
-          <input id="sgdescinp" type="text" name="Description" placeholder="Description"></input>
-          <input id="sgcategoryinp" type="text" name="Category" placeholder="Category"></input>
-          <input id="sgscenesinp" type="text" name="Scenes" placeholder="Scenes"></input>
-          <button id="saveSg">Save Scene Group</button>
-          <button id="clearSg">Clear Scene Group</button>
-          <button id="deleteSg">Delete Scene Group</button>
-          <button id="viewSg">View Scene Group</button>
+          <input id="sgnameinp" type="text" name="Name" placeholder="Name" class="form-control-plaintext"></input>
+          <input id="sgdescinp" type="text" name="Description" placeholder="Description" class="form-control-plaintext"></input>
+          <input id="sgcategoryinp" type="text" name="Category" placeholder="Category" class="form-control-plaintext"></input>
+          <input id="sgscenesinp" type="text" name="Scenes" placeholder="Scenes" class="form-control-plaintext"></input>
+          <div class="btn-toolbar" role="toolbar" aria-label="Project Toolbar" style="justify-content: center;">
+            <div class="btn-group" role="group" aria-label="Project Toolbar">
+              <button id="saveSg" type="button" class="btn btn-primary btn-sm" style="z-index:265">Save Scene Group</button>
+              <button id="clearSg" type="button" class="btn btn-primary btn-sm" style="z-index:265">Clear Scene Group</button>
+              <button id="deleteSg" type="button" class="btn btn-primary btn-sm" style="z-index:265">Delete Scene Group</button>
+              <button id="viewSg" type="button" class="btn btn-primary btn-sm" style="z-index:265">View Scene Group</button>
+            </div>
+          </div>
         </div>
       </div>
       <div class="row">
         <div class="col-md-6" class="tooltip" title="The human-readable name of the Project.">
-          <button id="cancel">Cancel</button>
+          <button id="cancel" type="button" class="btn btn-primary">Cancel</button>
         </div>
         <div class="col-md-6" class="tooltip" title="The human-readable name of the Project.">
-          <button id="save">Save Project</button>
+          <button id="save" type="button" class="btn btn-primary">Save Project</button>
         </div>
       </div>
       <footer class="footer">

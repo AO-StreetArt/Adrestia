@@ -7,7 +7,7 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <!-- Bootstrap -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.1.3/sandstone/bootstrap.min.css">
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
   <head>
@@ -34,8 +34,37 @@
   <body>
     <div class="pre-scrollable" style="height:100%;max-height: 100%;">
     <div class="container-fluid" style="height:100%;">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <a class="navbar-brand" href="#">Aesel</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarColor01">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="/portal/home">Home</a>
+            </li>
+            <li class="nav-item"><a class="nav-link" href="#">|</a></li>
+            <li class="nav-item" id="projectBrowser">
+              <a class="nav-link" href="/projectBrowser">Projects</a>
+            </li>
+            <li class="nav-item active" id="sceneBrowser">
+              <a class="nav-link" href="#">Scenes <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item" id="assetBrowser">
+              <a class="nav-link" href="/assetBrowser">Assets</a>
+            </li>
+            <li class="nav-item"><a class="nav-link" href="#">|</a></li>
+            <li class="nav-item" id="docs">
+              <a class="nav-link" href="https://aesel.readthedocs.io/en/latest/index.html">Documentation</a>
+            </li>
+          </ul>
+        </div>
+      </nav>
       <div class="row">
-        <h1 style="text-align: center;">Scenes</h1>
+        <div class="col-md-12">
+          <h1 style="text-align: center;">Scenes</h1>
+        </div>
       </div>
       <div class="row">
         <div class="col-md-10  col-md-offset-1">
@@ -49,44 +78,52 @@
           <button id="query">Query</button>
         </div>
       </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="btn-toolbar" role="toolbar" aria-label="Scenes Toolbar" style="justify-content: center;">
+            <div class="btn-group" role="group" aria-label="Scene Pagination">
+              <button id="editScene" type="button" class="btn btn-primary">Edit Scene</button>
+              <button id="createScene" type="button" class="btn btn-primary">Create Scene</button>
+              <button id="deleteScene" type="button" class="btn btn-primary">Delete Scene</button>
+            </div>
+          </div>
+        </div>
+      </div>
       <div class="row" style="height:50%;">
         <div class="col" style="height:100%;">
           <div id="sceneGrid" style="height:100%;" class="ag-theme-balham"></div>
         </div>
       </div>
       <div class="row">
-        <div class="col-md-6  col-md-offset-3">
-          <div class="btn-toolbar col-centered" role="toolbar" aria-label="Scenes Toolbar">
-            <div class="btn-group" role="group" aria-label="Scene Pagination">
-              <button id="firstPage" type="button" class="btn btn-secondary">First Page</button>
-              <button id="prevPage" type="button" class="btn btn-secondary">Previous Page</button>
-              <button id="nextPage" type="button" class="btn btn-secondary">Next Page</button>
-            </div>
-            <div class="btn-group" role="group" aria-label="Scene Pagination">
-              <button id="editScene" type="button" class="btn btn-secondary">Edit Scene</button>
-              <button id="createScene" type="button" class="btn btn-secondary">Create Scene</button>
-              <button id="deleteScene" type="button" class="btn btn-secondary">Delete Scene</button>
+        <div class="col-md-12">
+          <div class="btn-toolbar pull-right" role="toolbar" aria-label="Scenes Pagination">
+            <div class="btn-group mr-2" role="group" aria-label="Scene Pagination">
+              <button id="firstPage" type="button" class="btn btn-secondary btn-sm">1</button>
+              <button id="prevPage" type="button" class="btn btn-secondary btn-sm"><<</button>
+              <button id="nextPage" type="button" class="btn btn-secondary btn-sm">>></button>
             </div>
           </div>
         </div>
       </div>
       <div class="row">
-        <h1 style="text-align: center;">Objects</h1>
+        <div class="col-md-12">
+          <h1 style="text-align: center;">Objects</h1>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="btn-toolbar" role="toolbar" aria-label="Object Toolbar" style="justify-content: center;">
+            <div class="btn-group" role="group" aria-label="Object Toolbar">
+              <button id="editObject" type="button" class="btn btn-primary">Edit Object</button>
+              <button id="createObject" type="button" class="btn btn-primary">Create Object</button>
+              <button id="deleteObject" type="button" class="btn btn-primary">Delete Object</button>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="row" style="height:50%;">
         <div class="col" style="height:100%;">
           <div id="objGrid" style="height:100%;" class="ag-theme-balham"></div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-4  col-md-offset-4">
-          <div class="btn-toolbar col-centered" role="toolbar" aria-label="Object Toolbar">
-            <div class="btn-group" role="group" aria-label="Object Toolbar">
-              <button id="editObject" type="button" class="btn btn-secondary">Edit Object</button>
-              <button id="createObject" type="button" class="btn btn-secondary">Create Object</button>
-              <button id="deleteObject" type="button" class="btn btn-secondary">Delete Object</button>
-            </div>
-          </div>
         </div>
       </div>
       <footer class="footer">
