@@ -52,7 +52,7 @@ import org.springframework.web.servlet.view.JstlView;
 @EnableAutoConfiguration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @Import(AdrestiaMongoConfiguration.class)
-@PropertySource(value="classpath:auth0.properties", ignoreResourceNotFound=true)
+@PropertySource(value={"classpath:auth0.properties", "/auth/auth0.properties"}, ignoreResourceNotFound=true)
 @SpringBootApplication(exclude = {SolrAutoConfiguration.class})
 public class AdrestiaApplication extends WebSecurityConfigurerAdapter {
 
