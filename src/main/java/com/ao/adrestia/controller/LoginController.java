@@ -36,15 +36,26 @@ public class LoginController {
 
   @Autowired
   private AuthenticationController controller;
+
   @Value(value = "${com.auth0.domain}")
   private String domain;
+
+  // Authentication Redirect Override
+  @Value("${server.auth.redirect:}")
+  private String authRedirect;
+
   private final Logger logger = LoggerFactory.getLogger("adrestia.AuthController");
 
   @RequestMapping(value = "/login", method = RequestMethod.GET)
   protected String login(final HttpServletRequest req) {
     logger.debug("Performing login");
-    String redirectUri = req.getScheme() + "://" + req.getServerName() + ":"
-        + req.getServerPort() + "/callback";
+    String redirectUri = "";
+    if (authRedirect.isEmpty()) {
+      redirectUri = req.getScheme() + "://" + req.getServerName() + ":"
+          + req.getServerPort() + "/callback";
+    } else {
+      redirectUri = authRedirect + "/callback";
+    }
     String authorizeUrl = controller.buildAuthorizeUrl(req, redirectUri)
         .withAudience(String.format("https://%s/userinfo", domain))
         .build();
