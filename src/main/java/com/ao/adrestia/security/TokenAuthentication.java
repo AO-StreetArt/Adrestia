@@ -53,11 +53,11 @@ public class TokenAuthentication extends AbstractAuthenticationToken {
     }
     List<GrantedAuthority> authorities = new ArrayList<>();
     String[] scopes = rolesClaim.asArray(String.class);
-    logger.debug("Role Claim Scopes: {}", scopes);
+    logger.info("Role Claim Scopes: {}", scopes);
     for (String s : scopes) {
       SimpleGrantedAuthority a = new SimpleGrantedAuthority(s);
       if (!authorities.contains(a)) {
-        logger.debug("Granting Authority: {}", a.toString());
+        logger.info("Granting Authority: {}", a.toString());
         authorities.add(a);
       }
     }
