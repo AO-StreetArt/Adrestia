@@ -25,11 +25,13 @@ import com.auth0.Tokens;
 import com.auth0.jwt.JWT;
 
 import java.io.IOException;
+import javax.annotation.PostConstruct;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -43,12 +45,23 @@ public class CallbackController {
 
   @Autowired
   private AuthenticationController controller;
-  private final String redirectOnFail;
-  private final String redirectOnSuccess;
+  private String redirectOnFail;
+  private String redirectOnSuccess;
+
+  // Authentication Redirect Override
+  @Value("${server.auth.redirect:}")
+  private String authRedirect;
 
   public CallbackController() {
     this.redirectOnFail = "/login";
     this.redirectOnSuccess = "/portal/home";
+  }
+
+  @PostConstruct
+  public void init() {
+    if (!(authRedirect.isEmpty())) {
+      this.redirectOnSuccess = authRedirect + "/portal/home";
+    }
   }
 
   @RequestMapping(value = "/callback", method = RequestMethod.GET)
