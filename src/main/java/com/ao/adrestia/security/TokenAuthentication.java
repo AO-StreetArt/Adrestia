@@ -23,11 +23,15 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 public class TokenAuthentication extends AbstractAuthenticationToken {
+
+  private static final Logger logger = LoggerFactory.getLogger("adrestia.AuthController");
 
   private final DecodedJWT jwt;
   private boolean invalidated;
@@ -44,13 +48,16 @@ public class TokenAuthentication extends AbstractAuthenticationToken {
   private static Collection<? extends GrantedAuthority> readAuthorities(DecodedJWT jwt) {
     Claim rolesClaim = jwt.getClaim("https://access.control/roles");
     if (rolesClaim.isNull()) {
+      logger.warn("No Roles found for JWT Token");
       return Collections.emptyList();
     }
     List<GrantedAuthority> authorities = new ArrayList<>();
     String[] scopes = rolesClaim.asArray(String.class);
+    logger.debug("Role Claim Scopes: {}", scopes);
     for (String s : scopes) {
       SimpleGrantedAuthority a = new SimpleGrantedAuthority(s);
       if (!authorities.contains(a)) {
+        logger.debug("Granting Authority: {}", a.toString());
         authorities.add(a);
       }
     }
@@ -70,6 +77,7 @@ public class TokenAuthentication extends AbstractAuthenticationToken {
 
   @Override
   public void setAuthenticated(boolean authenticated) {
+    logger.info("Invalidating Authentication Token");
     if (authenticated) {
       throw new IllegalArgumentException("Create a new Authentication object to authenticate");
     }
