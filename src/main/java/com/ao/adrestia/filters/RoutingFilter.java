@@ -205,10 +205,17 @@ public class RoutingFilter extends ZuulFilter {
       }
     }
 
+    // Determine the protocol of the request
+    String originalUrl = context.getRequest().getRequestURL().toString();
+    String[] originalUrlSplitList = originalUrl.split(":", 1);
+    String routedProtocol = "";
+    if (originalUrlSplitList.length > 0) {
+      routedProtocol = originalUrlSplitList[0];
+    }
     try {
       // Set the URL of the request to a new URL with the existing protocol
-      log.info("Returning final URL {}://{}:{}/{}", currentUrl.getProtocol(), hostname, port, newTail);
-      context.setRouteHost(new URL(currentUrl.getProtocol(), hostname, port, ""));
+      log.info("Returning final URL {}://{}:{}/{}", routedProtocol, hostname, port, newTail);
+      context.setRouteHost(new URL(routedProtocol, hostname, port, ""));
       context.put("requestURI", newTail);
     } catch (Exception e) {
       log.error("Error setting service URL", e);
