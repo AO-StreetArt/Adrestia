@@ -100,4 +100,10 @@ public class UiController {
     return "objEdit";
   }
 
+  @RequestMapping(value = "/portal/login", method = RequestMethod.GET)
+  protected String loginPage(final Map<String, Object> model, final Principal principal) {
+    logger.info("Request for Login Page");
+    return "login";
+  }
+
 }

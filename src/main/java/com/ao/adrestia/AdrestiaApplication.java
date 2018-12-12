@@ -16,13 +16,16 @@ package com.ao.adrestia;
 
 import com.ao.adrestia.filters.PersistenceFilter;
 import com.ao.adrestia.filters.RoutingFilter;
-import com.ao.adrestia.security.TokenAuthentication;
-
-import com.auth0.AuthenticationController;
+import com.ao.adrestia.model.ApplicationUser;
+import com.ao.adrestia.repo.ApplicationUserRepository;
+import com.ao.adrestia.security.JWTAuthorizationFilter;
+import com.ao.adrestia.security.JWTAuthenticationFilter;
+import com.ao.adrestia.security.DbUserDetails;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -37,11 +40,14 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.mongodb.config.AbstractMongoConfiguration;
 import org.springframework.http.HttpMethod;
 import org.springframework.retry.annotation.EnableRetry;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
@@ -49,38 +55,24 @@ import org.springframework.web.servlet.view.JstlView;
 @EnableDiscoveryClient
 @EnableZuulProxy
 @EnableWebSecurity
-@EnableAutoConfiguration
-@EnableGlobalMethodSecurity(prePostEnabled = true)
 @Import(AdrestiaMongoConfiguration.class)
-@PropertySource(value="file:/auth/auth0.properties", ignoreResourceNotFound=true)
-@PropertySource(value="classpath:auth0.properties", ignoreResourceNotFound=true)
 @SpringBootApplication(exclude = {SolrAutoConfiguration.class})
 public class AdrestiaApplication extends WebSecurityConfigurerAdapter {
-
-  /**
-  * This is your auth0 domain
-  * (tenant you have created when registering with auth0 - account name).
-  */
-  @Value(value = "${com.auth0.domain}")
-  private String domain;
-
-  /**
-  * This is the client id of your auth0 application
-  * (see Settings page on auth0 dashboard).
-  */
-  @Value(value = "${com.auth0.clientId:}")
-  private String clientId;
-
-  /**
-  * This is the client secret of your auth0 application
-  * (see Settings page on auth0 dashboard).
-  */
-  @Value(value = "${com.auth0.clientSecret:}")
-  private String clientSecret;
+  private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
   // Is Authentication required for accessing our HTTP Server
   @Value("${server.auth.active:false}")
   private boolean httpAuthActive;
+
+  // Secret for generating JWTs
+  @Value("${server.auth.secret:SecretKeyToGenJWTs}")
+  private String jwtSecret;
+
+  @Autowired
+  DbUserDetails userDetailsService;
+
+  @Autowired
+  ApplicationUserRepository applicationUserRepository;
 
   @Bean
   public InternalResourceViewResolver viewResolver() {
@@ -93,9 +85,8 @@ public class AdrestiaApplication extends WebSecurityConfigurerAdapter {
   }
 
   @Bean
-  public AuthenticationController authenticationController() throws UnsupportedEncodingException {
-    return AuthenticationController.newBuilder(domain, clientId, clientSecret)
-        .build();
+  public BCryptPasswordEncoder bCryptPasswordEncoder() {
+    return encoder;
   }
 
   @Override
@@ -104,27 +95,27 @@ public class AdrestiaApplication extends WebSecurityConfigurerAdapter {
 
     if (httpAuthActive) {
       http.authorizeRequests()
-          .antMatchers("/callback", "/login", "/health").permitAll()
+          .antMatchers("/health").permitAll()
+          .antMatchers("/portal/login").permitAll()
+          .antMatchers(HttpMethod.POST, "/login").permitAll()
           .antMatchers("/**").authenticated()
           .and()
-          .logout().permitAll();
-      http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.NEVER);
+          .addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtSecret))
+          .addFilter(new JWTAuthorizationFilter(authenticationManager(), applicationUserRepository, jwtSecret))
+          // this disables session creation on Spring Security
+          .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     } else {
       // Security Disabled
       http.authorizeRequests().anyRequest().permitAll();
     }
   }
 
-  public String getDomain() {
-    return domain;
-  }
-
-  public String getClientId() {
-    return clientId;
-  }
-
-  public String getClientSecret() {
-    return clientSecret;
+  @Override
+  protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+    if (httpAuthActive) {
+      // Create a default account
+      auth.userDetailsService(userDetailsService).passwordEncoder(encoder);
+    }
   }
 
   public static void main(String[] args) {

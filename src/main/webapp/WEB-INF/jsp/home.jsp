@@ -43,10 +43,6 @@
           <li class="nav-item" id="docs">
             <a class="nav-link" href="https://aesel.readthedocs.io/en/latest/index.html">Documentation</a>
           </li>
-          <li class="nav-item"><a class="nav-link" href="#">|</a></li>
-          <li class="nav-item" id="qsLogoutBtn">
-            <a class="nav-link" href="#">Logout</a>
-          </li>
         </ul>
       </div>
     </nav>

@@ -1,0 +1,118 @@
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
+<!DOCTYPE html>
+<html lang="en">
+  <!-- Jquery -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.1.3/sandstone/bootstrap.min.css">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+  <!-- JBox -->
+  <script src="https://cdn.jsdelivr.net/gh/StephanWagner/jBox@v0.5.1/dist/jBox.all.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/gh/StephanWagner/jBox@v0.5.1/dist/jBox.all.min.css" rel="stylesheet">
+
+  <head>
+    <meta http-equiv="Content-Type" content="text/html" charset="utf-8"/>
+    <title>Aesel Login</title>
+
+    <style>
+    html, body {
+      overflow: hidden;
+      width   : 100%;
+      height  : 100%;
+      margin  : 0;
+      padding : 0;
+    }
+    input {
+      width : 100%;
+    }
+    html {
+      overflow-y: hidden;
+    }
+    </style>
+  </head>
+  <body>
+    <div class="pre-scrollable" style="height:100%;max-height: 100%;">
+    <div class="container-fluid" style="height:100%;">
+      <div class="row">
+        <div class="col-md-12">
+          <h1 style="text-align: center;">Login</h1>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-2">
+          Username:
+        </div>
+        <div class="col-md-10" class="tooltip" title="Your username.">
+          <input id="usernameinp" type="text" class="form-control-plaintext" name="Username" placeholder="Username"></input>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-2">
+          Password:
+        </div>
+        <div class="col-md-10" class="tooltip" title="Your secret password.">
+          <input id="passwordinp" type="password" class="form-control-plaintext" name="Password" placeholder="Password"></input>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6" class="tooltip" title="Cancel the login.">
+          <button id="cancel" type="button" class="btn btn-primary">Cancel</button>
+        </div>
+        <div class="col-md-6" class="tooltip" title="Login to the Web Browser.">
+          <button id="login" type="button" class="btn btn-primary">Login</button>
+        </div>
+      </div>
+      <footer class="footer">
+          <p> &copy; 2018 AO Labs</p>
+      </footer>
+    </div>
+    </div>
+    <script>
+
+    function loginReturn(data, textStatus, xhr) {
+      console.log("Redirecting to home page");
+      console.log(xhr.getResponseHeader('Authorization'));
+      window.location.replace("home");
+    }
+
+    // Button click logic
+    function onButtonClick(event) {
+      if (event.target.id == "login") {
+        var newUser = document.getElementById('usernameinp').value;
+        var newPass = document.getElementById('passwordinp').value;
+        var loginData = {}
+        if (newUser) loginData["username"] = newUser;
+        if (newPass) loginData["password"] = newPass;
+        var loginMethodType = "POST";
+        var loginUrl = "/login";
+        var loginDataString = JSON.stringify(loginData);
+        console.log(loginDataString);
+        $.ajax({url: loginUrl,
+                type: loginMethodType,
+                data: loginDataString,
+                contentType: "application/json; charset=utf-8",
+                success: loginReturn});
+      } else if (event.target.id == "cancel") {
+        window.history.back();
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', function(){
+
+      // Setup the button callbacks into the Javascript
+      var buttons = document.getElementsByTagName("button");
+      for (let i = 0; i < buttons.length; i++) {
+        buttons[i].addEventListener("click", onButtonClick, false);
+      };
+
+      // Activate JBox Tooltips
+      new jBox('Tooltip', {
+        attach: '.tooltip'
+      });
+    });
+    </script>
+  </body>
+</html>
