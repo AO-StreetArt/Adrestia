@@ -207,11 +207,12 @@ public class RoutingFilter extends ZuulFilter {
 
     // Determine the protocol of the request
     String originalUrl = context.getRequest().getRequestURL().toString();
-    String[] originalUrlSplitList = originalUrl.split(":", 1);
+    String[] originalUrlSplitList = originalUrl.split(":", 2);
     String routedProtocol = "";
     if (originalUrlSplitList.length > 0) {
       routedProtocol = originalUrlSplitList[0];
     }
+
     try {
       // Set the URL of the request to a new URL with the existing protocol
       log.info("Returning final URL {}://{}:{}/{}", routedProtocol, hostname, port, newTail);
