@@ -37,15 +37,10 @@ ext {
 	springCloudVersion = 'Finchley.SR1'
 }
 
-configurations {
-  all*.exclude module : 'spring-boot-starter-logging'
-}
-
 dependencies {
 	compile('org.springframework.boot:spring-boot-starter-actuator')
 	compile('org.springframework.boot:spring-boot-starter-web')
 	compile('org.springframework.boot:spring-boot-starter-data-mongodb')
-  compile('org.springframework.boot:spring-boot-starter-log4j2')
   compile 'org.springframework.boot:spring-boot-starter-security:1.5.6.RELEASE'
 
 	compile('org.springframework.cloud:spring-cloud-starter-consul-discovery')
@@ -58,6 +53,8 @@ dependencies {
   compile('org.springframework.cloud:spring-cloud-vault-config-consul')
 
   compile 'com.auth0:mvc-auth-commons:1.+'
+  //compile('io.jsonwebtoken:jjwt:0.7.0')
+  compile('com.auth0:java-jwt:3.4.1')
 
   runtime 'org.apache.tomcat.embed:tomcat-embed-jasper:8.5.20'
 	runtime('org.springframework.boot:spring-boot-devtools')
