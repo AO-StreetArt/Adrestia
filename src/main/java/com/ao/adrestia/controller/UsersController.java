@@ -36,7 +36,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("v1/users")
+@RequestMapping("users")
 public class UsersController {
   private static Logger log = LoggerFactory.getLogger("adrestia.UserController");
 
@@ -56,7 +56,7 @@ public class UsersController {
     // Detect any existing users
     List<ApplicationUser> existingUsers = applicationUserRepository.findByUsername(user.username);
     if (existingUsers.size() > 0) {
-      log.info("Sign-up requested for existing user");
+      log.warn("Sign-up requested for existing user");
       returnCode = HttpStatus.CONFLICT;
     } else {
       log.info("Signing up new User: {}", user.username);

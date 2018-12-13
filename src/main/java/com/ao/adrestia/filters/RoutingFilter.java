@@ -119,7 +119,7 @@ public class RoutingFilter extends ZuulFilter {
     // Find URL path information
     String urlTail = currentReq.getRequestURI();
     String newTail = urlTail;
-    log.info("Filtering URL: {}", newTail);
+    log.debug("Filtering URL: {}", newTail);
     String[] parsedUrlList = urlTail.split(Pattern.quote("?"), 2);
     String[] initialUrlPathList = parsedUrlList[0].split(Pattern.quote("/"), 0);
     String[] urlPathList = null;
@@ -147,7 +147,7 @@ public class RoutingFilter extends ZuulFilter {
             // Object or property request, so route to CLyman
             ServiceInstance targetInstance = discoveryClient.findClyman(urlPathList[2]);
             if (targetInstance != null) {
-              log.info("Routing Request to {}", targetInstance.getHost());
+              log.debug("Routing Request to {}", targetInstance.getHost());
               hostname = targetInstance.getHost();
               port = targetInstance.getPort();
               isClymanRequest = true;
@@ -163,7 +163,7 @@ public class RoutingFilter extends ZuulFilter {
           // We have a Scene Request, so route to Crazy Ivan
           ServiceInstance targetInstance = discoveryClient.findCrazyIvan();
           if (targetInstance != null) {
-            log.info("Routing Request to {}", targetInstance.getHost());
+            log.debug("Routing Request to {}", targetInstance.getHost());
             hostname = targetInstance.getHost();
             port = targetInstance.getPort();
             isIvanRequest = true;
@@ -181,7 +181,7 @@ public class RoutingFilter extends ZuulFilter {
         // We have an asset request, so route to AVC
         ServiceInstance targetInstance = discoveryClient.findAvc();
         if (targetInstance != null) {
-          log.info("Routing Request to {}", targetInstance.getHost());
+          log.debug("Routing Request to {}", targetInstance.getHost());
           hostname = targetInstance.getHost();
           port = targetInstance.getPort();
           isAvcRequest = true;
@@ -190,7 +190,7 @@ public class RoutingFilter extends ZuulFilter {
         // We have a project request, so route to the Projects service
         ServiceInstance targetInstance = discoveryClient.findProjectService();
         if (targetInstance != null) {
-          log.info("Routing Request to {}", targetInstance.getHost());
+          log.debug("Routing Request to {}", targetInstance.getHost());
           hostname = targetInstance.getHost();
           port = targetInstance.getPort();
           isProjectRequest = true;
