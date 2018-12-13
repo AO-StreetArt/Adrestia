@@ -226,15 +226,19 @@ public class RoutingFilter extends ZuulFilter {
     if (httpAuthActive) {
       String credentialsString = "";
       if (isAvcRequest) {
+        log.debug("Setting AVC Credentials with User {}", avcUsername);
         credentialsString =
             Base64.getEncoder().encodeToString((avcUsername + ":" + avcPassword).getBytes(StandardCharsets.ISO_8859_1));
       } else if (isClymanRequest) {
+        log.debug("Setting CLyman Credentials with User {}", clymanUsername);
         credentialsString =
             Base64.getEncoder().encodeToString((clymanUsername + ":" + clymanPassword).getBytes(StandardCharsets.ISO_8859_1));
       } else if (isIvanRequest) {
+        log.debug("Setting Ivan Credentials with User {}", ivanUsername);
         credentialsString =
             Base64.getEncoder().encodeToString((ivanUsername + ":" + ivanPassword).getBytes(StandardCharsets.ISO_8859_1));
       } else if (isProjectRequest) {
+        log.debug("Setting Projects Credentials with User {}", projectsUsername);
         credentialsString =
             Base64.getEncoder().encodeToString((projectsUsername + ":" + projectsPassword).getBytes(StandardCharsets.ISO_8859_1));
       }
