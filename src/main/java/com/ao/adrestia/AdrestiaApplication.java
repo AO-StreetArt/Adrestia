@@ -109,10 +109,10 @@ public class AdrestiaApplication
 
     if (httpAuthActive) {
       http.authorizeRequests()
-          .antMatchers("/health").permitAll()
-          .antMatchers("/css/**").permitAll()
-          .antMatchers("/favicon.ico").permitAll()
-          .antMatchers("/portal/login").permitAll()
+          .antMatchers(HttpMethod.GET, "/health").permitAll()
+          .antMatchers(HttpMethod.GET, "/css/**").permitAll()
+          .antMatchers(HttpMethod.GET, "/favicon.ico").permitAll()
+          .antMatchers(HttpMethod.GET, "/portal/login").permitAll()
           .antMatchers(HttpMethod.POST, "/login").permitAll()
           .antMatchers("/**").authenticated()
           .and()
