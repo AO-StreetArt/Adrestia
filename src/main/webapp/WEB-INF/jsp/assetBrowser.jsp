@@ -159,10 +159,25 @@
         var assetFileType = selectedData[0]["fileType"]
         console.log(assetId)
         // Replace the information stored in the Babylon scene
-        activeAsset.dispose();
-        BABYLON.SceneLoader.Append("/v1/asset/" + assetId + "/", "file." + assetFileType, scene, function (scene) {
-          console.log("Asset Loaded")
-        });
+        for (let i = scene.meshes.length - 1; i >= 0; i--) {
+          scene.meshes[i].dispose();
+        }
+        for (let i = scene.spriteManagers.length - 1; i >= 0; i--) {
+          scene.spriteManagers[i].dispose();
+        }
+        if (assetFileType == "obj") {
+          BABYLON.SceneLoader.Append("/v1/asset/" + assetId + "/", "file." + assetFileType, scene, function (scene) {
+            console.log("Asset Loaded")
+          });
+        } else if (assetFileType == "png" || assetFileType == "jpg" || assetFileType == "jpeg") {
+          var spriteManagerAsset = new BABYLON.SpriteManager("imageAssetManager", "/v1/asset/" + assetId + "/file" + assetFileType, 1, 800, scene);
+          var imgAsset = new BABYLON.Sprite("imageAsset", spriteManagerAsset);
+          imgAsset.position.x = 0
+          imgAsset.position.y = 0
+          imgAsset.position.z = 0
+          imgAsset.width = 5;
+          imgAsset.height = 5;
+        }
       }
     }
 
