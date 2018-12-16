@@ -15,62 +15,46 @@
   <script src="https://cdn.jsdelivr.net/gh/StephanWagner/jBox@v0.5.1/dist/jBox.all.min.js"></script>
   <link href="https://cdn.jsdelivr.net/gh/StephanWagner/jBox@v0.5.1/dist/jBox.all.min.css" rel="stylesheet">
 
+  <!-- Custom CSS -->
+  <link href="/css/aeselBrowserBaseStyle.css" rel="stylesheet">
   <head>
     <meta http-equiv="Content-Type" content="text/html" charset="utf-8"/>
     <title>Aesel Login</title>
-
-    <style>
-    html, body {
-      overflow: hidden;
-      width   : 100%;
-      height  : 100%;
-      margin  : 0;
-      padding : 0;
-    }
-    input {
-      width : 100%;
-    }
-    html {
-      overflow-y: hidden;
-    }
-    </style>
   </head>
   <body>
-    <div class="pre-scrollable" style="height:100%;max-height: 100%;">
-    <div class="container-fluid" style="height:100%;">
+    <div class="container-fluid pre-scrollable" style="height:100%;max-height:100%;">
       <div class="row">
         <div class="col-md-12">
           <h1 style="text-align: center;">Login</h1>
         </div>
       </div>
       <div class="row">
-        <div class="col-md-2">
-          Username:
+        <div class="col-xs-5 col-sm-4 col-md-2 col-lg-2">
+          <p>Username:</p>
         </div>
-        <div class="col-md-10" class="tooltip" title="Your username.">
+        <div class="col-xs-7 col-sm-8 col-md-10 col-lg-10" class="tooltip" title="Your username.">
           <input id="usernameinp" type="text" class="form-control-plaintext" name="Username" placeholder="Username"></input>
         </div>
       </div>
       <div class="row">
-        <div class="col-md-2">
-          Password:
+        <div class="col-xs-5 col-sm-4 col-md-2 col-lg-2">
+          <p>Password:</p>
         </div>
-        <div class="col-md-10" class="tooltip" title="Your secret password.">
+        <div class="col-xs-7 col-sm-8 col-md-10 col-lg-10" class="tooltip" title="Your secret password.">
           <input id="passwordinp" type="password" class="form-control-plaintext" name="Password" placeholder="Password"></input>
         </div>
       </div>
       <div class="row">
-        <div class="col-md-6" class="tooltip" title="Cancel the login.">
-          <button id="cancel" type="button" class="btn btn-primary">Cancel</button>
+        <div class="col-md-6 col-lg-6" class="tooltip" title="Cancel the login.">
+          <button id="cancel" type="button" class="btn btn-primary"><span style="font-size:larger;">Cancel</span></button>
         </div>
-        <div class="col-md-6" class="tooltip" title="Login to the Web Browser.">
-          <button id="login" type="button" class="btn btn-primary">Login</button>
+        <div class="col-md-6 col-lg-6" class="tooltip" title="Login to the Web Browser.">
+          <button id="login" type="button" class="btn btn-primary"><span style="font-size:larger;">Login</span></button>
         </div>
       </div>
       <footer class="footer">
           <p> &copy; 2018 AO Labs</p>
       </footer>
-    </div>
     </div>
     <script>
 

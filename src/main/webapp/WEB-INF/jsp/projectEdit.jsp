@@ -15,6 +15,8 @@
   <script src="https://cdn.jsdelivr.net/gh/StephanWagner/jBox@v0.5.1/dist/jBox.all.min.js"></script>
   <link href="https://cdn.jsdelivr.net/gh/StephanWagner/jBox@v0.5.1/dist/jBox.all.min.css" rel="stylesheet">
 
+  <!-- Custom CSS -->
+  <link href="/css/aeselBrowserBaseStyle.css" rel="stylesheet">
   <head>
     <meta http-equiv="Content-Type" content="text/html" charset="utf-8"/>
     <title>Aesel Project</title>
@@ -22,42 +24,15 @@
     <script src="https://unpkg.com/ag-grid-community/dist/ag-grid-community.min.noStyle.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/ag-grid-community/dist/styles/ag-grid.css">
     <link rel="stylesheet" href="https://unpkg.com/ag-grid-community/dist/styles/ag-theme-balham.css">
-    <style>
-    html, body {
-      overflow: hidden;
-      width   : 100%;
-      height  : 100%;
-      margin  : 0;
-      padding : 0;
-    }
-    input {
-      width : 100%;
-    }
-    html {
-      overflow-y: hidden;
-    }
-    .center {
-      display: block;
-      margin-left: auto;
-      margin-right: auto;
-      width: 25%;
-    }
-    </style>
   </head>
   <body>
-    <div class="pre-scrollable" style="height:100%;max-height: 100%;">
-    <div class="container-fluid" style="height:100%;">
+    <div class="container-fluid pre-scrollable" style="height:100%;max-height:100%;">
       <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <a class="navbar-brand" href="#">Aesel</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarColor01">
+        <a class="navbar-brand" href="#"></a>
           <ul class="navbar-nav mr-auto">
             <li class="nav-item">
               <a class="nav-link" href="/portal/home">Home</a>
             </li>
-            <li class="nav-item"><a class="nav-link" href="#">|</a></li>
             <li class="nav-item active" id="projectBrowser">
               <a class="nav-link" href="#">Projects <span class="sr-only">(current)</span></a>
             </li>
@@ -67,12 +42,10 @@
             <li class="nav-item" id="assetBrowser">
               <a class="nav-link" href="/assetBrowser">Assets</a>
             </li>
-            <li class="nav-item"><a class="nav-link" href="#">|</a></li>
             <li class="nav-item" id="docs">
               <a class="nav-link" href="https://aesel.readthedocs.io/en/latest/index.html">Documentation</a>
             </li>
           </ul>
-        </div>
       </nav>
       <div class="row">
         <div class="col-md-12">
@@ -80,67 +53,67 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-md-2">
-          Key:
+        <div class="col-xs-5 col-sm-4 col-md-2 col-lg-2">
+          <p>Key:</p>
         </div>
-        <div class="col-md-10" class="tooltip" title="The unique identifier of the Project.">
+        <div class="col-xs-7 col-sm-8 col-md-10 col-lg-10" class="tooltip" title="The unique identifier of the Project.">
           <input id="keyinp" type="text" class="form-control-plaintext" name="Key" placeholder="Key"></input>
         </div>
       </div>
       <div class="row">
-        <div class="col-md-2">
-          Name:
+        <div class="col-xs-5 col-sm-4 col-md-2 col-lg-2">
+          <p>Name:</p>
         </div>
-        <div class="col-md-10" class="tooltip" title="The human-readable name of the Project.">
+        <div class="col-xs-7 col-sm-8 col-md-10 col-lg-10" class="tooltip" title="The human-readable name of the Project.">
           <input id="nameinp" type="text" class="form-control-plaintext" name="Name" placeholder="Name"></input>
         </div>
       </div>
       <div class="row">
-        <div class="col-md-2">
-          Description:
+        <div class="col-xs-5 col-sm-4 col-md-2 col-lg-2">
+          <p>Description:</p>
         </div>
-        <div class="col-md-10" class="tooltip" title="A Description of the Project.">
+        <div class="col-xs-7 col-sm-8 col-md-10 col-lg-10" class="tooltip" title="A Description of the Project.">
           <input id="descinp" type="text" class="form-control-plaintext" name="Description" placeholder="Description"></input>
         </div>
       </div>
       <div class="row">
-        <div class="col-md-2">
-          Category:
+        <div class="col-xs-5 col-sm-4 col-md-2 col-lg-2">
+          <p>Category:</p>
         </div>
-        <div class="col-md-10" class="tooltip" title="The category of the Project.">
+        <div class="col-xs-7 col-sm-8 col-md-10 col-lg-10" class="tooltip" title="The category of the Project.">
           <input id="categoryinp" type="text" class="form-control-plaintext" name="Category" placeholder="Category"></input>
         </div>
       </div>
       <div class="row">
-        <div class="col-md-2">
-          Tags:
+        <div class="col-xs-5 col-sm-4 col-md-2 col-lg-2">
+          <p>Tags:</p>
         </div>
-        <div class="col-md-10" class="tooltip" title="Searchable tags on the Project.">
+        <div class="col-xs-7 col-sm-8 col-md-10 col-lg-10" class="tooltip" title="Searchable tags on the Project.">
           <input id="tagsinp" type="text" class="form-control-plaintext" name="Tags" placeholder="Tags"></input>
         </div>
       </div>
       <div class="row">
-        <div class="col-md-2">
-          Collections:
+        <div class="col-xs-5 col-sm-4 col-md-2 col-lg-2">
+          <p>Collections:</p>
         </div>
-        <div class="col-md-10" class="tooltip" title="Searchable tags on the Project.">
+        <div class="col-xs-7 col-sm-8 col-md-10 col-lg-10" class="tooltip" title="Searchable tags on the Project.">
           <input id="collectionsinp" type="text" class="form-control-plaintext" name="Asset Collections" placeholder="Asset Collections"></input>
         </div>
       </div>
       <div class="row">
-        <div class="col-md-2">
-          Thumbnail:
+        <div class="col-xs-4 col-sm-4 col-md-2 col-lg-2">
+          <p>Thumbnail:</p>
         </div>
-        <div class="col-md-10" class="tooltip" title="The human-readable name of the Project.">
-          <input name="file" type="file" id="uploadThumbnail" class="form-control-file"></button>
+        <div class="col-xs-4 col-sm-4 col-md-5 col-lg-5" class="tooltip" title="The human-readable name of the Project.">
+          <input name="file" type="file" id="uploadThumbnail" class="form-control-file"></input>
+        </div>
+        <div class="col-xs-4 col-sm-4 col-md-5 col-lg-5" class="tooltip" title="The human-readable name of the Project.">
+          <button id="deleteThumbnail" type="button" class="btn btn-primary btn-sm"><span style="font-size:larger;">Delete Thumbnail</p></button>
         </div>
       </div>
       <div class="row">
-        <div class="col-md-6" class="tooltip" title="A thumbnail image representing the project.">
-          <img id="projectThumbnail" alt="No Thumbnail Available" src="https://www.layoutit.com/img/sports-q-c-140-140-3.jpg" class="rounded center" />
-        </div>
-        <div class="col-md-6" class="tooltip" title="The human-readable name of the Project.">
-          <button id="deleteThumbnail" type="button" class="btn btn-primary btn-sm">Delete Thumbnail</button>
+        <div class="col-md-12 col-lg-12" class="tooltip" title="A thumbnail image representing the project.">
+          <img class="img-fluid rounded mx-auto d-block" id="projectThumbnail" alt="No Thumbnail Available" src="https://www.layoutit.com/img/sports-q-c-140-140-3.jpg" class="rounded center" />
         </div>
       </div>
       <div class="row">
@@ -159,26 +132,25 @@
           <input id="sgscenesinp" type="text" name="Scenes" placeholder="Scenes" class="form-control-plaintext"></input>
           <div class="btn-toolbar" role="toolbar" aria-label="Project Toolbar" style="justify-content: center;">
             <div class="btn-group" role="group" aria-label="Project Toolbar">
-              <button id="saveSg" type="button" class="btn btn-primary btn-sm" style="z-index:265">Save Scene Group</button>
-              <button id="clearSg" type="button" class="btn btn-primary btn-sm" style="z-index:265">Clear Scene Group</button>
-              <button id="deleteSg" type="button" class="btn btn-primary btn-sm" style="z-index:265">Delete Scene Group</button>
-              <button id="viewSg" type="button" class="btn btn-primary btn-sm" style="z-index:265">View Scene Group</button>
+              <button id="saveSg" type="button" class="btn btn-primary btn-sm" style="z-index:265"><span style="font-size:larger;">Save Scene Group</span></button>
+              <button id="clearSg" type="button" class="btn btn-primary btn-sm" style="z-index:265"><span style="font-size:larger;">Clear Scene Group</span></button>
+              <button id="deleteSg" type="button" class="btn btn-primary btn-sm" style="z-index:265"><span style="font-size:larger;">Delete Scene Group</span></button>
+              <button id="viewSg" type="button" class="btn btn-primary btn-sm" style="z-index:265"><span style="font-size:larger;">View Scene Group</span></button>
             </div>
           </div>
         </div>
       </div>
       <div class="row">
         <div class="col-md-6" class="tooltip" title="The human-readable name of the Project.">
-          <button id="cancel" type="button" class="btn btn-primary">Cancel</button>
+          <button id="cancel" type="button" class="btn btn-primary"><span style="font-size:larger;">Cancel</span></button>
         </div>
         <div class="col-md-6" class="tooltip" title="The human-readable name of the Project.">
-          <button id="save" type="button" class="btn btn-primary">Save Project</button>
+          <button id="save" type="button" class="btn btn-primary"><span style="font-size:larger;">Save Project</span></button>
         </div>
       </div>
       <footer class="footer">
           <p> &copy; 2018 AO Labs</p>
       </footer>
-    </div>
     </div>
     <script>
     // The Project Key is injected here by the server before

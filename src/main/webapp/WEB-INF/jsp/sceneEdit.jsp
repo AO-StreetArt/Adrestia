@@ -15,6 +15,8 @@
   <script src="https://cdn.jsdelivr.net/gh/StephanWagner/jBox@v0.5.1/dist/jBox.all.min.js"></script>
   <link href="https://cdn.jsdelivr.net/gh/StephanWagner/jBox@v0.5.1/dist/jBox.all.min.css" rel="stylesheet">
 
+  <!-- Custom CSS -->
+  <link href="/css/aeselBrowserBaseStyle.css" rel="stylesheet">
   <head>
     <meta http-equiv="Content-Type" content="text/html" charset="utf-8"/>
     <title>Aesel Scene</title>
@@ -22,37 +24,15 @@
     <script src="https://unpkg.com/ag-grid-community/dist/ag-grid-community.min.noStyle.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/ag-grid-community/dist/styles/ag-grid.css">
     <link rel="stylesheet" href="https://unpkg.com/ag-grid-community/dist/styles/ag-theme-balham.css">
-
-    <style>
-    html, body {
-      overflow: hidden;
-      width   : 100%;
-      height  : 100%;
-      margin  : 0;
-      padding : 0;
-    }
-    input {
-      width : 100%;
-    }
-    html {
-      overflow-y: hidden;
-    }
-    </style>
   </head>
   <body>
-    <div class="pre-scrollable" style="height:100%;max-height: 100%;">
-    <div class="container-fluid" style="height:100%;">
+    <div class="container-fluid pre-scrollable" style="height:100%;max-height:100%;">
       <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <a class="navbar-brand" href="#">Aesel</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarColor01">
           <ul class="navbar-nav mr-auto">
             <li class="nav-item">
               <a class="nav-link" href="/portal/home">Home</a>
             </li>
-            <li class="nav-item"><a class="nav-link" href="#">|</a></li>
             <li class="nav-item" id="projectBrowser">
               <a class="nav-link" href="/projectBrowser">Projects</a>
             </li>
@@ -62,12 +42,10 @@
             <li class="nav-item" id="assetBrowser">
               <a class="nav-link" href="/assetBrowser">Assets</a>
             </li>
-            <li class="nav-item"><a class="nav-link" href="#">|</a></li>
             <li class="nav-item" id="docs">
               <a class="nav-link" href="https://aesel.readthedocs.io/en/latest/index.html">Documentation</a>
             </li>
           </ul>
-        </div>
       </nav>
       <div class="row">
         <div class="col-md-12">
@@ -75,65 +53,64 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-md-2">
-          Key:
+        <div class="col-xs-5 col-sm-4 col-md-2 col-lg-2">
+          <p>Key:</p>
         </div>
-        <div class="col-md-10" class="tooltip" title="The unique identifier of the Scene.">
+        <div class="col-xs-7 col-sm-8 col-md-10 col-lg-10" class="tooltip" title="The unique identifier of the Scene.">
           <input id="keyinp" type="text" class="form-control-plaintext" name="Key" placeholder="Key"></input>
         </div>
       </div>
       <div class="row">
-        <div class="col-md-2">
-          Name:
+        <div class="col-xs-5 col-sm-4 col-md-2 col-lg-2">
+          <p>Name:</p>
         </div>
-        <div class="col-md-10" class="tooltip" title="The human-readable name of the Scene.">
+        <div class="col-xs-7 col-sm-8 col-md-10 col-lg-10" class="tooltip" title="The human-readable name of the Scene.">
           <input id="nameinp" type="text" class="form-control-plaintext" name="Name" placeholder="Name"></input>
         </div>
       </div>
       <div class="row">
-        <div class="col-md-2">
-          Region:
+        <div class="col-xs-5 col-sm-4 col-md-2 col-lg-2">
+          <p>Region:</p>
         </div>
-        <div class="col-md-10" class="tooltip" title="The human-readable name of the Scene.">
+        <div class="col-xs-7 col-sm-8 col-md-10 col-lg-10" class="tooltip" title="The human-readable name of the Scene.">
           <input id="regioninp" type="text" class="form-control-plaintext" name="Region" placeholder="Region"></input>
         </div>
       </div>
       <div class="row">
-        <div class="col-md-2">
-          Latitude:
+        <div class="col-xs-5 col-sm-4 col-md-2 col-lg-2">
+          <p>Latitude:</p>
         </div>
-        <div class="col-md-10" class="tooltip" title="The latitude of the Scene for distance queries.">
+        <div class="col-xs-7 col-sm-8 col-md-10 col-lg-10" class="tooltip" title="The latitude of the Scene for distance queries.">
           <input id="latitudeinp" type="text" class="form-control-plaintext" name="Latitude" placeholder="Latitude"></input>
         </div>
       </div>
       <div class="row">
-        <div class="col-md-2">
-          Longitude:
+        <div class="col-xs-5 col-sm-4 col-md-2 col-lg-2">
+          <p>Longitude:</p>
         </div>
-        <div class="col-md-10" class="tooltip" title="The longitude of the Scene for distance queries.">
+        <div class="col-xs-7 col-sm-8 col-md-10 col-lg-10" class="tooltip" title="The longitude of the Scene for distance queries.">
           <input id="longitudeinp" type="text" class="form-control-plaintext" name="Longitude" placeholder="Longitude"></input>
         </div>
       </div>
       <div class="row">
-        <div class="col-md-2">
-          Tags:
+        <div class="col-xs-5 col-sm-4 col-md-2 col-lg-2">
+          <p>Tags:</p>
         </div>
-        <div class="col-md-10" class="tooltip" title="The tags associated to the Scene.">
+        <div class="col-xs-7 col-sm-8 col-md-10 col-lg-10" class="tooltip" title="The tags associated to the Scene.">
           <input id="tagsinp" type="text" class="form-control-plaintext" name="Tags" placeholder="Tags"></input>
         </div>
       </div>
       <div class="row">
-        <div class="col-md-6" class="tooltip" title="Cancel the changes.">
+        <div class="col-md-6 col-lg-6" class="tooltip" title="Cancel the changes.">
           <button id="cancel" type="button" class="btn btn-primary">Cancel</button>
         </div>
-        <div class="col-md-6" class="tooltip" title="Save the Scene.">
+        <div class="col-md-6 col-lg-6" class="tooltip" title="Save the Scene.">
           <button id="save" type="button" class="btn btn-primary">Save Scene</button>
         </div>
       </div>
       <footer class="footer">
           <p> &copy; 2018 AO Labs</p>
       </footer>
-    </div>
     </div>
     <script>
     // The Scene Key is injected here by the server before

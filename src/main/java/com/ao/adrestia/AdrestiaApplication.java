@@ -48,6 +48,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
@@ -57,7 +59,9 @@ import org.springframework.web.servlet.view.JstlView;
 @EnableWebSecurity
 @Import(AdrestiaMongoConfiguration.class)
 @SpringBootApplication(exclude = {SolrAutoConfiguration.class})
-public class AdrestiaApplication extends WebSecurityConfigurerAdapter {
+public class AdrestiaApplication
+    extends WebSecurityConfigurerAdapter
+    implements WebMvcConfigurer {
   private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
   // Is Authentication required for accessing our HTTP Server
@@ -74,11 +78,30 @@ public class AdrestiaApplication extends WebSecurityConfigurerAdapter {
   @Autowired
   ApplicationUserRepository applicationUserRepository;
 
+  // Bean definition for Zuul Routing Filter
+  @Bean
+  public RoutingFilter routingFilter() {
+    return new RoutingFilter();
+  }
+
+  // Bean definition for Zuul Persistence Filter
+  @Bean PersistenceFilter persistenceFilter() {
+    return new PersistenceFilter();
+  }
+
+  // Bean definition for Password Encoder (Hashing Pw's)
   @Bean
   public BCryptPasswordEncoder bCryptPasswordEncoder() {
     return encoder;
   }
 
+  // Enable loading custom CSS Files
+  @Override
+  public void addResourceHandlers(ResourceHandlerRegistry registry) {
+      registry.addResourceHandler("/css/**").addResourceLocations("/css/");
+  }
+
+  // Configure Web Security
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     http.csrf().disable();
@@ -86,6 +109,7 @@ public class AdrestiaApplication extends WebSecurityConfigurerAdapter {
     if (httpAuthActive) {
       http.authorizeRequests()
           .antMatchers("/health").permitAll()
+          .antMatchers("/favicon.ico").permitAll()
           .antMatchers("/portal/login").permitAll()
           .antMatchers(HttpMethod.POST, "/login").permitAll()
           .antMatchers("/**").authenticated()
@@ -100,6 +124,7 @@ public class AdrestiaApplication extends WebSecurityConfigurerAdapter {
     }
   }
 
+  // Configure Authentication
   @Override
   protected void configure(AuthenticationManagerBuilder auth) throws Exception {
     if (httpAuthActive) {
@@ -110,14 +135,5 @@ public class AdrestiaApplication extends WebSecurityConfigurerAdapter {
 
   public static void main(String[] args) {
     SpringApplication.run(AdrestiaApplication.class, args);
-  }
-
-  @Bean
-  public RoutingFilter routingFilter() {
-    return new RoutingFilter();
-  }
-
-  @Bean PersistenceFilter persistenceFilter() {
-    return new PersistenceFilter();
   }
 }

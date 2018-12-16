@@ -12,6 +12,8 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.1.3/sandstone/bootstrap.min.css">
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
+  <!-- Custom CSS -->
+  <link href="/css/aeselBrowserBaseStyle.css" rel="stylesheet">
   <head>
     <meta http-equiv="Content-Type" content="text/html" charset="utf-8"/>
     <title>Aesel Asset Browser</title>
@@ -23,18 +25,6 @@
     <script src="https://cdn.babylonjs.com/babylon.js"></script>
     <script src="https://preview.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
     <style>
-    html, body {
-      overflow: hidden;
-      width   : 100%;
-      height  : 100%;
-      margin  : 0;
-      padding : 0;
-    }
-    .col-centered{
-      float: none;
-      margin: 0 auto;
-    }
-
     #renderCanvas {
       width   : 100%;
       height  : 100%;
@@ -43,19 +33,13 @@
     </style>
   </head>
   <body>
-    <div class="pre-scrollable" style="height:100%;max-height: 100%;">
-    <div class="container-fluid" style="height:100%;">
+    <div class="container-fluid pre-scrollable" style="height:100%;max-height:100%;">
       <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <a class="navbar-brand" href="#">Aesel</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarColor01">
+        <a class="navbar-brand" href="#"></a>
           <ul class="navbar-nav mr-auto">
             <li class="nav-item">
               <a class="nav-link" href="/portal/home">Home</a>
             </li>
-            <li class="nav-item"><a class="nav-link" href="#">|</a></li>
             <li class="nav-item" id="projectBrowser">
               <a class="nav-link" href="/projectBrowser">Projects</a>
             </li>
@@ -65,12 +49,10 @@
             <li class="nav-item" id="assetBrowser">
               <a class="nav-link active" href="#">Assets <span class="sr-only">(current)</span></a>
             </li>
-            <li class="nav-item"><a class="nav-link" href="#">|</a></li>
             <li class="nav-item" id="docs">
               <a class="nav-link" href="https://aesel.readthedocs.io/en/latest/index.html">Documentation</a>
             </li>
           </ul>
-        </div>
       </nav>
       <div class="row">
         <div class="col-md-12">
@@ -84,11 +66,11 @@
         <div class="col-md-12">
           <div class="btn-toolbar" role="toolbar" aria-label="Asset Toolbar" style="justify-content: center;">
             <div class="btn-group" role="group" aria-label="Asset Toolbar">
-              <button id="view" type="button" class="btn btn-primary" style="z-index:265">View</button>
-              <button id="download" type="button" class="btn btn-primary" style="z-index:265">Download</button>
-              <button id="edit" type="button" class="btn btn-primary" style="z-index:265">Edit Asset</button>
-              <button id="create" type="button" class="btn btn-primary" style="z-index:265">Create Asset</button>
-              <button id="delete" type="button" class="btn btn-primary" style="z-index:265">Delete Asset</button>
+              <button id="view" type="button" class="btn btn-primary" style="z-index:265"><span style="font-size:larger;">View</span></button>
+              <button id="download" type="button" class="btn btn-primary" style="z-index:265"><span style="font-size:larger;">Download</span></button>
+              <button id="edit" type="button" class="btn btn-primary" style="z-index:265"><span style="font-size:larger;">Edit Asset</span></button>
+              <button id="create" type="button" class="btn btn-primary" style="z-index:265"><span style="font-size:larger;">Create Asset</span></button>
+              <button id="delete" type="button" class="btn btn-primary" style="z-index:265"><span style="font-size:larger;">Delete Asset</span></button>
             </div>
           </div>
         </div>
@@ -112,7 +94,6 @@
       <footer class="footer">
           <p> &copy; 2018 AO Labs</p>
       </footer>
-    </div>
     </div>
     <script>
     // Global WegGL variables to access in callbacks

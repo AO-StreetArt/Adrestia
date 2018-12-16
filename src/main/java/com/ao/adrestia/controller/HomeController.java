@@ -42,10 +42,15 @@ public class HomeController {
     logger.info("Home page");
     if (principal == null && authActive) {
       logger.warn("No Principal Detected");
-      return "redirect:/logout";
+      return "redirect:/portal/login";
     }
     model.put("userId", principal);
     return "home";
+  }
+
+  @RequestMapping(value = "/", method = RequestMethod.GET)
+  protected String resolveRoot(final Map<String, Object> model, final Principal principal) {
+    return "forward:/portal/home";
   }
 
 }

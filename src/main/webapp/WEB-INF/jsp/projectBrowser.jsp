@@ -12,6 +12,8 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.1.3/sandstone/bootstrap.min.css">
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
+  <!-- Custom CSS -->
+  <link href="/css/aeselBrowserBaseStyle.css" rel="stylesheet">
   <head>
     <meta http-equiv="Content-Type" content="text/html" charset="utf-8"/>
     <title>Aesel Project</title>
@@ -19,30 +21,15 @@
     <script src="https://unpkg.com/ag-grid-community/dist/ag-grid-community.min.noStyle.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/ag-grid-community/dist/styles/ag-grid.css">
     <link rel="stylesheet" href="https://unpkg.com/ag-grid-community/dist/styles/ag-theme-balham.css">
-    <style>
-    html, body {
-      overflow: hidden;
-      width   : 100%;
-      height  : 100%;
-      margin  : 0;
-      padding : 0;
-    }
-    </style>
   </head>
   <body>
-    <div class="pre-scrollable" style="height:100%;max-height: 100%;">
-    <div class="container-fluid" style="height:100%;">
+    <div class="container-fluid pre-scrollable" style="height:100%;max-height:100%;">
       <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <a class="navbar-brand" href="#">Aesel</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarColor01">
+        <a class="navbar-brand" href="#"></a>
           <ul class="navbar-nav mr-auto">
             <li class="nav-item">
               <a class="nav-link" href="/portal/home">Home</a>
             </li>
-            <li class="nav-item"><a class="nav-link" href="#">|</a></li>
             <li class="nav-item active" id="projectBrowser">
               <a class="nav-link" href="#">Projects <span class="sr-only">(current)</span></a>
             </li>
@@ -52,12 +39,10 @@
             <li class="nav-item" id="assetBrowser">
               <a class="nav-link" href="/assetBrowser">Assets</a>
             </li>
-            <li class="nav-item"><a class="nav-link" href="#">|</a></li>
             <li class="nav-item" id="docs">
               <a class="nav-link" href="https://aesel.readthedocs.io/en/latest/index.html">Documentation</a>
             </li>
           </ul>
-        </div>
       </nav>
       <div class="row">
         <div class="col-md-12">
@@ -65,22 +50,22 @@
         </div>
       </div>
       <div class="row">
-    		<div class="col-md-6">
+    		<div class="col-md-6 col-lg-6">
     			<p id="projectDescription">
             Double click on a project in the list to view the description and thumbnail.
     			</p>
     		</div>
-    		<div class="col-md-6">
-    			<img id="projectThumbnail" alt="No Thumbnail Available" src="https://www.layoutit.com/img/sports-q-c-140-140-3.jpg" class="rounded" />
+    		<div class="col-md-6 col-lg-6">
+    			<img class="img-fluid rounded mx-auto d-block" id="projectThumbnail" alt="No Thumbnail Available" src="https://www.layoutit.com/img/sports-q-c-140-140-3.jpg" class="rounded" />
     		</div>
     	</div>
       <div class="row">
         <div class="col-md-12">
           <div class="btn-toolbar" role="toolbar" aria-label="Project Toolbar" style="justify-content: center;">
             <div class="btn-group" role="group" aria-label="Project Toolbar">
-              <button id="editProj" type="button" class="btn btn-primary" style="z-index:265">Edit Project</button>
-              <button id="createProj" type="button" class="btn btn-primary" style="z-index:265">Create Project</button>
-              <button id="delete" type="button" class="btn btn-primary" style="z-index:265">Delete Project</button>
+              <button id="editProj" type="button" class="btn btn-primary" style="z-index:265"><span style="font-size:larger;">Edit Project</span></button>
+              <button id="createProj" type="button" class="btn btn-primary" style="z-index:265"><span style="font-size:larger;">Create Project</span></button>
+              <button id="delete" type="button" class="btn btn-primary" style="z-index:265"><span style="font-size:larger;">Delete Project</span></button>
             </div>
           </div>
         </div>
@@ -104,7 +89,6 @@
       <footer class="footer">
           <p> &copy; 2018 AO Labs</p>
       </footer>
-    </div>
     </div>
     <script>
     console.log("Creating Table");

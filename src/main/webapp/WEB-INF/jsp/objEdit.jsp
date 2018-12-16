@@ -15,6 +15,8 @@
   <script src="https://cdn.jsdelivr.net/gh/StephanWagner/jBox@v0.5.1/dist/jBox.all.min.js"></script>
   <link href="https://cdn.jsdelivr.net/gh/StephanWagner/jBox@v0.5.1/dist/jBox.all.min.css" rel="stylesheet">
 
+  <!-- Custom CSS -->
+  <link href="/css/aeselBrowserBaseStyle.css" rel="stylesheet">
   <head>
     <meta http-equiv="Content-Type" content="text/html" charset="utf-8"/>
     <title>Aesel Object</title>
@@ -22,37 +24,15 @@
     <script src="https://unpkg.com/ag-grid-community/dist/ag-grid-community.min.noStyle.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/ag-grid-community/dist/styles/ag-grid.css">
     <link rel="stylesheet" href="https://unpkg.com/ag-grid-community/dist/styles/ag-theme-balham.css">
-
-    <style>
-    html, body {
-      overflow: hidden;
-      width   : 100%;
-      height  : 100%;
-      margin  : 0;
-      padding : 0;
-    }
-    input {
-      width : 100%;
-    }
-    html {
-      overflow-y: hidden;
-    }
-    </style>
   </head>
   <body>
-    <div class="pre-scrollable" style="height:100%;max-height: 100%;">
-    <div class="container-fluid" style="height:100%;">
+    <div class="container-fluid pre-scrollable" style="height:100%;max-height:100%;">
       <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <a class="navbar-brand" href="#">Aesel</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarColor01">
+        <a class="navbar-brand" href="#"></a>
           <ul class="navbar-nav mr-auto">
             <li class="nav-item">
               <a class="nav-link" href="/portal/home">Home</a>
             </li>
-            <li class="nav-item"><a class="nav-link" href="#">|</a></li>
             <li class="nav-item" id="projectBrowser">
               <a class="nav-link" href="/projectBrowser">Projects</a>
             </li>
@@ -62,12 +42,10 @@
             <li class="nav-item" id="assetBrowser">
               <a class="nav-link" href="/assetBrowser">Assets</a>
             </li>
-            <li class="nav-item"><a class="nav-link" href="#">|</a></li>
             <li class="nav-item" id="docs">
               <a class="nav-link" href="https://aesel.readthedocs.io/en/latest/index.html">Documentation</a>
             </li>
           </ul>
-        </div>
       </nav>
       <div class="row">
         <div class="col-md-12">
@@ -75,104 +53,104 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-md-2">
-          Key:
+        <div class="col-xs-5 col-sm-4 col-md-2 col-lg-2">
+          <p>Key:</p>
         </div>
         <div class="col-md-10" class="tooltip" title="The unique identifier of the Object.">
           <input id="keyinp" type="text" class="form-control-plaintext" name="Key" placeholder="Key"></input>
         </div>
       </div>
       <div class="row">
-        <div class="col-md-2">
-          Name:
+        <div class="col-xs-5 col-sm-4 col-md-2 col-lg-2">
+          <p>Name:</p>
         </div>
         <div class="col-md-10" class="tooltip" title="The human-readable name of the Object.">
           <input id="nameinp" type="text" class="form-control-plaintext" name="Name" placeholder="Name"></input>
         </div>
       </div>
       <div class="row">
-        <div class="col-md-2">
-          Parent:
+        <div class="col-xs-5 col-sm-4 col-md-2 col-lg-2">
+          <p>Parent:</p>
         </div>
         <div class="col-md-10" class="tooltip" title="The parent Object from which this inherits attributes.">
           <input id="parentinp" type="text" class="form-control-plaintext" name="Parent" placeholder="Parent"></input>
         </div>
       </div>
       <div class="row">
-        <div class="col-md-2">
-          Type:
+        <div class="col-xs-5 col-sm-4 col-md-2 col-lg-2">
+          <p>Type:</p>
         </div>
         <div class="col-md-10" class="tooltip" title="The human-readable name of the Object.">
           <input id="typeinp" type="text" class="form-control-plaintext" name="Type" placeholder="Type"></input>
         </div>
       </div>
       <div class="row">
-        <div class="col-md-2">
-          Subtype:
+        <div class="col-xs-5 col-sm-4 col-md-2 col-lg-2">
+          <p>Subtype:</p>
         </div>
         <div class="col-md-10" class="tooltip" title="The latitude of the Object for distance queries.">
           <input id="subtypeinp" type="text" class="form-control-plaintext" name="Subtype" placeholder="Subtype"></input>
         </div>
       </div>
       <div class="row">
-        <div class="col-md-2">
-          Owner:
+        <div class="col-xs-5 col-sm-4 col-md-2 col-lg-2">
+          <p>Owner:</p>
         </div>
         <div class="col-md-10" class="tooltip" title="The longitude of the Object for distance queries.">
           <input id="ownerinp" type="text" class="form-control-plaintext" name="Owner" placeholder="Owner"></input>
         </div>
       </div>
       <div class="row">
-        <div class="col-md-2">
-          Frame:
+        <div class="col-xs-5 col-sm-4 col-md-2 col-lg-2">
+          <p>Frame:</p>
         </div>
         <div class="col-md-10" class="tooltip" title="The tags associated to the Object.">
           <input id="frameinp" type="text" class="form-control-plaintext" name="Frame" placeholder="Frame"></input>
         </div>
       </div>
       <div class="row">
-        <div class="col-md-2">
-          Timestamp:
+        <div class="col-xs-5 col-sm-4 col-md-2 col-lg-2">
+          <p>Timestamp:</p>
         </div>
         <div class="col-md-10" class="tooltip" title="The tags associated to the Object.">
           <input id="timeinp" type="text" class="form-control-plaintext" name="Timestamp" placeholder="Timestamp"></input>
         </div>
       </div>
       <div class="row">
-        <div class="col-md-2">
-          Translation:
+        <div class="col-xs-5 col-sm-4 col-md-2 col-lg-2">
+          <p>Translation:</p>
         </div>
         <div class="col-md-10" class="tooltip" title="The tags associated to the Object.">
           <input id="translationinp" type="text" class="form-control-plaintext" name="Translation" placeholder="Translation"></input>
         </div>
       </div>
       <div class="row">
-        <div class="col-md-2">
-          Euler Rotation:
+        <div class="col-xs-5 col-sm-4 col-md-2 col-lg-2">
+          <p>Euler Rotation:</p>
         </div>
         <div class="col-md-10" class="tooltip" title="The tags associated to the Object.">
           <input id="erotinp" type="text" class="form-control-plaintext" name="ERotation" placeholder="Euler Rotation"></input>
         </div>
       </div>
       <div class="row">
-        <div class="col-md-2">
-          Quaternion Rotation:
+        <div class="col-xs-5 col-sm-4 col-md-2 col-lg-2">
+          <p>Quaternion Rotation:</p>
         </div>
         <div class="col-md-10" class="tooltip" title="The tags associated to the Object.">
           <input id="qrotinp" type="text" class="form-control-plaintext" name="QRotation" placeholder="Quaternion Rotation"></input>
         </div>
       </div>
       <div class="row">
-        <div class="col-md-2">
-          Scale:
+        <div class="col-xs-5 col-sm-4 col-md-2 col-lg-2">
+          <p>Scale:</p>
         </div>
         <div class="col-md-10" class="tooltip" title="The tags associated to the Object.">
           <input id="scaleinp" type="text" class="form-control-plaintext" name="Scale" placeholder="Scale"></input>
         </div>
       </div>
       <div class="row">
-        <div class="col-md-2">
-          Transform:
+        <div class="col-xs-5 col-sm-4 col-md-2 col-lg-2">
+          <p>Transform:</p>
         </div>
         <div class="col-md-10" class="tooltip" title="The tags associated to the Object.">
           <input id="transforminp" type="text" class="form-control-plaintext" name="Transform" placeholder="Transform"></input>
@@ -180,16 +158,15 @@
       </div>
       <div class="row">
         <div class="col-md-6" class="tooltip" title="Cancel the changes.">
-          <button id="cancel" type="button" class="btn btn-primary">Cancel</button>
+          <button id="cancel" type="button" class="btn btn-primary"><span style="font-size:larger;">Cancel</span></button>
         </div>
         <div class="col-md-6" class="tooltip" title="Save the Object.">
-          <button id="save" type="button" class="btn btn-primary">Save Object</button>
+          <button id="save" type="button" class="btn btn-primary"><span style="font-size:larger;">Save Object</span></button>
         </div>
       </div>
       <footer class="footer">
           <p> &copy; 2018 AO Labs</p>
       </footer>
-    </div>
     </div>
     <script>
     // The Scene and Object Keys are injected here by

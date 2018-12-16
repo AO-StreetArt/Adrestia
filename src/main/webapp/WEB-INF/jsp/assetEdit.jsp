@@ -15,40 +15,20 @@
   <script src="https://cdn.jsdelivr.net/gh/StephanWagner/jBox@v0.5.1/dist/jBox.all.min.js"></script>
   <link href="https://cdn.jsdelivr.net/gh/StephanWagner/jBox@v0.5.1/dist/jBox.all.min.css" rel="stylesheet">
 
+  <!-- Custom CSS -->
+  <link href="/css/aeselBrowserBaseStyle.css" rel="stylesheet">
   <head>
     <meta http-equiv="Content-Type" content="text/html" charset="utf-8"/>
     <title>Aesel Asset</title>
-
-    <style>
-    html, body {
-      overflow: hidden;
-      width   : 100%;
-      height  : 100%;
-      margin  : 0;
-      padding : 0;
-    }
-    input {
-      width : 100%;
-    }
-    html {
-      overflow-y: hidden;
-    }
-    </style>
   </head>
   <body>
-    <div class="pre-scrollable" style="height:100%;max-height: 100%;">
-    <div class="container-fluid" style="height:100%;">
+    <div class="container-fluid pre-scrollable" style="height:100%;max-height:100%;">
       <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <a class="navbar-brand" href="#">Aesel</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarColor01">
+        <a class="navbar-brand" href="#"></a>
           <ul class="navbar-nav mr-auto">
             <li class="nav-item">
               <a class="nav-link" href="/portal/home">Home</a>
             </li>
-            <li class="nav-item"><a class="nav-link" href="#">|</a></li>
             <li class="nav-item" id="projectBrowser">
               <a class="nav-link" href="/projectBrowser">Projects</a>
             </li>
@@ -58,12 +38,10 @@
             <li class="nav-item active" id="assetBrowser">
               <a class="nav-link" href="#">Assets <span class="sr-only">(current)</span></a>
             </li>
-            <li class="nav-item"><a class="nav-link" href="#">|</a></li>
             <li class="nav-item" id="docs">
               <a class="nav-link" href="https://aesel.readthedocs.io/en/latest/index.html">Documentation</a>
             </li>
           </ul>
-        </div>
       </nav>
       <div class="row">
         <div class="col-md-12">
@@ -71,73 +49,72 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-md-2">
-          Key:
+        <div class="col-xs-5 col-sm-4 col-md-2 col-lg-2">
+          <p>Key:</p>
         </div>
-        <div class="col-md-10" class="tooltip" title="The unique identifier of the Scene.">
+        <div class="col-xs-7 col-sm-8 col-md-10 col-lg-10" class="tooltip" title="The unique identifier of the Scene.">
           <input id="keyinp" type="text" class="form-control-plaintext" name="Key" placeholder="Key"></input>
         </div>
       </div>
       <div class="row">
-        <div class="col-md-2">
-          Name:
+        <div class="col-xs-5 col-sm-4 col-md-2 col-lg-2">
+          <p>Name:</p>
         </div>
-        <div class="col-md-10" class="tooltip" title="The human-readable name of the Scene.">
+        <div class="col-xs-7 col-sm-8 col-md-10 col-lg-10" class="tooltip" title="The human-readable name of the Scene.">
           <input id="nameinp" type="text" class="form-control-plaintext" name="Name" placeholder="Name"></input>
         </div>
       </div>
       <div class="row">
-        <div class="col-md-2">
-          Content Type:
+        <div class="col-xs-5 col-sm-4 col-md-2 col-lg-2">
+          <p>Content Type:</p>
         </div>
-        <div class="col-md-10" class="tooltip" title="The latitude of the Scene for distance queries.">
+        <div class="col-xs-7 col-sm-8 col-md-10 col-lg-10" class="tooltip" title="The latitude of the Scene for distance queries.">
           <input id="ctypeinp" type="text" class="form-control-plaintext" name="ContentType" placeholder="Content Type"></input>
         </div>
       </div>
       <div class="row">
-        <div class="col-md-2">
-          File Type:
+        <div class="col-xs-5 col-sm-4 col-md-2 col-lg-2">
+          <p>File Type:</p>
         </div>
-        <div class="col-md-10" class="tooltip" title="The longitude of the Scene for distance queries.">
+        <div class="col-xs-7 col-sm-8 col-md-10 col-lg-10" class="tooltip" title="The longitude of the Scene for distance queries.">
           <input id="ftypeinp" type="text" class="form-control-plaintext" name="FileType" placeholder="File Type"></input>
         </div>
       </div>
       <div class="row">
-        <div class="col-md-2">
-          Asset Type:
+        <div class="col-xs-5 col-sm-4 col-md-2 col-lg-2">
+          <p>Asset Type:</p>
         </div>
-        <div class="col-md-10" class="tooltip" title="The longitude of the Scene for distance queries.">
+        <div class="col-xs-7 col-sm-8 col-md-10 col-lg-10" class="tooltip" title="The longitude of the Scene for distance queries.">
           <input id="atypeinp" type="text" class="form-control-plaintext" name="AssetType" placeholder="Asset Type"></input>
         </div>
       </div>
       <div class="row">
-        <div class="col-md-2">
-          Tags:
+        <div class="col-xs-5 col-sm-4 col-md-2 col-lg-2">
+          <p>Tags:</p>
         </div>
-        <div class="col-md-10" class="tooltip" title="The tags associated to the Scene.">
+        <div class="col-xs-7 col-sm-8 col-md-10 col-lg-10" class="tooltip" title="The tags associated to the Scene.">
           <input id="tagsinp" type="text" class="form-control-plaintext" name="Tags" placeholder="Tags"></input>
         </div>
       </div>
       <div class="row">
-        <div class="col-md-2">
-          File:
+        <div class="col-xs-5 col-sm-4 col-md-2 col-lg-2">
+          <p>File:</p>
         </div>
-        <div class="col-md-10" class="tooltip" title="The actual asset file to upload.">
+        <div class="col-xs-7 col-sm-8 col-md-10 col-lg-10" class="tooltip" title="The actual asset file to upload.">
           <input id="fileinp" name="file" type="file" class="form-control-file"></input>
         </div>
       </div>
       <div class="row">
-        <div class="col-md-6" class="tooltip" title="Cancel the changes.">
-          <button id="cancel" type="button" class="btn btn-primary">Cancel</button>
+        <div class="col-md-6 col-lg-6" class="tooltip" title="Cancel the changes.">
+          <button id="cancel" type="button" class="btn btn-primary"><span style="font-size:larger;">Cancel</span></button>
         </div>
-        <div class="col-md-6" class="tooltip" title="Save the Asset.">
-          <button id="save" type="button" class="btn btn-primary">Save</button>
+        <div class="col-md-6 col-lg-6" class="tooltip" title="Save the Asset.">
+          <button id="save" type="button" class="btn btn-primary"><span style="font-size:larger;">Save</span></button>
         </div>
       </div>
       <footer class="footer">
           <p> &copy; 2018 AO Labs</p>
       </footer>
-    </div>
     </div>
     <script>
     // The Asset Key is injected here by the server before
