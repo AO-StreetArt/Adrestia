@@ -95,10 +95,11 @@ public class AdrestiaApplication
     return encoder;
   }
 
-  // Enable loading custom CSS Files
+  // Enable loading custom CSS and PNG Files
   @Override
   public void addResourceHandlers(ResourceHandlerRegistry registry) {
       registry.addResourceHandler("/css/**").addResourceLocations("/css/");
+      registry.addResourceHandler("/images/**").addResourceLocations("/images/");
   }
 
   // Configure Web Security

@@ -20,6 +20,21 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html" charset="utf-8"/>
     <title>Aesel</title>
+    <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.1.0/cookieconsent.min.css" />
+    <script src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.1.0/cookieconsent.min.js"></script>
+    <script>
+    window.addEventListener("load", function(){
+    window.cookieconsent.initialise({
+      "palette": {
+        "popup": {
+          "background": "#252e39"
+        },
+        "button": {
+          "background": "#14a7d0"
+        }
+      }
+    })});
+    </script>
   </head>
   <body>
     <div class="container-fluid pre-scrollable" style="height:100%;max-height: 100%;">
@@ -52,21 +67,22 @@
     	</div>
     	<div class="row">
     		<div class="col-md-6 col-lg-6">
-          <a href="https://aesel.readthedocs.io/en/latest/pages/quickstart.html">
-      			<h3 class="text-center">
-      				Getting Started with the Aesel Browser
-      			</h3><img class="img-fluid rounded mx-auto d-block" alt="Bootstrap Image Preview" src="https://www.layoutit.com/img/sports-q-c-140-140-3.jpg" />
+    			<h2 class="text-center">
+    				Getting Started with the Aesel Browser
+    			</h2>
+          <a href="https://aesel.readthedocs.io/en/latest/pages/web_ui_quickstart.html">
+            <img class="img-fluid rounded mx-auto d-block" alt="Aesel Web Browser Logo" src="/images/aeselweb_logo.png" />
       			<p>
-      				Getting Started with this browser for Aesel, which is a great way to explore and learn.  The Browser
-              lets you explore and update the Aesel server without having to hit any API's yourself.
+      				Getting Started with this browser for Aesel, which is a great way to explore and learn the API's.
       			</p>
           </a>
     		</div>
     		<div class="col-md-6 col-lg-6">
+    			<h2 class="text-center">
+    				Getting Started with BlenderSync
+    			</h2>
           <a href="https://blendersync.readthedocs.io/en/latest/">
-      			<h3 class="text-center">
-      				Getting Started with BlenderSync
-      			</h3><img class="img-fluid rounded mx-auto d-block" alt="Bootstrap Image Preview" src="https://www.layoutit.com/img/sports-q-c-140-140-3.jpg" />
+            <img class="img-fluid rounded mx-auto d-block" alt="Blender Sync Logo" src="/images/bsync_logo.png" />
       			<p>
       				BlenderSync integrates Aesel directly into Blender.  Explore how to create and share assets and projects,
               as well as animate collaboratively with your team.
@@ -75,24 +91,15 @@
     		</div>
     	</div>
     	<div class="row">
-    		<div class="col-md-6">
+    		<div class="col-md-12">
+    			<h2 class="text-center">
+    				Aesel Workflows
+    			</h2>
           <a href="https://aesel.readthedocs.io/en/latest/pages/overview.html">
-      			<h3 class="text-center">
-      				Aesel Workflows
-      			</h3><img class="img-fluid rounded mx-auto d-block" alt="Bootstrap Image Preview" src="https://www.layoutit.com/img/sports-q-c-140-140-3.jpg" />
-      			<p>
+            <img class="img-fluid rounded mx-auto d-block" alt="Aesel Workflows Animation" src="/images/aesellearning_logo.png" />
+      			<p class="text-center">
               Explore the workflows supported by the Aesel API's to build your own application using Aesel as a
               back-end service.
-      			</p>
-          </a>
-    		</div>
-    		<div class="col-md-6">
-          <a href="https://aesel.readthedocs.io/en/latest/pages/DVS_API.html">
-      			<h3 class="text-center">
-      				Aesel API
-      			</h3><img class="img-fluid rounded mx-auto d-block" alt="Bootstrap Image Preview" src="https://www.layoutit.com/img/sports-q-c-140-140-3.jpg" />
-      			<p>
-      				Explore the details of the Aesel API's, which can be called from any programming language.
       			</p>
           </a>
     		</div>
