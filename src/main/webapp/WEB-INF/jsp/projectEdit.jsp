@@ -299,7 +299,7 @@
         }
       } else if (event.target.id == "cancel") {
         // Cancel Button
-        window.history.back();
+        window.location.replace("projectBrowser");
       } else if (event.target.id == "saveSg") {
         // Save Scene Group Button
         // See if we are updating an existing group

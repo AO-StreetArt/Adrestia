@@ -192,7 +192,7 @@
 
     // Cancel button logic
     function onButtonClick(event) {
-      window.history.back();
+      window.location.replace("assetBrowser");
     }
 
     document.getElementById('cancel').addEventListener("click", onButtonClick, false);

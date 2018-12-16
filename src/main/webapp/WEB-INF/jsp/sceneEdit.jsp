@@ -150,7 +150,7 @@
                 contentType: "application/json; charset=utf-8",
                 success: sceneReturn});
       } else if (event.target.id == "cancel") {
-        window.history.back();
+        window.location.replace("sceneBrowser");
       }
     }
 

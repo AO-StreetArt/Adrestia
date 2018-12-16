@@ -226,7 +226,7 @@
                   console.log(data);
                 }});
       } else if (event.target.id == "cancel") {
-        window.history.back();
+        window.location.replace("sceneBrowser");
       }
     }
 
