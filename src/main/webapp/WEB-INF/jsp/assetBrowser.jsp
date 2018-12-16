@@ -100,6 +100,8 @@
     var canvas = null;
     var engine = null;
     var scene = null;
+    var activeSprite = null;
+    var activeSpriteManager = null;
 
     console.log("Creating Table");
 
@@ -162,21 +164,24 @@
         for (let i = scene.meshes.length - 1; i >= 0; i--) {
           scene.meshes[i].dispose();
         }
-        for (let i = scene.spriteManagers.length - 1; i >= 0; i--) {
-          scene.spriteManagers[i].dispose();
+        if (activeSprite != null) {
+          activeSprite.dispose();
+          activeSprite = null;
+          activeSpriteManager.dispose();
+          activeSpriteManager = null;
         }
         if (assetFileType == "obj") {
           BABYLON.SceneLoader.Append("/v1/asset/" + assetId + "/", "file." + assetFileType, scene, function (scene) {
             console.log("Asset Loaded")
           });
         } else if (assetFileType == "png" || assetFileType == "jpg" || assetFileType == "jpeg") {
-          var spriteManagerAsset = new BABYLON.SpriteManager("imageAssetManager", "/v1/asset/" + assetId + "/file" + assetFileType, 1, 800, scene);
-          var imgAsset = new BABYLON.Sprite("imageAsset", spriteManagerAsset);
-          imgAsset.position.x = 0
-          imgAsset.position.y = 0
-          imgAsset.position.z = 0
-          imgAsset.width = 5;
-          imgAsset.height = 5;
+          activeSpriteManager = new BABYLON.SpriteManager("imageAssetManager", "/v1/asset/" + assetId + "/file" + assetFileType, 1, 800, scene);
+          activeSprite = new BABYLON.Sprite("imageAsset", activeSpriteManager);
+          activeSprite.position.x = 0
+          activeSprite.position.y = 0
+          activeSprite.position.z = 0
+          activeSprite.width = 5;
+          activeSprite.height = 5;
         }
       }
     }
