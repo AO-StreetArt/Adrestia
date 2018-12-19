@@ -14,9 +14,19 @@ limitations under the License.
 
 package com.ao.adrestia.security;
 
-import com.auth0.jwt.JWT;
 import com.ao.adrestia.model.ApplicationUser;
+import com.auth0.jwt.JWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Date;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,30 +38,20 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Date;
-
 import static com.auth0.jwt.algorithms.Algorithm.HMAC512;
 
-public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
   private static Logger log = LoggerFactory.getLogger("adrestia.JWTAuthenticationFilter");
   private AuthenticationManager authenticationManager;
-  private String SECRET;
+  private String secret;
   private static final long EXPIRATION_TIME = 86_400_000; // 1 day expiration
   public static final String TOKEN_PREFIX = "Bearer ";
   public static final String HEADER_STRING = "Authorization";
   public static final String SIGN_UP_URL = "/users/sign-up";
 
-  public JWTAuthenticationFilter(AuthenticationManager authenticationManager, String secret) {
+  public JwtAuthenticationFilter(AuthenticationManager authenticationManager, String secret) {
     this.authenticationManager = authenticationManager;
-    this.SECRET = secret;
+    this.secret = secret;
   }
 
   @Override
@@ -84,7 +84,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     String token = JWT.create()
         .withSubject(((User) auth.getPrincipal()).getUsername())
         .withExpiresAt(new Date(System.currentTimeMillis() + this.EXPIRATION_TIME))
-        .sign(HMAC512(this.SECRET.getBytes(StandardCharsets.UTF_8)));
+        .sign(HMAC512(this.secret.getBytes(StandardCharsets.UTF_8)));
     log.debug("Authentication Successful");
     res.addHeader(HEADER_STRING, TOKEN_PREFIX + token);
     res.addCookie(new Cookie("access_token", token));

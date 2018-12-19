@@ -20,6 +20,16 @@ import com.ao.adrestia.repo.ApplicationUserRepository;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.nio.charset.StandardCharsets;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,25 +39,20 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
+public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
   private static Logger log = LoggerFactory.getLogger("adrestia.JWTAuthorizationFilter");
-  private String SECRET;
+  private String secret;
   private ApplicationUserRepository userRepository;
   public static final String TOKEN_PREFIX = "Bearer ";
   public static final String HEADER_STRING = "Authorization";
 
-  public JWTAuthorizationFilter(AuthenticationManager authManager, ApplicationUserRepository userRepo, String secret) {
+  /**
+  * Auth Filter Constructor.
+  */
+  public JwtAuthorizationFilter(AuthenticationManager authManager,
+      ApplicationUserRepository userRepo, String secret) {
     super(authManager);
-    this.SECRET = secret;
+    this.secret = secret;
     this.userRepository = userRepo;
   }
 
@@ -98,20 +103,34 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
       }
     }
     // parse the token.
-    String user = JWT.require(Algorithm.HMAC512(this.SECRET.getBytes()))
+    String user = JWT.require(Algorithm.HMAC512(
+        this.secret.getBytes(StandardCharsets.UTF_8)))
         .build().verify(token).getSubject();
 
     if (user != null) {
       log.debug("User retrieved from JWT {}", user);
-      // Validate admin access, if necessary
+      // Validate user access
       List<ApplicationUser> requestUsers = this.userRepository.findByUsername(user);
       if (requestUsers.size() > 0) {
-        if (!requestUsers.get(0).isAdmin()
+        // Admin validation
+        if (!(requestUsers.get(0).isAdmin() || requestUsers.get(0).isActive())
             && (request.getRequestURI().contains("sign-up")
-                || request.getRequestURI().contains("cluster"))) {
-          log.warn("Rejecting non-admin access to core cluster endpoint");
+            || request.getRequestURI().contains("cluster")
+            || request.getRequestURI().contains("cache"))) {
+          log.warn("Rejecting access to core cluster endpoint for user {}", user);
           return null;
         }
+        // Non-admin users can only acces user endpoints for themselves
+        if (!(requestUsers.get(0).isAdmin())) {
+          if (request.getRequestURI().contains("users")
+              && !(request.getRequestURI().contains(requestUsers.get(0).getId()))) {
+            log.warn("Rejecting access to user endpoint for non-matching user {}", user);
+            return null;
+          }
+        }
+      } else {
+        log.warn("Unable to find ApplicationUser matching presented token user {}", user);
+        return null;
       }
       return new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
     }

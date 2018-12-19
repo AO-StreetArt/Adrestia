@@ -18,9 +18,9 @@ import com.ao.adrestia.filters.PersistenceFilter;
 import com.ao.adrestia.filters.RoutingFilter;
 import com.ao.adrestia.model.ApplicationUser;
 import com.ao.adrestia.repo.ApplicationUserRepository;
-import com.ao.adrestia.security.JWTAuthorizationFilter;
-import com.ao.adrestia.security.JWTAuthenticationFilter;
 import com.ao.adrestia.security.DbUserDetails;
+import com.ao.adrestia.security.JwtAuthenticationFilter;
+import com.ao.adrestia.security.JwtAuthorizationFilter;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
@@ -45,8 +45,8 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -98,8 +98,8 @@ public class AdrestiaApplication
   // Enable loading custom CSS and PNG Files
   @Override
   public void addResourceHandlers(ResourceHandlerRegistry registry) {
-      registry.addResourceHandler("/css/**").addResourceLocations("/css/");
-      registry.addResourceHandler("/images/**").addResourceLocations("/images/");
+    registry.addResourceHandler("/css/**").addResourceLocations("/css/");
+    registry.addResourceHandler("/images/**").addResourceLocations("/images/");
   }
 
   // Configure Web Security
@@ -116,8 +116,8 @@ public class AdrestiaApplication
           .antMatchers(HttpMethod.POST, "/login").permitAll()
           .antMatchers("/**").authenticated()
           .and()
-          .addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtSecret))
-          .addFilter(new JWTAuthorizationFilter(authenticationManager(), applicationUserRepository, jwtSecret))
+          .addFilter(new JwtAuthenticationFilter(authenticationManager(), jwtSecret))
+          .addFilter(new JwtAuthorizationFilter(authenticationManager(), applicationUserRepository, jwtSecret))
           // this disables session creation on Spring Security
           .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     } else {

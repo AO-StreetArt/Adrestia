@@ -150,8 +150,8 @@ public class PersistenceFilter extends ZuulFilter {
             headers.setContentType(MediaType.APPLICATION_JSON);
             if (httpAuthActive) {
               String credentialsString = "";
-              credentialsString =
-                  Base64.getEncoder().encodeToString((ivanUsername + ":" + ivanPassword).getBytes(StandardCharsets.ISO_8859_1));
+              credentialsString = Base64.getEncoder().encodeToString(
+                  (ivanUsername + ":" + ivanPassword).getBytes(StandardCharsets.ISO_8859_1));
               headers.add("Authorization", "Basic " + credentialsString);
             }
             HttpEntity<String> entity = new HttpEntity<String>("", headers);
