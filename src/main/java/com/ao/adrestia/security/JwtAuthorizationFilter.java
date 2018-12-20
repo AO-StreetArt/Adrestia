@@ -113,7 +113,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
       List<ApplicationUser> requestUsers = this.userRepository.findByUsername(user);
       if (requestUsers.size() > 0) {
         // Admin validation
-        if (!(requestUsers.get(0).isAdmin() || requestUsers.get(0).isActive())
+        if (!(requestUsers.get(0).getIsAdmin() || requestUsers.get(0).getIsActive())
             && (request.getRequestURI().contains("sign-up")
             || request.getRequestURI().contains("cluster")
             || request.getRequestURI().contains("cache"))) {
@@ -121,7 +121,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
           return null;
         }
         // Non-admin users can only acces user endpoints for themselves
-        if (!(requestUsers.get(0).isAdmin())) {
+        if (!(requestUsers.get(0).getIsAdmin())) {
           if (request.getRequestURI().contains("users")
               && !(request.getRequestURI().contains(requestUsers.get(0).getId()))) {
             log.warn("Rejecting access to user endpoint for non-matching user {}", user);

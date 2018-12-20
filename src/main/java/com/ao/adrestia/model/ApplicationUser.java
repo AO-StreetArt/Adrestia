@@ -127,7 +127,7 @@ public class ApplicationUser {
   * Returns value of isAdmin.
   * @return True if the user has administrator access.
   */
-  public boolean isAdmin() {
+  public boolean getIsAdmin() {
     return isAdmin;
   }
 
@@ -143,7 +143,7 @@ public class ApplicationUser {
   * Returns value of isActive.
   * @return True if the user is currently active.
   */
-  public boolean isActive() {
+  public boolean getIsActive() {
     return isActive;
   }
 
