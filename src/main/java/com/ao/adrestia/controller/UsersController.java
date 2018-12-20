@@ -84,6 +84,7 @@ public class UsersController {
     }
     String responseBody = "";
     HttpHeaders responseHeaders = new HttpHeaders();
+    user.password = "";
     return new ResponseEntity<ApplicationUser>(user, responseHeaders, returnCode);
   }
 
@@ -101,6 +102,7 @@ public class UsersController {
     HttpStatus returnCode = HttpStatus.OK;
     // Set up a response header to return a valid HTTP Response
     HttpHeaders responseHeaders = new HttpHeaders();
+    user.password = "";
     return new ResponseEntity<ApplicationUser>(user, responseHeaders, returnCode);
   }
 
@@ -123,6 +125,7 @@ public class UsersController {
     }
     // Return the response
     HttpHeaders responseHeaders = new HttpHeaders();
+    returnUser.password = "";
     return new ResponseEntity<ApplicationUser>(returnUser, responseHeaders, returnCode);
   }
 
@@ -155,6 +158,7 @@ public class UsersController {
       returnCode = HttpStatus.NOT_FOUND;
     }
     // Return the response
+    returnUser.password = "";
     return new ResponseEntity<ApplicationUser>(returnUser, responseHeaders, returnCode);
   }
 
