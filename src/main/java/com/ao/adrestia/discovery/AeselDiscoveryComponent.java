@@ -169,7 +169,8 @@ public class AeselDiscoveryComponent implements AeselDiscoveryService, CommandLi
         targetIndex = ivanIndex.getAndIncrement();
       }
 
-      log.info("Returning Ivan instance {} of {} retrieved from Consul", targetIndex, instances.size());
+      log.info("Returning Ivan instance {} of {} retrieved from Consul",
+          targetIndex, instances.size());
 
       // Return the targeted value
       return instances.get(targetIndex);
@@ -198,10 +199,12 @@ public class AeselDiscoveryComponent implements AeselDiscoveryService, CommandLi
 
         // Get the cluster name out of our cache response
         SceneLocation targetLocation = cachedLocations.get(0);
-        log.info("Retrieved Scene Location out of cache at {}", targetLocation.clusterIdentifier);
+        log.info("Retrieved Scene Location out of cache at {}",
+            targetLocation.clusterIdentifier);
 
         // Now that we have a cluster, find an Ivan instance
-        List<ServiceInstance> activeInstances = findClymanByCluster(targetLocation.clusterIdentifier);
+        List<ServiceInstance> activeInstances =
+            findClymanByCluster(targetLocation.clusterIdentifier);
         if (activeInstances.size() > 0) {
           if (clymanIndex.compareAndSet(activeInstances.size(), 0)) {
             targetIndex = clymanIndex.getAndIncrement();
@@ -222,7 +225,8 @@ public class AeselDiscoveryComponent implements AeselDiscoveryService, CommandLi
           SceneLocation targetLocation = dbLocations.get(targetIndex);
 
           // Now that we have the cache, find the Crazy Ivan instance
-          List<ServiceInstance> activeInstances = findClymanByCluster(targetLocation.clusterIdentifier);
+          List<ServiceInstance> activeInstances =
+              findClymanByCluster(targetLocation.clusterIdentifier);
           if (activeInstances.size() > 0) {
             if (clymanIndex.compareAndSet(activeInstances.size(), 0)) {
               targetIndex = clymanIndex.getAndIncrement();
@@ -276,6 +280,7 @@ public class AeselDiscoveryComponent implements AeselDiscoveryService, CommandLi
   * Find an instance of the Project Service.
   * @return A ServiceInstance object with the instance details found
   */
+  @Override
   public ServiceInstance findProjectService() {
     log.info("Finding Project Service Instance");
 

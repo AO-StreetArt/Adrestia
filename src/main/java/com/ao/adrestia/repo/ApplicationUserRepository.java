@@ -22,5 +22,13 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface ApplicationUserRepository extends MongoRepository<ApplicationUser, String> {
 
+  /**
+  * Find users by Username.
+  */
   public List<ApplicationUser> findByUsername(String username);
+
+  /**
+  * Find users by Email.
+  */
+  public List<ApplicationUser> findByEmail(String email);
 }

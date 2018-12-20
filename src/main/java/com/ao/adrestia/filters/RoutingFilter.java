@@ -35,6 +35,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -171,13 +174,18 @@ public class RoutingFilter extends ZuulFilter {
           if (urlPathList.length == 4) {
             // We need to strip out the scene url elements if we hit
             // the registration API's
-            if (urlPathList[3].equals("register") || urlPathList[3].equals("deregister") || urlPathList[3].equals("align")) {
+            if (urlPathList[3].equals("register")
+                || urlPathList[3].equals("deregister")
+                || urlPathList[3].equals("align")) {
               newTail = "/" + stripSceneUrlElements(urlPathList, parsedUrlList);
             }
           }
         }
 
-      } else if (urlPathList[1].equals("asset") || urlPathList[1].equals("history") || urlPathList[1].equals("relationship") || urlPathList[1].equals("collection")) {
+      } else if (urlPathList[1].equals("asset")
+          || urlPathList[1].equals("history")
+          || urlPathList[1].equals("relationship")
+          || urlPathList[1].equals("collection")) {
         // We have an asset request, so route to AVC
         ServiceInstance targetInstance = discoveryClient.findAvc();
         if (targetInstance != null) {
@@ -222,27 +230,36 @@ public class RoutingFilter extends ZuulFilter {
       log.error("Error setting service URL", e);
     }
 
-    // If Authentication is enabled, then inject Basic Auth credentials
+    // If Authentication is enabled, then update auth headers
     if (httpAuthActive) {
+      // Move the current principal to a different HTTP header
+      Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+      User requestUser = (User)authentication.getPrincipal();
+      log.debug("Injecting Aesel header field with user {}", requestUser.getUsername());
+      context.addZuulRequestHeader("X-Aesel-Principal", requestUser.getUsername());
+
+      // Then, inject Basic Auth credentials for the downstream service
       String credentialsString = "";
       if (isAvcRequest) {
         log.debug("Setting AVC Credentials with User {}", avcUsername);
-        credentialsString =
-            Base64.getEncoder().encodeToString((avcUsername + ":" + avcPassword).getBytes(StandardCharsets.ISO_8859_1));
+        credentialsString = Base64.getEncoder().encodeToString(
+            (avcUsername + ":" + avcPassword).getBytes(StandardCharsets.ISO_8859_1));
       } else if (isClymanRequest) {
         log.debug("Setting CLyman Credentials with User {}", clymanUsername);
-        credentialsString =
-            Base64.getEncoder().encodeToString((clymanUsername + ":" + clymanPassword).getBytes(StandardCharsets.ISO_8859_1));
+        credentialsString = Base64.getEncoder().encodeToString(
+            (clymanUsername + ":" + clymanPassword).getBytes(StandardCharsets.ISO_8859_1));
       } else if (isIvanRequest) {
         log.debug("Setting Ivan Credentials with User {}", ivanUsername);
-        credentialsString =
-            Base64.getEncoder().encodeToString((ivanUsername + ":" + ivanPassword).getBytes(StandardCharsets.ISO_8859_1));
+        credentialsString = Base64.getEncoder().encodeToString(
+            (ivanUsername + ":" + ivanPassword).getBytes(StandardCharsets.ISO_8859_1));
       } else if (isProjectRequest) {
         log.debug("Setting Projects Credentials with User {}", projectsUsername);
-        credentialsString =
-            Base64.getEncoder().encodeToString((projectsUsername + ":" + projectsPassword).getBytes(StandardCharsets.ISO_8859_1));
+        credentialsString = Base64.getEncoder().encodeToString(
+            (projectsUsername + ":" + projectsPassword).getBytes(StandardCharsets.ISO_8859_1));
       }
       context.addZuulRequestHeader("Authorization", "Basic " + credentialsString);
+
+
     }
     return null;
   }

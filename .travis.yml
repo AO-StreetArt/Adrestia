@@ -26,6 +26,7 @@ install:
   - sleep 480
 script:
   - cd $TRAVIS_BUILD_DIR/src/test/json && newman run Adrestia.postman_collection.json -e AdrestiaTest.postman_environment.json
+  - cd $TRAVIS_BUILD_DIR/src/test/json && newman run AdrestiaUserApi.postman_collection.json -e AdrestiaTest.postman_environment.json
   - docker stop $(docker ps -aq)
 after_success:
   - cd $TRAVIS_BUILD_DIR && scripts/linux/push_docker.sh
