@@ -234,9 +234,9 @@ public class RoutingFilter extends ZuulFilter {
     if (httpAuthActive) {
       // Move the current principal to a different HTTP header
       Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-      User requestUser = (User)authentication.getPrincipal();
-      log.debug("Injecting Aesel header field with user {}", requestUser.getUsername());
-      context.addZuulRequestHeader("X-Aesel-Principal", requestUser.getUsername());
+      String requestUser = (String) authentication.getPrincipal();
+      log.debug("Injecting Aesel header field with user {}", requestUser);
+      context.addZuulRequestHeader("X-Aesel-Principal", requestUser);
 
       // Then, inject Basic Auth credentials for the downstream service
       String credentialsString = "";

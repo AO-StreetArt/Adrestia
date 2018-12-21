@@ -19,6 +19,7 @@
   <link href="/css/aeselBrowserBaseStyle.css" rel="stylesheet">
   <head>
     <meta http-equiv="Content-Type" content="text/html" charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>Aesel Asset</title>
   </head>
   <body>
@@ -37,6 +38,9 @@
             </li>
             <li class="nav-item active" id="assetBrowser">
               <a class="nav-link" href="#">Assets <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item" id="userBrowser">
+              <a class="nav-link" href="/userBrowser" id="userBrowserLink">Users</a>
             </li>
             <li class="nav-item" id="docs">
               <a class="nav-link" href="https://aesel.readthedocs.io/en/latest/index.html">Documentation</a>
@@ -211,6 +215,22 @@
     }
 
     window.addEventListener('DOMContentLoaded', function(){
+      // The User ID is injected here by the server before
+      // it returns the page
+      var loggedInUser = "${userName}";
+      console.log(loggedInUser);
+      // If the user is an admin, then the server will inject 'true' here,
+      // otherwise, it will inject 'false'.
+      var isUserAdmin = "${isAdmin}";
+      var adminLoggedIn = (isUserAdmin == 'true');
+      if (!adminLoggedIn) {
+        // Disable the user browser link in the navbar if the logged in
+        // user does not have admin access
+        document.getElementById("userBrowser").setAttribute('class', 'nav-item disabled');
+        document.getElementById("userBrowserLink").click(function() {
+          return false;
+        });
+      }
 
       // Setup the cancel button callback
       var cancelButton = document.getElementById('cancel');

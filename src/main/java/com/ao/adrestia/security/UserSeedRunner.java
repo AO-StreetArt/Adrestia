@@ -17,6 +17,9 @@ package com.ao.adrestia.security;
 import com.ao.adrestia.model.ApplicationUser;
 import com.ao.adrestia.repo.ApplicationUserRepository;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,12 +54,19 @@ public class UserSeedRunner implements CommandLineRunner {
   public void run(String...args) throws Exception {
     // Create the initial user
     if (httpAuthActive) {
-      log.info("Seeding Initial Application User");
-      ApplicationUser newUser = new ApplicationUser();
-      newUser.username = initUser;
-      newUser.password = bCryptPasswordEncoder.encode(initPw);
-      newUser.isAdmin = true;
-      applicationUserRepository.save(newUser);
+      List<ApplicationUser> existingUsers =
+          applicationUserRepository.findByUsername(initUser);
+      if (existingUsers.size() == 0) {
+        log.info("Seeding Initial Application User");
+        ApplicationUser newUser = new ApplicationUser();
+        newUser.username = initUser;
+        newUser.password = bCryptPasswordEncoder.encode(initPw);
+        newUser.isAdmin = true;
+        newUser.isActive = true;
+        applicationUserRepository.save(newUser);
+      } else {
+        log.debug("Initial Application User creation bypassed");
+      }
     }
   }
 

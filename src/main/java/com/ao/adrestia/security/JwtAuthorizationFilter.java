@@ -123,7 +123,8 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         // Non-admin users can only acces user endpoints for themselves
         if (!(requestUsers.get(0).getIsAdmin())) {
           if (request.getRequestURI().contains("users")
-              && !(request.getRequestURI().contains(requestUsers.get(0).getId()))) {
+              && !(request.getRequestURI().contains(requestUsers.get(0).getId()) 
+              || request.getRequestURI().contains(requestUsers.get(0).getUsername()))) {
             log.warn("Rejecting access to user endpoint for non-matching user {}", user);
             return null;
           }

@@ -17,7 +17,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html" charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>Aesel Project</title>
+    <title>Aesel Users</title>
     <!--- Ag-grid-community --->
     <script src="https://unpkg.com/ag-grid-community/dist/ag-grid-community.min.noStyle.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/ag-grid-community/dist/styles/ag-grid.css">
@@ -31,8 +31,8 @@
             <li class="nav-item">
               <a class="nav-link" href="/portal/home">Home</a>
             </li>
-            <li class="nav-item active" id="projectBrowser">
-              <a class="nav-link" href="#">Projects <span class="sr-only">(current)</span></a>
+            <li class="nav-item" id="projectBrowser">
+              <a class="nav-link" href="/projectBrowser">Projects</a>
             </li>
             <li class="nav-item" id="sceneBrowser">
               <a class="nav-link" href="/sceneBrowser">Scenes</a>
@@ -40,8 +40,8 @@
             <li class="nav-item" id="assetBrowser">
               <a class="nav-link" href="/assetBrowser">Assets</a>
             </li>
-            <li class="nav-item" id="userBrowser">
-              <a class="nav-link" href="/userBrowser" id="userBrowserLink">Users</a>
+            <li class="nav-item active" id="userBrowser">
+              <a class="nav-link" href="#">Users <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item" id="docs">
               <a class="nav-link" href="https://aesel.readthedocs.io/en/latest/index.html">Documentation</a>
@@ -50,26 +50,16 @@
       </nav>
       <div class="row">
         <div class="col-md-12">
-          <h1 style="text-align: center;">Projects</h1>
+          <h1 style="text-align: center;">Users</h1>
         </div>
       </div>
       <div class="row">
-    		<div class="col-md-6 col-lg-6">
-    			<p id="projectDescription">
-            Double click on a project in the list to view the description and thumbnail.
-    			</p>
-    		</div>
-    		<div class="col-md-6 col-lg-6">
-    			<img class="img-fluid rounded mx-auto d-block" id="projectThumbnail" alt="No Thumbnail Available" src="https://www.layoutit.com/img/sports-q-c-140-140-3.jpg" class="rounded" />
-    		</div>
-    	</div>
-      <div class="row">
         <div class="col-md-12">
-          <div class="btn-toolbar" role="toolbar" aria-label="Project Toolbar" style="justify-content: center;">
-            <div class="btn-group" role="group" aria-label="Project Toolbar">
-              <button id="editProj" type="button" class="btn btn-primary" style="z-index:265"><span style="font-size:larger;">Edit Project</span></button>
-              <button id="createProj" type="button" class="btn btn-primary" style="z-index:265"><span style="font-size:larger;">Create Project</span></button>
-              <button id="delete" type="button" class="btn btn-primary" style="z-index:265"><span style="font-size:larger;">Delete Project</span></button>
+          <div class="btn-toolbar" role="toolbar" aria-label="User Toolbar" style="justify-content: center;">
+            <div class="btn-group" role="group" aria-label="User Toolbar">
+              <button id="editUser" type="button" class="btn btn-primary" style="z-index:265"><span style="font-size:larger;">Edit User</span></button>
+              <button id="createUser" type="button" class="btn btn-primary" style="z-index:265"><span style="font-size:larger;">Create User</span></button>
+              <button id="deleteUser" type="button" class="btn btn-primary" style="z-index:265"><span style="font-size:larger;">Delete User</span></button>
             </div>
           </div>
         </div>
@@ -108,24 +98,19 @@
         editable: false
       },
       {
-        headerName: "Name",
-        field: "name",
+        headerName: "Username",
+        field: "username",
         pinned: 'left',
         filter: "agTextColumnFilter",
         filterParams: { applyButton: true, clearButton:true, filterOptions:["equals"], suppressAndOrCondition: true, caseSensitive:true },
         editable: false
       },
       {
-        headerName: "Category",
-        field: "category",
+        headerName: "Email",
+        field: "email",
         filter: "agTextColumnFilter",
         filterParams: { applyButton: true, clearButton:true, filterOptions:["equals"], suppressAndOrCondition: true, caseSensitive:true },
         editable: false
-      },
-      {
-        headerName: "Thumbnail",
-        field: "thumbnail",
-        hide: true
       }
     ];
 
@@ -133,18 +118,18 @@
       console.log("Filter Updated:");
       var filterModel = gridOptions.api.getFilterModel();
       if ("id" in filterModel) {
-        console.log("Getting Project by ID");
-        $.ajax({url: "v1/project/" + filterModel.id.filter, type: 'GET', data: {}, success: query_return});
+        console.log("Getting User by ID");
+        $.ajax({url: "/users/" + filterModel.id.filter, type: 'GET', data: {}, success: query_return});
       } else {
-        console.log("Getting Projects by query");
+        console.log("Getting Users by query");
         // Getting filter params
         query_params = {}
-        if ("name" in filterModel) query_params["name"] = filterModel.name.filter;
-        if ("category" in filterModel) query_params["category"] = filterModel.category.filter;
+        if ("username" in filterModel) query_params["username"] = filterModel.username.filter;
+        if ("email" in filterModel) query_params["email"] = filterModel.email.filter;
         query_params["num_records"] = gridOptions.api.paginationGetPageSize();
         query_params["page"] = gridOptions.api.paginationGetCurrentPage();
         // Execute query
-        $.ajax({url: "v1/project", type: 'GET', data: query_params, success: query_return});
+        $.ajax({url: "/users/", type: 'GET', data: query_params, success: query_return});
       }
     }
 
@@ -160,11 +145,7 @@
       onRowDoubleClicked: function(event) {
         console.log("Row Double Clicked:");
         var selectedRow = gridOptions.api.getSelectedNodes()[0].data;
-        var newDescription = selectedRow.description;
-        var newThumbnail = selectedRow.thumbnail;
-        document.getElementById('projectDescription').innerHTML = newDescription;
-        document.getElementById('projectThumbnail').src = "v1/asset/" + newThumbnail + "/thumbnail.png";
-        console.log(newDescription)
+        window.location.replace("editUser?key=" + selectedRow.id);
       },
       onFilterChanged: updateGridData
     };
@@ -185,11 +166,12 @@
       var selectedNodes = gridOptions.api.getSelectedNodes()
       var selectedData = selectedNodes.map( function(node) { return node.data })
       if (selectedData.length > 0) {
-        var assetKey = selectedData[0].key;
-        $.ajax({url: "v1/project/" + assetKey,
+        var userKey = selectedData[0].id;
+        $.ajax({url: "/users/" + userKey,
                 type: 'DELETE',
                 success: function(data) {
-                  console.log("Deleted Project");
+                  console.log("Deleted User");
+                  updateGridData({});
                 }});
       }
     }
@@ -199,47 +181,36 @@
       console.log("Detected button click");
 
       // Logic to update the scene list based on the input query
-      if (event.target.id == "firstPage") {
-        gridOptions.api.paginationGoToPage(0);
-      } else if (event.target.id == "prevPage") {
-        var currentPage = gridOptions.api.paginationGetCurrentPage();
-        gridOptions.api.paginationGoToPage(currentPage+1);
-      } else if (event.target.id == "nextPage") {
-        var currentPage = gridOptions.api.paginationGetCurrentPage();
-        gridOptions.api.paginationGoToPage(currentPage-1);
-      } else if (event.target.id == "createProj") {
-        window.location.replace("editProject");
-      } else if (event.target.id == "editProj") {
-        var selectedRow = gridOptions.api.getSelectedNodes()[0].data;
-        window.location.replace("editProject?key=" + selectedRow.id);
-      } else if (event.target.id == "delete") {
+      if (event.target.id == "deleteUser") {
         delete_selected();
+      } else {
+        if (event.target.id == "firstPage") {
+          gridOptions.api.paginationGoToPage(0);
+        } else if (event.target.id == "prevPage") {
+          var currentPage = gridOptions.api.paginationGetCurrentPage();
+          gridOptions.api.paginationGoToPage(currentPage+1);
+        } else if (event.target.id == "nextPage") {
+          var currentPage = gridOptions.api.paginationGetCurrentPage();
+          gridOptions.api.paginationGoToPage(currentPage-1);
+        } else if (event.target.id == "createUser") {
+          window.location.replace("editUser");
+        } else if (event.target.id == "editUser") {
+          var selectedRow = gridOptions.api.getSelectedNodes()[0].data;
+          window.location.replace("editUser?key=" + selectedRow.id);
+        }
+        updateGridData({});
       }
-      updateGridData({});
     }
 
     // Main page, added once DOM is loaded into browser
     window.addEventListener('DOMContentLoaded', function(){
-      // The User ID is injected here by the server before
-      // it returns the page
-      var loggedInUser = "${userName}";
-      console.log(loggedInUser);
-      // If the user is an admin, then the server will inject 'true' here,
-      // otherwise, it will inject 'false'.
-      var isUserAdmin = "${isAdmin}";
-      var adminLoggedIn = (isUserAdmin == 'true');
-      if (!adminLoggedIn) {
-        // Disable the user browser link in the navbar if the logged in
-        // user does not have admin access
-        document.getElementById("userBrowser").setAttribute('class', 'nav-item disabled');
-        document.getElementById("userBrowserLink").click(function() {
-          return false;
-        });
-      }
 
-      // Execute an HTTP call to get the available asset metadata
-      // and populate it into the list
-      $.ajax({url: "v1/project", data: {}, success: query_return});
+      // Execute an HTTP call to get the available users
+      // and populate them into the list
+      query_params = {}
+      query_params["num_records"] = gridOptions.api.paginationGetPageSize();
+      query_params["page"] = gridOptions.api.paginationGetCurrentPage();
+      $.ajax({url: "/users/", data: query_params, success: query_return});
 
       // Setup the button callbacks into the Javascript
       var buttons = document.getElementsByTagName("button");

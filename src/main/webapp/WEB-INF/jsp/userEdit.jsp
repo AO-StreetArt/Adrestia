@@ -20,7 +20,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html" charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>Aesel Scene</title>
+    <title>Aesel User</title>
     <!--- Ag-grid-community --->
     <script src="https://unpkg.com/ag-grid-community/dist/ag-grid-community.min.noStyle.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/ag-grid-community/dist/styles/ag-grid.css">
@@ -37,14 +37,14 @@
             <li class="nav-item" id="projectBrowser">
               <a class="nav-link" href="/projectBrowser">Projects</a>
             </li>
-            <li class="nav-item active" id="sceneBrowser">
-              <a class="nav-link" href="#">Scenes <span class="sr-only">(current)</span></a>
+            <li class="nav-item" id="sceneBrowser">
+              <a class="nav-link" href="/sceneBrowser">Scenes</a>
             </li>
             <li class="nav-item" id="assetBrowser">
               <a class="nav-link" href="/assetBrowser">Assets</a>
             </li>
-            <li class="nav-item" id="userBrowser">
-              <a class="nav-link" href="/userBrowser" id="userBrowserLink">Users</a>
+            <li class="nav-item active" id="userBrowser">
+              <a class="nav-link" href="#" id="userBrowserLink">Users<span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item" id="docs">
               <a class="nav-link" href="https://aesel.readthedocs.io/en/latest/index.html">Documentation</a>
@@ -53,55 +53,71 @@
       </nav>
       <div class="row">
         <div class="col-md-12">
-          <h1 style="text-align: center;">Scene</h1>
+          <h1 style="text-align: center;">User</h1>
         </div>
       </div>
       <div class="row">
         <div class="col-xs-5 col-sm-4 col-md-2 col-lg-2">
           <p>Key:</p>
         </div>
-        <div class="col-xs-7 col-sm-8 col-md-10 col-lg-10" class="tooltip" title="The unique identifier of the Scene.">
+        <div class="col-xs-7 col-sm-8 col-md-10 col-lg-10" class="tooltip" title="The unique identifier of the User.">
           <input id="keyinp" type="text" class="form-control-plaintext" name="Key" placeholder="Key"></input>
         </div>
       </div>
       <div class="row">
         <div class="col-xs-5 col-sm-4 col-md-2 col-lg-2">
-          <p>Name:</p>
+          <p>Username:</p>
         </div>
-        <div class="col-xs-7 col-sm-8 col-md-10 col-lg-10" class="tooltip" title="The human-readable name of the Scene.">
-          <input id="nameinp" type="text" class="form-control-plaintext" name="Name" placeholder="Name"></input>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-xs-5 col-sm-4 col-md-2 col-lg-2">
-          <p>Region:</p>
-        </div>
-        <div class="col-xs-7 col-sm-8 col-md-10 col-lg-10" class="tooltip" title="The human-readable name of the Scene.">
-          <input id="regioninp" type="text" class="form-control-plaintext" name="Region" placeholder="Region"></input>
+        <div class="col-xs-7 col-sm-8 col-md-10 col-lg-10" class="tooltip" title="The username for the account.">
+          <input id="usernameinp" type="text" class="form-control-plaintext" name="Username" placeholder="Username"></input>
         </div>
       </div>
       <div class="row">
         <div class="col-xs-5 col-sm-4 col-md-2 col-lg-2">
-          <p>Latitude:</p>
+          <p>Password:</p>
         </div>
-        <div class="col-xs-7 col-sm-8 col-md-10 col-lg-10" class="tooltip" title="The latitude of the Scene for distance queries.">
-          <input id="latitudeinp" type="text" class="form-control-plaintext" name="Latitude" placeholder="Latitude"></input>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-xs-5 col-sm-4 col-md-2 col-lg-2">
-          <p>Longitude:</p>
-        </div>
-        <div class="col-xs-7 col-sm-8 col-md-10 col-lg-10" class="tooltip" title="The longitude of the Scene for distance queries.">
-          <input id="longitudeinp" type="text" class="form-control-plaintext" name="Longitude" placeholder="Longitude"></input>
+        <div class="col-xs-7 col-sm-8 col-md-10 col-lg-10" class="tooltip" title="The password to login with this account.">
+          <input id="passwordinp" type="password" class="form-control-plaintext" name="Password" placeholder="Password"></input>
         </div>
       </div>
       <div class="row">
         <div class="col-xs-5 col-sm-4 col-md-2 col-lg-2">
-          <p>Tags:</p>
+          <p>Email:</p>
         </div>
-        <div class="col-xs-7 col-sm-8 col-md-10 col-lg-10" class="tooltip" title="The tags associated to the Scene.">
-          <input id="tagsinp" type="text" class="form-control-plaintext" name="Tags" placeholder="Tags"></input>
+        <div class="col-xs-7 col-sm-8 col-md-10 col-lg-10" class="tooltip" title="The email associated to the account.">
+          <input id="emailinp" type="text" class="form-control-plaintext" name="Email" placeholder="Email"></input>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-5 col-sm-4 col-md-2 col-lg-2">
+          <p>Administrator:</p>
+        </div>
+        <div class="col-xs-7 col-sm-8 col-md-10 col-lg-10" class="tooltip" title="Set to 'true' if this user has administrator access.">
+          <input id="admininp" type="text" class="form-control-plaintext" name="isAdmin" placeholder="isAdmin"></input>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-5 col-sm-4 col-md-2 col-lg-2">
+          <p>Active:</p>
+        </div>
+        <div class="col-xs-7 col-sm-8 col-md-10 col-lg-10" class="tooltip" title="Set to 'true' if this user has access to the system.">
+          <input id="activeinp" type="text" class="form-control-plaintext" name="isActive" placeholder="isActive"></input>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-5 col-sm-4 col-md-2 col-lg-2">
+          <p>Favorite Projects:</p>
+        </div>
+        <div class="col-xs-7 col-sm-8 col-md-10 col-lg-10" class="tooltip" title="A list of Project ID's the user has marked as favorites.">
+          <input id="favprojectsinp" type="text" class="form-control-plaintext" name="favProjects" placeholder="Favorite Projects"></input>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-5 col-sm-4 col-md-2 col-lg-2">
+          <p>Favorite Scenes:</p>
+        </div>
+        <div class="col-xs-7 col-sm-8 col-md-10 col-lg-10" class="tooltip" title="A list of Scene ID's the user has marked as favorites.">
+          <input id="favscenesinp" type="text" class="form-control-plaintext" name="favScenes" placeholder="Favorite Scenes"></input>
         </div>
       </div>
       <div class="row">
@@ -117,11 +133,12 @@
       </footer>
     </div>
     <script>
-    // The Scene Key is injected here by the server before
+    // The User Key is injected here by the server before
     // it returns the page
-    var sceneKey = "${sceneKey}";
+    var userKey = "${userKey}";
+    console.log(userKey);
 
-    function sceneReturn(data) {
+    function userReturn(data) {
       console.log(data);
     }
 
@@ -129,45 +146,52 @@
     function onButtonClick(event) {
       if (event.target.id == "save") {
         var newKey = document.getElementById('keyinp').value;
-        var newName = document.getElementById('nameinp').value;
-        var newRegion = document.getElementById('regioninp').value;
-        var newLat = document.getElementById('latitudeinp').value;
-        var newLong = document.getElementById('longitudeinp').value;
-        var newTags = document.getElementById('tagsinp').value;
-        sceneData = {}
-        if (newName) sceneData["name"] = newName;
-        if (newRegion) sceneData["region"] = newRegion;
-        if (newLong) sceneData["longitude"] = parseFloat(newLong);
-        if (newLat) sceneData["latitude"] = parseFloat(newLat);
-        if (newTags) sceneData["tags"] = newTags.split(",");
-        sceneListMethodType = "POST";
+        var newUsername = document.getElementById('usernameinp').value;
+        var newPassword = document.getElementById('passwordinp').value;
+        var newEmail = document.getElementById('emailinp').value;
+        var newAdmin = document.getElementById('admininp').value;
+        var newActive = document.getElementById('activeinp').value;
+        var newProjectList = document.getElementById('favprojectsinp').value;
+        var newSceneList = document.getElementById('favscenesinp').value;
+        userData = {}
+        if (newUsername) userData["username"] = newUsername;
+        if (newPassword) userData["password"] = newPassword;
+        if (newEmail) userData["email"] = newEmail;
+        if (newAdmin) userData["isAdmin"] = (newAdmin == "true");
+        if (newActive) userData["isActive"] = (newActive == "true");
+        if (newProjectList) userData["favoriteProjects"] = newProjectList.split(",");
+        if (newSceneList) userData["favoriteScenes"] = newSceneList.split(",");
+        userMethodType = "POST";
+        userUrl = "/users/";
         if (newKey) {
-          sceneListMethodType = "PUT";
-          sceneData["key"] = newKey;
+          userMethodType = "PUT";
+          userData["key"] = newKey;
+          userUrl = userUrl + newKey;
+        } else {
+          userUrl = userUrl + "sign-up";
         }
-        sceneUrl = "v1/scene/" + newKey;
-        sceneListData = JSON.stringify({"scenes": [sceneData]});
-        console.log(sceneListData);
-        $.ajax({url: sceneUrl,
-                type: sceneListMethodType,
-                data: sceneListData,
+        console.log(userData);
+        $.ajax({url: userUrl,
+                type: userMethodType,
+                data: JSON.stringify(userData),
                 contentType: "application/json; charset=utf-8",
-                success: sceneReturn});
+                success: userReturn});
       } else if (event.target.id == "cancel") {
-        window.location.replace("sceneBrowser");
+        window.location.replace("userBrowser");
       }
     }
 
     // Logic for loading the page from a pre-existing Project
     var query_return = function(data) {
-      console.log("Updating Scene Data");
+      console.log("Updating User Data");
       console.log(data);
-      document.getElementById('keyinp').value = data.scenes[0].key;
-      document.getElementById('nameinp').value = data.scenes[0].name;
-      document.getElementById('regioninp').value = data.scenes[0].region;
-      document.getElementById('latitudeinp').value = data.scenes[0].latitude;
-      document.getElementById('longitudeinp').value = data.scenes[0].longitude;
-      document.getElementById('tagsinp').value = data.scenes[0].tags;
+      document.getElementById('keyinp').value = data.id;
+      document.getElementById('usernameinp').value = data.username;
+      document.getElementById('emailinp').value = data.email;
+      document.getElementById('admininp').value = data.isAdmin;
+      document.getElementById('activeinp').value = data.isActive;
+      document.getElementById('favprojectsinp').value = data.favoriteProjects;
+      document.getElementById('favscenesinp').value = data.favoriteScenes;
     }
 
     window.addEventListener('DOMContentLoaded', function(){
@@ -199,9 +223,9 @@
         attach: '.tooltip'
       });
 
-      console.log("Scene Key: " + sceneKey)
-      if (sceneKey) {
-        $.ajax({url: "v1/scene/" + sceneKey, data: {}, success: query_return});
+      console.log("User Key: " + userKey)
+      if (userKey) {
+        $.ajax({url: "/users/" + userKey, data: {}, success: query_return});
       }
     });
     </script>

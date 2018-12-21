@@ -17,12 +17,19 @@ limitations under the License.
 
 package com.ao.adrestia.controller;
 
+import com.ao.adrestia.model.ApplicationUser;
+import com.ao.adrestia.repo.ApplicationUserRepository;
+
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -37,10 +44,28 @@ public class UiController {
 
   private final Logger logger = LoggerFactory.getLogger("adrestia.AuthController");
 
+  @Value(value = "${server.auth.active}")
+  private boolean authActive;
+
+  @Autowired
+  ApplicationUserRepository userRepository;
+
+  // Pages which display the full navbar need to know whether
+  // the logged in user is an admin to know what to display.
+  private void addUserDetailsToModel(final Map<String, Object> model, final Principal principal) {
+    if (authActive) {
+      List<ApplicationUser> users = userRepository.findByUsername(principal.getName());
+      if (users.size() > 0) {
+        model.put("userName", users.get(0).username);
+        model.put("isAdmin", String.valueOf(users.get(0).isAdmin));
+      }
+    }
+  }
+
   @RequestMapping(value = "/assetBrowser", method = RequestMethod.GET)
   protected String assetBrowser(final Map<String, Object> model, final Principal principal) {
     logger.info("Request for Asset Browser");
-    model.put("test", "test");
+    addUserDetailsToModel(model, principal);
     return "assetBrowser";
   }
 
@@ -50,6 +75,7 @@ public class UiController {
       final Principal principal,
       @RequestParam(value = "keys", defaultValue = "") String sceneKeys) {
     logger.info("Request for Scene Browser");
+    addUserDetailsToModel(model, principal);
     model.put("sceneKeys", sceneKeys);
     return "sceneBrowser";
   }
@@ -57,8 +83,25 @@ public class UiController {
   @RequestMapping(value = "/projectBrowser", method = RequestMethod.GET)
   protected String projectBrowser(final Map<String, Object> model, final Principal principal) {
     logger.info("Request for Project Browser");
-    model.put("test", "test");
+    addUserDetailsToModel(model, principal);
     return "projectBrowser";
+  }
+
+  @RequestMapping(value = "/userBrowser", method = RequestMethod.GET)
+  protected String userBrowser(final Map<String, Object> model, final Principal principal) {
+    logger.info("Request for User Browser");
+    return "userBrowser";
+  }
+
+  @RequestMapping(value = "/editUser", method = RequestMethod.GET)
+  protected String createUserUi(
+      final Map<String, Object> model,
+      final Principal principal,
+      @RequestParam(value = "key", defaultValue = "") String userKey) {
+    logger.info("Request for User Edit UI");
+    addUserDetailsToModel(model, principal);
+    model.put("userKey", userKey);
+    return "userEdit";
   }
 
   @RequestMapping(value = "/editProject", method = RequestMethod.GET)
@@ -67,6 +110,7 @@ public class UiController {
       final Principal principal,
       @RequestParam(value = "key", defaultValue = "") String projKey) {
     logger.info("Request for Project Edit UI");
+    addUserDetailsToModel(model, principal);
     model.put("projKey", projKey);
     return "projectEdit";
   }
@@ -77,6 +121,7 @@ public class UiController {
       final Principal principal,
       @RequestParam(value = "key", defaultValue = "") String sceneKey) {
     logger.info("Request for Scene Edit UI");
+    addUserDetailsToModel(model, principal);
     model.put("sceneKey", sceneKey);
     return "sceneEdit";
   }
@@ -87,6 +132,7 @@ public class UiController {
       final Principal principal,
       @RequestParam(value = "key", defaultValue = "") String assetKey) {
     logger.info("Request for Asset Edit UI");
+    addUserDetailsToModel(model, principal);
     model.put("assetKey", assetKey);
     return "assetEdit";
   }
@@ -98,6 +144,7 @@ public class UiController {
       @RequestParam(value = "sceneKey", defaultValue = "") String sceneKey,
       @RequestParam(value = "objKey", defaultValue = "") String objKey) {
     logger.info("Request for Scene Edit UI");
+    addUserDetailsToModel(model, principal);
     model.put("sceneKey", sceneKey);
     model.put("objKey", objKey);
     return "objEdit";

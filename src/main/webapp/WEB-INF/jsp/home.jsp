@@ -19,6 +19,7 @@
   <link href="/css/aeselBrowserBaseStyle.css" rel="stylesheet">
   <head>
     <meta http-equiv="Content-Type" content="text/html" charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>Aesel</title>
     <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.1.0/cookieconsent.min.css" />
     <script src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.1.0/cookieconsent.min.js"></script>
@@ -53,6 +54,9 @@
             <li class="nav-item" id="assetBrowser">
               <a class="nav-link" href="/assetBrowser">Assets</a>
             </li>
+            <li class="nav-item" id="userBrowser">
+              <a class="nav-link" href="/userBrowser" id="userBrowserLink">Users</a>
+            </li>
             <li class="nav-item" id="docs">
               <a class="nav-link" href="https://aesel.readthedocs.io/en/latest/index.html">Documentation</a>
             </li>
@@ -71,7 +75,7 @@
     				Getting Started with the Aesel Browser
     			</h2>
           <a href="https://aesel.readthedocs.io/en/latest/pages/web_ui_quickstart.html">
-            <img class="img-fluid rounded mx-auto d-block" alt="Aesel Web Browser Logo" src="/images/aeselweb_logo.png" />
+            <img class="img-fluid rounded mx-auto d-block" alt="Aesel Web Browser Logo" src="/images/aesellearning_logo.png" />
       			<p>
       				Getting Started with this browser for Aesel, which is a great way to explore and learn the API's.
       			</p>
@@ -82,7 +86,7 @@
     				Getting Started with BlenderSync
     			</h2>
           <a href="https://blendersync.readthedocs.io/en/latest/">
-            <img class="img-fluid rounded mx-auto d-block" alt="Blender Sync Logo" src="/images/bsync_logo.png" />
+            <img class="img-fluid rounded mx-auto d-block" alt="Blender Sync Logo" src="/images/aesellearning_logo.png" />
       			<p>
       				BlenderSync integrates Aesel directly into Blender.  Explore how to create and share assets and projects,
               as well as animate collaboratively with your team.
@@ -90,17 +94,33 @@
           </a>
     		</div>
     	</div>
-    	<div class="row">
+      <div class="row">
     		<div class="col-md-12">
     			<h2 class="text-center">
-    				Aesel Workflows
+    				Favorite Projects
     			</h2>
+    		</div>
+    	</div>
+    	<div class="row">
+    		<div class="col-md-4">
+    			<h3 class="text-center" id="project1Header"></h3>
           <a href="https://aesel.readthedocs.io/en/latest/pages/overview.html">
-            <img class="img-fluid rounded mx-auto d-block" alt="Aesel Workflows Animation" src="/images/aesellearning_logo.png" />
-      			<p class="text-center">
-              Explore the workflows supported by the Aesel API's to build your own application using Aesel as a
-              back-end service.
-      			</p>
+            <img class="img-fluid rounded mx-auto d-block" alt="Aesel Project 1" src="" id="project1Thumbnail"/>
+      			<p class="text-center" id="project1Description"></p>
+          </a>
+    		</div>
+        <div class="col-md-4">
+    			<h3 class="text-center" id="project2Header"></h3>
+          <a href="https://aesel.readthedocs.io/en/latest/pages/overview.html">
+            <img class="img-fluid rounded mx-auto d-block" alt="Aesel Workflows Animation" src="" id="project2Thumbnail" />
+      			<p class="text-center" id="project2Description"></p>
+          </a>
+    		</div>
+        <div class="col-md-4">
+    			<h3 class="text-center" id="project3Header"></h3>
+          <a href="https://aesel.readthedocs.io/en/latest/pages/overview.html">
+            <img class="img-fluid rounded mx-auto d-block" alt="Aesel Workflows Animation" src="" id="project3Thumbnail" />
+      			<p class="text-center" id="project3Description"></p>
           </a>
     		</div>
     	</div>
@@ -109,9 +129,59 @@
       </footer>
     </div>
     <script>
-    // The User ID is injected here by the server before
-    // it returns the page
-    var loggedInUser = "${userId}";
+    // Main page, added once DOM is loaded into browser
+    window.addEventListener('DOMContentLoaded', function(){
+      // The User ID is injected here by the server before
+      // it returns the page
+      var loggedInUser = "${userName}";
+      console.log(loggedInUser);
+      // If the user is an admin, then the server will inject 'true' here,
+      // otherwise, it will inject 'false'.
+      var isUserAdmin = "${isAdmin}";
+      var adminLoggedIn = (isUserAdmin == 'true');
+      if (!adminLoggedIn) {
+        // Disable the user browser link in the navbar if the logged in
+        // user does not have admin access
+        document.getElementById("userBrowser").setAttribute('class', 'nav-item disabled');
+        // document.getElementById("userBrowserLink").click(function() {
+        //   return false;
+        // });
+      }
+      // The favorite projects list is injected here by the server
+      // before it returns the page.
+      var favoriteProjectsList = "${projectsString}";
+      var favProjects = favoriteProjectsList.split(",");
+      if (favProjects.length > 0 && favProjects[0] != "") {
+        $.ajax({url: "/v1/project/" + favProjects[0],
+                type: 'GET',
+                success: function(data) {
+                  console.log("Project 1 Retrieved");
+                  document.getElementById('project1Header').innerHTML = data.name;
+                  document.getElementById('project1Description').innerHTML = data.description;
+                  document.getElementById('project1Thumbnail').src = "v1/asset/" + data.thumbnail + "/thumbnail.png";
+                }});
+      }
+      if (favProjects.length > 1) {
+        $.ajax({url: "/v1/project/" + favProjects[1],
+                type: 'GET',
+                success: function(data) {
+                  console.log("Project 2 Retrieved");
+                  document.getElementById('project2Header').innerHTML = data.name;
+                  document.getElementById('project2Description').innerHTML = data.description;
+                  document.getElementById('project2Thumbnail').src = "v1/asset/" + data.thumbnail + "/thumbnail.png";
+                }});
+      }
+      if (favProjects.length > 2) {
+        $.ajax({url: "/v1/project/" + favProjects[2],
+                type: 'GET',
+                success: function(data) {
+                  console.log("Project 3 Retrieved");
+                  document.getElementById('project3Header').innerHTML = data.name;
+                  document.getElementById('project3Description').innerHTML = data.description;
+                  document.getElementById('project3Thumbnail').src = "v1/asset/" + data.thumbnail + "/thumbnail.png";
+                }});
+      }
+    });
     </script>
   </body>
 </html>

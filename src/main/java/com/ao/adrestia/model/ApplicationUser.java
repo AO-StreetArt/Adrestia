@@ -38,6 +38,8 @@ public class ApplicationUser {
   */
   public ApplicationUser() {
     super();
+    this.favoriteProjects = new ArrayList<String>();
+    this.favoriteScenes = new ArrayList<String>();
   }
 
   /**

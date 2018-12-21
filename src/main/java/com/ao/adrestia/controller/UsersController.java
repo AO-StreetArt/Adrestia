@@ -28,6 +28,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -133,9 +136,11 @@ public class UsersController {
   * Find users by username or email.
   */
   @GetMapping("/")
-  public ResponseEntity<ApplicationUser> findUser(
+  public ResponseEntity<List<ApplicationUser>> findUser(
       @RequestParam(value = "username", defaultValue = "") String username,
-      @RequestParam(value = "email", defaultValue = "") String email) {
+      @RequestParam(value = "email", defaultValue = "") String email,
+      @RequestParam(value = "num_records", defaultValue = "10") int recordsInPage,
+      @RequestParam(value = "page", defaultValue = "0") int pageNum) {
     // Set up a success response code
     HttpStatus returnCode = HttpStatus.OK;
     // Set up a response header to return a valid HTTP Response
@@ -148,18 +153,19 @@ public class UsersController {
     } else if (!(email.isEmpty())) {
       existingUsers = applicationUserRepository.findByEmail(email);
     } else {
-      existingUsers = new ArrayList<ApplicationUser>();
+      Pageable pageable = new PageRequest(pageNum, recordsInPage);
+      Page<ApplicationUser> page = applicationUserRepository.findAll(pageable);
+      existingUsers = page.getContent();
     }
     if (existingUsers.size() > 0) {
-      log.info("Retrieved user by Username");
-      returnUser = existingUsers.get(0);
+      log.info("Retrieved users");
     } else {
-      log.warn("Unable to find User: {}:{}", username, email);
+      log.warn("Unable to find Users: {}:{}", username, email);
       returnCode = HttpStatus.NOT_FOUND;
     }
     // Return the response
     returnUser.password = "";
-    return new ResponseEntity<ApplicationUser>(returnUser, responseHeaders, returnCode);
+    return new ResponseEntity<List<ApplicationUser>>(existingUsers, responseHeaders, returnCode);
   }
 
   /**

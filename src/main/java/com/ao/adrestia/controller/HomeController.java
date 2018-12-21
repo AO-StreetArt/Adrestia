@@ -17,12 +17,18 @@ limitations under the License.
 
 package com.ao.adrestia.controller;
 
+import com.ao.adrestia.model.ApplicationUser;
+import com.ao.adrestia.repo.ApplicationUserRepository;
+
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,6 +41,9 @@ public class HomeController {
   @Value(value = "${server.auth.active}")
   private boolean authActive;
 
+  @Autowired
+  ApplicationUserRepository userRepository;
+
   private final Logger logger = LoggerFactory.getLogger("adrestia.AuthController");
 
   @RequestMapping(value = "/portal/home", method = RequestMethod.GET)
@@ -43,8 +52,28 @@ public class HomeController {
     if (principal == null && authActive) {
       logger.warn("No Principal Detected");
       return "redirect:/portal/login";
+    } else if (authActive) {
+      // Add user information to the page
+      List<ApplicationUser> users = userRepository.findByUsername(principal.getName());
+      if (users.size() > 0) {
+        model.put("userName", users.get(0).username);
+        model.put("isAdmin", String.valueOf(users.get(0).isAdmin));
+        String projectsString = "";
+        List<String> favProjects = users.get(0).getFavoriteProjects();
+        for (int i = 0; i < favProjects.size(); i++) {
+          if (i > 1) projectsString = projectsString + ",";
+          projectsString = projectsString + favProjects.get(i);
+        }
+        model.put("projects", projectsString);
+      } else {
+        logger.warn("No User found for principal");
+        return "redirect:/portal/login";
+      }
+    } else {
+      model.put("isAdmin", "");
+      model.put("userName", "");
+      model.put("projects", "");
     }
-    model.put("userId", principal);
     return "home";
   }
 
