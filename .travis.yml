@@ -14,14 +14,14 @@ before_install:
   - npm install newman --global;
   - export NETWORK_INTERFACE_NAME=$(route | grep '^default' | grep -o '[^ ]*$')
   - export NETWORK_INTERFACE_ADDRESS=$(ip addr show $NETWORK_INTERFACE_NAME | grep -Po 'inet \K[\d.]+')
-  - docker run -d -p 8500:8500 --name=consul consul agent --dev -client=0.0.0.0
-  - sleep 5
+  - docker run -d -p 27017:27017 --name=mongo mongo
+  - sleep 10
 install:
   - ./gradlew check
   - ./gradlew build
   - docker login -u $DOCKER_UN -p $DOCKER_PW
   - docker build -t aostreetart/adrestia:v2 .
-  - docker stop consul
+  - docker stop mongo
   - cd $TRAVIS_BUILD_DIR/scripts/linux && ./start_dev_cluster.sh &
   - sleep 480
 script:
