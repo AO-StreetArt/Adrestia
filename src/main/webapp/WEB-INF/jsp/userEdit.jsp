@@ -51,6 +51,7 @@
             </li>
           </ul>
       </nav>
+      <div class="alert alert-success" id="success-alert" style="display:none">User Saved!</div>
       <div class="row">
         <div class="col-md-12">
           <h1 style="text-align: center;">User</h1>
@@ -125,7 +126,7 @@
           <button id="cancel" type="button" class="btn btn-primary">Cancel</button>
         </div>
         <div class="col-md-6 col-lg-6" class="tooltip" title="Save the Scene.">
-          <button id="save" type="button" class="btn btn-primary">Save Scene</button>
+          <button id="save" type="button" class="btn btn-primary">Save User</button>
         </div>
       </div>
       <footer class="footer">
@@ -140,6 +141,8 @@
 
     function userReturn(data) {
       console.log(data);
+      $("#success-alert").show();
+      setTimeout(function() { $("#success-alert").hide(); }, 5000);
     }
 
     // Button click logic

@@ -87,6 +87,7 @@
               <button id="editScene" type="button" class="btn btn-primary"><span style="font-size:larger;">Edit Scene</span></button>
               <button id="createScene" type="button" class="btn btn-primary"><span style="font-size:larger;">Create Scene</span></button>
               <button id="deleteScene" type="button" class="btn btn-primary"><span style="font-size:larger;">Delete Scene</span></button>
+              <button id="viewScnProperties" type="button" class="btn btn-primary"><span style="font-size:larger;">View Scene Properties</span></button>
             </div>
           </div>
         </div>
@@ -119,6 +120,7 @@
               <button id="editObject" type="button" class="btn btn-primary"><span style="font-size:larger;">Edit Object</span></button>
               <button id="createObject" type="button" class="btn btn-primary"><span style="font-size:larger;">Create Object</span></button>
               <button id="deleteObject" type="button" class="btn btn-primary"><span style="font-size:larger;">Delete Object</span></button>
+              <button id="viewObjProperties" type="button" class="btn btn-primary"><span style="font-size:larger;">View Object Properties</span></button>
             </div>
           </div>
         </div>
@@ -372,7 +374,14 @@
         window.location.replace("editScene?key=" + selectedRow.key);
 
       } else if (event.target.id == "deleteScene") {
-        deleteSelectedScene();
+        var r = confirm("Delete the selected Scene?");
+        if (r) {
+          deleteSelectedScene();
+        }
+
+      } else if (event.target.id == "viewScnProperties") {
+        var selectedRow = scnGridOptions.api.getSelectedNodes()[0].data;
+        window.location.replace("propertyBrowser?scene=" + selectedRow.key);
 
       } else if (event.target.id == "createObject") {
         var selectedRow = scnGridOptions.api.getSelectedNodes()[0].data;
@@ -383,8 +392,16 @@
         var selectedObj = objGridOptions.api.getSelectedNodes()[0].data;
         window.location.replace("editObj?sceneKey=" + selectedRow.key + "&objKey=" + selectedObj.key);
 
+      } else if (event.target.id == "viewObjProperties") {
+        var selectedRow = scnGridOptions.api.getSelectedNodes()[0].data;
+        var selectedObj = objGridOptions.api.getSelectedNodes()[0].data;
+        window.location.replace("propertyBrowser?scene=" + selectedRow.key + "&object=" + selectedObj.key);
+
       } else if (event.target.id == "deleteObject") {
-        deleteSelectedObj();
+        var r = confirm("Delete the selected Object?");
+        if (r) {
+          deleteSelectedObj();
+        }
       }
     }
 
@@ -433,10 +450,7 @@
       if (!adminLoggedIn) {
         // Disable the user browser link in the navbar if the logged in
         // user does not have admin access
-        document.getElementById("userBrowser").setAttribute('class', 'nav-item disabled');
-        document.getElementById("userBrowserLink").click(function() {
-          return false;
-        });
+        document.getElementById("userBrowserLink").href = "#";
       }
 
       updateSceneGridData({});

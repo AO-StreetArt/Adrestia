@@ -182,7 +182,10 @@
 
       // Logic to update the scene list based on the input query
       if (event.target.id == "deleteUser") {
-        delete_selected();
+        var r = confirm("Delete the selected User?");
+        if (r) {
+          delete_selected();
+        }
       } else {
         if (event.target.id == "firstPage") {
           gridOptions.api.paginationGoToPage(0);

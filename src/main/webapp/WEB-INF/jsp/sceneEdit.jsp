@@ -51,6 +51,7 @@
             </li>
           </ul>
       </nav>
+      <div class="alert alert-success" id="success-alert" style="display:none">Scene Saved!</div>
       <div class="row">
         <div class="col-md-12">
           <h1 style="text-align: center;">Scene</h1>
@@ -123,6 +124,8 @@
 
     function sceneReturn(data) {
       console.log(data);
+      $("#success-alert").show();
+      setTimeout(function() { $("#success-alert").hide(); }, 5000);
     }
 
     // Button click logic
@@ -182,10 +185,7 @@
       if (!adminLoggedIn) {
         // Disable the user browser link in the navbar if the logged in
         // user does not have admin access
-        document.getElementById("userBrowser").setAttribute('class', 'nav-item disabled');
-        document.getElementById("userBrowserLink").click(function() {
-          return false;
-        });
+        document.getElementById("userBrowserLink").href = "#";
       }
 
       // Setup the button callbacks into the Javascript

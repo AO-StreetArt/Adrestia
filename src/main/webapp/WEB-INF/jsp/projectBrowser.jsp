@@ -213,7 +213,10 @@
         var selectedRow = gridOptions.api.getSelectedNodes()[0].data;
         window.location.replace("editProject?key=" + selectedRow.id);
       } else if (event.target.id == "delete") {
-        delete_selected();
+        var r = confirm("Delete the selected project?");
+        if (r) {
+          delete_selected();
+        }
       }
       updateGridData({});
     }
@@ -231,10 +234,7 @@
       if (!adminLoggedIn) {
         // Disable the user browser link in the navbar if the logged in
         // user does not have admin access
-        document.getElementById("userBrowser").setAttribute('class', 'nav-item disabled');
-        document.getElementById("userBrowserLink").click(function() {
-          return false;
-        });
+        document.getElementById("userBrowserLink").href = "#";
       }
 
       // Execute an HTTP call to get the available asset metadata

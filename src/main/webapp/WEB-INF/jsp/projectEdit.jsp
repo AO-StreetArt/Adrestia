@@ -51,6 +51,7 @@
             </li>
           </ul>
       </nav>
+      <div class="alert alert-success" id="success-alert" style="display:none">Project Saved!</div>
       <div class="row">
         <div class="col-md-12">
           <h1 style="text-align: center;">Project</h1>
@@ -249,6 +250,8 @@
         contentType: "application/json; charset=utf-8",
         success: function(data) {
           console.log("Project Saved");
+          $("#success-alert").show();
+          setTimeout(function() { $("#success-alert").hide(); }, 5000);
         }
       });
     }
@@ -415,10 +418,7 @@
       if (!adminLoggedIn) {
         // Disable the user browser link in the navbar if the logged in
         // user does not have admin access
-        document.getElementById("userBrowser").setAttribute('class', 'nav-item disabled');
-        document.getElementById("userBrowserLink").click(function() {
-          return false;
-        });
+        document.getElementById("userBrowserLink").href = "#";
       }
 
       // Setup the button callbacks into the Javascript

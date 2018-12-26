@@ -51,6 +51,7 @@
             </li>
           </ul>
       </nav>
+      <div class="alert alert-success" id="success-alert" style="display:none">Object Saved!</div>
       <div class="row">
         <div class="col-md-12">
           <h1 style="text-align: center;">Object</h1>
@@ -60,7 +61,7 @@
         <div class="col-xs-5 col-sm-4 col-md-2 col-lg-2">
           <p>Key:</p>
         </div>
-        <div class="col-md-10" class="tooltip" title="The unique identifier of the Object.">
+        <div class="col-xs-7 col-sm-8 col-md-10 col-lg-10" class="tooltip" title="The unique identifier of the Object.">
           <input id="keyinp" type="text" class="form-control-plaintext" name="Key" placeholder="Key"></input>
         </div>
       </div>
@@ -68,7 +69,7 @@
         <div class="col-xs-5 col-sm-4 col-md-2 col-lg-2">
           <p>Name:</p>
         </div>
-        <div class="col-md-10" class="tooltip" title="The human-readable name of the Object.">
+        <div class="col-xs-7 col-sm-8 col-md-10 col-lg-10" class="tooltip" title="The human-readable name of the Object.">
           <input id="nameinp" type="text" class="form-control-plaintext" name="Name" placeholder="Name"></input>
         </div>
       </div>
@@ -76,7 +77,7 @@
         <div class="col-xs-5 col-sm-4 col-md-2 col-lg-2">
           <p>Parent:</p>
         </div>
-        <div class="col-md-10" class="tooltip" title="The parent Object from which this inherits attributes.">
+        <div class="col-xs-7 col-sm-8 col-md-10 col-lg-10" class="tooltip" title="The parent Object from which this inherits attributes.">
           <input id="parentinp" type="text" class="form-control-plaintext" name="Parent" placeholder="Parent"></input>
         </div>
       </div>
@@ -84,7 +85,7 @@
         <div class="col-xs-5 col-sm-4 col-md-2 col-lg-2">
           <p>Type:</p>
         </div>
-        <div class="col-md-10" class="tooltip" title="The human-readable name of the Object.">
+        <div class="col-xs-7 col-sm-8 col-md-10 col-lg-10" class="tooltip" title="The human-readable name of the Object.">
           <input id="typeinp" type="text" class="form-control-plaintext" name="Type" placeholder="Type"></input>
         </div>
       </div>
@@ -92,7 +93,7 @@
         <div class="col-xs-5 col-sm-4 col-md-2 col-lg-2">
           <p>Subtype:</p>
         </div>
-        <div class="col-md-10" class="tooltip" title="The latitude of the Object for distance queries.">
+        <div class="col-xs-7 col-sm-8 col-md-10 col-lg-10" class="tooltip" title="The latitude of the Object for distance queries.">
           <input id="subtypeinp" type="text" class="form-control-plaintext" name="Subtype" placeholder="Subtype"></input>
         </div>
       </div>
@@ -100,7 +101,7 @@
         <div class="col-xs-5 col-sm-4 col-md-2 col-lg-2">
           <p>Owner:</p>
         </div>
-        <div class="col-md-10" class="tooltip" title="The longitude of the Object for distance queries.">
+        <div class="col-xs-7 col-sm-8 col-md-10 col-lg-10" class="tooltip" title="The longitude of the Object for distance queries.">
           <input id="ownerinp" type="text" class="form-control-plaintext" name="Owner" placeholder="Owner"></input>
         </div>
       </div>
@@ -108,7 +109,7 @@
         <div class="col-xs-5 col-sm-4 col-md-2 col-lg-2">
           <p>Frame:</p>
         </div>
-        <div class="col-md-10" class="tooltip" title="The tags associated to the Object.">
+        <div class="col-xs-7 col-sm-8 col-md-10 col-lg-10" class="tooltip" title="The tags associated to the Object.">
           <input id="frameinp" type="text" class="form-control-plaintext" name="Frame" placeholder="Frame"></input>
         </div>
       </div>
@@ -116,7 +117,7 @@
         <div class="col-xs-5 col-sm-4 col-md-2 col-lg-2">
           <p>Timestamp:</p>
         </div>
-        <div class="col-md-10" class="tooltip" title="The tags associated to the Object.">
+        <div class="col-xs-7 col-sm-8 col-md-10 col-lg-10" class="tooltip" title="The tags associated to the Object.">
           <input id="timeinp" type="text" class="form-control-plaintext" name="Timestamp" placeholder="Timestamp"></input>
         </div>
       </div>
@@ -124,7 +125,7 @@
         <div class="col-xs-5 col-sm-4 col-md-2 col-lg-2">
           <p>Translation:</p>
         </div>
-        <div class="col-md-10" class="tooltip" title="The tags associated to the Object.">
+        <div class="col-xs-7 col-sm-8 col-md-10 col-lg-10" class="tooltip" title="The tags associated to the Object.">
           <input id="translationinp" type="text" class="form-control-plaintext" name="Translation" placeholder="Translation"></input>
         </div>
       </div>
@@ -132,7 +133,7 @@
         <div class="col-xs-5 col-sm-4 col-md-2 col-lg-2">
           <p>Euler Rotation:</p>
         </div>
-        <div class="col-md-10" class="tooltip" title="The tags associated to the Object.">
+        <div class="col-xs-7 col-sm-8 col-md-10 col-lg-10" class="tooltip" title="The tags associated to the Object.">
           <input id="erotinp" type="text" class="form-control-plaintext" name="ERotation" placeholder="Euler Rotation"></input>
         </div>
       </div>
@@ -140,7 +141,7 @@
         <div class="col-xs-5 col-sm-4 col-md-2 col-lg-2">
           <p>Quaternion Rotation:</p>
         </div>
-        <div class="col-md-10" class="tooltip" title="The tags associated to the Object.">
+        <div class="col-xs-7 col-sm-8 col-md-10 col-lg-10" class="tooltip" title="The tags associated to the Object.">
           <input id="qrotinp" type="text" class="form-control-plaintext" name="QRotation" placeholder="Quaternion Rotation"></input>
         </div>
       </div>
@@ -148,7 +149,7 @@
         <div class="col-xs-5 col-sm-4 col-md-2 col-lg-2">
           <p>Scale:</p>
         </div>
-        <div class="col-md-10" class="tooltip" title="The tags associated to the Object.">
+        <div class="col-xs-7 col-sm-8 col-md-10 col-lg-10" class="tooltip" title="The tags associated to the Object.">
           <input id="scaleinp" type="text" class="form-control-plaintext" name="Scale" placeholder="Scale"></input>
         </div>
       </div>
@@ -156,7 +157,7 @@
         <div class="col-xs-5 col-sm-4 col-md-2 col-lg-2">
           <p>Transform:</p>
         </div>
-        <div class="col-md-10" class="tooltip" title="The tags associated to the Object.">
+        <div class="col-xs-7 col-sm-8 col-md-10 col-lg-10" class="tooltip" title="The tags associated to the Object.">
           <input id="transforminp" type="text" class="form-control-plaintext" name="Transform" placeholder="Transform"></input>
         </div>
       </div>
@@ -216,18 +217,20 @@
         if (newQRotation) objData["quaternion_rotation"] = stringToFloatArray(newQRotation);
         if (newScale) objData["scale"] = stringToFloatArray(newScale);
         if (newTransform) objData["transform"] = stringToFloatArray(newTransform);
-        var objUrl = "v1/object/";
+        var objUrl = "v1/scene/" + sceneKey + "/object/";
         if (newKey) {
           objData["key"] = newKey;
           objUrl = objUrl + newKey;
         }
         objListData = {"objects": [objData]}
-        $.ajax({url: "v1/scene/" + sceneKey + "/object/" + newKey,
+        $.ajax({url: objUrl,
                 type: 'POST',
                 data: JSON.stringify(objListData),
                 contentType: "application/json; charset=utf-8",
                 success: function(data) {
                   console.log(data);
+                  $("#success-alert").show();
+                  setTimeout(function() { $("#success-alert").hide(); }, 5000);
                 }});
       } else if (event.target.id == "cancel") {
         window.location.replace("sceneBrowser");
@@ -265,10 +268,7 @@
       if (!adminLoggedIn) {
         // Disable the user browser link in the navbar if the logged in
         // user does not have admin access
-        document.getElementById("userBrowser").setAttribute('class', 'nav-item disabled');
-        document.getElementById("userBrowserLink").click(function() {
-          return false;
-        });
+        document.getElementById("userBrowserLink").href = "#";
       }
 
       // Setup the button callbacks into the Javascript

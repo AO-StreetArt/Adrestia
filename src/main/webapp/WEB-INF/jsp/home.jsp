@@ -138,14 +138,13 @@
       // If the user is an admin, then the server will inject 'true' here,
       // otherwise, it will inject 'false'.
       var isUserAdmin = "${isAdmin}";
+      console.log(isUserAdmin);
       var adminLoggedIn = (isUserAdmin == 'true');
+      console.log(adminLoggedIn);
       if (!adminLoggedIn) {
         // Disable the user browser link in the navbar if the logged in
         // user does not have admin access
-        document.getElementById("userBrowser").setAttribute('class', 'nav-item disabled');
-        // document.getElementById("userBrowserLink").click(function() {
-        //   return false;
-        // });
+        document.getElementById("userBrowserLink").href = "#";
       }
       // The favorite projects list is injected here by the server
       // before it returns the page.
