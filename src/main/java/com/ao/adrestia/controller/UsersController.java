@@ -146,7 +146,7 @@ public class UsersController {
       updateQuery.put("username", user.getUsername());
     }
     if (user.getUsername() != null && !(user.getUsername().isEmpty())) {
-      updateQuery.put("password", bCryptPasswordEncoder.encode(user.getPassword()););
+      updateQuery.put("password", bCryptPasswordEncoder.encode(user.getPassword()));
     }
     if (user.getEmail() != null && !(user.getEmail().isEmpty())) {
       updateQuery.put("email", user.getEmail());
