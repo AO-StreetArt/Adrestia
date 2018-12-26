@@ -80,6 +80,19 @@ public class UiController {
     return "sceneBrowser";
   }
 
+  @RequestMapping(value = "/propertyBrowser", method = RequestMethod.GET)
+  protected String propertyBrowser(
+      final Map<String, Object> model,
+      final Principal principal,
+      @RequestParam(value = "scene", defaultValue = "") String sceneKey,
+      @RequestParam(value = "object", defaultValue = "") String objKey) {
+    logger.info("Request for Property Browser");
+    addUserDetailsToModel(model, principal);
+    model.put("sceneKey", sceneKey);
+    model.put("objKey", objKey);
+    return "propertyBrowser";
+  }
+
   @RequestMapping(value = "/projectBrowser", method = RequestMethod.GET)
   protected String projectBrowser(final Map<String, Object> model, final Principal principal) {
     logger.info("Request for Project Browser");
@@ -102,6 +115,19 @@ public class UiController {
     addUserDetailsToModel(model, principal);
     model.put("userKey", userKey);
     return "userEdit";
+  }
+
+  @RequestMapping(value = "/editProperty", method = RequestMethod.GET)
+  protected String createPropertyUi(
+      final Map<String, Object> model,
+      final Principal principal,
+      @RequestParam(value = "scene", defaultValue = "") String sceneKey,
+      @RequestParam(value = "property", defaultValue = "") String propKey) {
+    logger.info("Request for Property Edit UI");
+    addUserDetailsToModel(model, principal);
+    model.put("sceneKey", sceneKey);
+    model.put("propKey", propKey);
+    return "propertyEdit";
   }
 
   @RequestMapping(value = "/editProject", method = RequestMethod.GET)
