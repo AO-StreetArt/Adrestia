@@ -20,9 +20,24 @@ package com.ao.adrestia.controller;
 import com.ao.adrestia.model.ApplicationUser;
 import com.ao.adrestia.repo.ApplicationUserRepository;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
+import com.mongodb.async.SingleResultCallback;
+import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Sorts;
+import com.mongodb.client.model.UpdateOptions;
+import com.mongodb.client.result.UpdateResult;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import javax.annotation.PostConstruct;
+
+import org.bson.Document;
+import org.bson.types.ObjectId;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +46,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -53,12 +70,25 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("users")
 public class UsersController {
   private static Logger log = LoggerFactory.getLogger("adrestia.UserController");
+  private String mongoCollectionName = "applicationUser";
 
   @Autowired
   ApplicationUserRepository applicationUserRepository;
 
   @Autowired
+  MongoDatabase mongoDb;
+  MongoCollection<Document> mongoCollection = null;
+
+  @Autowired
   BCryptPasswordEncoder bCryptPasswordEncoder;
+
+  /**
+  * Use the Mongo Client to access the database and collection.
+  */
+  @PostConstruct
+  public void init() {
+    mongoCollection = mongoDb.getCollection(mongoCollectionName);
+  }
 
   /**
   * Sign-up a new user.
@@ -91,6 +121,18 @@ public class UsersController {
     return new ResponseEntity<ApplicationUser>(user, responseHeaders, returnCode);
   }
 
+  private BasicDBObject genUpdateQuery(String attrKey, String attrVal, String opType) {
+    BasicDBObject update = new BasicDBObject();
+    update.put(attrKey, attrVal);
+    return new BasicDBObject(opType, update);
+  }
+
+  private BasicDBObject genIdQuery(String id) {
+    BasicDBObject query = new BasicDBObject();
+    query.put("_id", new ObjectId(id));
+    return query;
+  }
+
   /**
   * Update an existing user.
   */
@@ -98,15 +140,95 @@ public class UsersController {
   public ResponseEntity<ApplicationUser> updateUser(
       @RequestBody ApplicationUser user,
       @PathVariable("key") String key) {
-    user.setId(key);
-    user.password = bCryptPasswordEncoder.encode(user.getPassword());
-    applicationUserRepository.save(user);
-    // Set up a success response code
+    log.info("Updating Existing User");
+    BasicDBObject updateQuery = new BasicDBObject();
+    if (user.getUsername() != null && !(user.getUsername().isEmpty())) {
+      updateQuery.put("username", user.getUsername());
+    }
+    if (user.getUsername() != null && !(user.getUsername().isEmpty())) {
+      updateQuery.put("password", bCryptPasswordEncoder.encode(user.getPassword()););
+    }
+    if (user.getEmail() != null && !(user.getEmail().isEmpty())) {
+      updateQuery.put("email", user.getEmail());
+    }
+    if (user.getIsAdmin() != null) {
+      updateQuery.put("isAdmin", user.getIsAdmin());
+    }
+    if (user.getIsActive() != null) {
+      updateQuery.put("isActive", user.getIsActive());
+    }
+
+    UpdateResult result = mongoCollection.updateOne(genIdQuery(key),
+        new BasicDBObject("$set", updateQuery), new UpdateOptions());
+
+    // Set the http response code
     HttpStatus returnCode = HttpStatus.OK;
+    if (result.getModifiedCount() < 1) {
+      returnCode = HttpStatus.REQUESTED_RANGE_NOT_SATISFIABLE;
+      logger.debug("No documents modified for user update");
+    }
+    HttpHeaders responseHeaders = new HttpHeaders();
+    return new ResponseEntity<String>("", responseHeaders, returnCode);
+  }
+
+  private ResponseEntity<String> updateArrayAttr(String userKey,
+      String attrKey, String attrVal, String updType) {
+    BasicDBObject updateQuery = genUpdateQuery(attrKey, attrVal, updType);
+    BasicDBObject query = genIdQuery(userKey);
+    UpdateResult result = mongoCollection.updateOne(query, updateQuery, new UpdateOptions());
+    // Set the http response code
+    HttpStatus returnCode = HttpStatus.OK;
+    if (result.getModifiedCount() < 1) {
+      returnCode = HttpStatus.REQUESTED_RANGE_NOT_SATISFIABLE;
+      log.debug("No documents modified for array attribute update");
+    }
     // Set up a response header to return a valid HTTP Response
     HttpHeaders responseHeaders = new HttpHeaders();
-    user.password = "";
-    return new ResponseEntity<ApplicationUser>(user, responseHeaders, returnCode);
+    return new ResponseEntity<String>("", responseHeaders, returnCode);
+  }
+
+  /**
+  * Add a favorite project to an existing user.
+  */
+  @PutMapping("/{key}/projects/{projectKey}")
+  public ResponseEntity<String> addUserFavProject(
+      @PathVariable("key") String key,
+      @PathVariable("projectKey") String projectKey) {
+    log.info("Adding Favorite Project to user");
+    return updateArrayAttr(key, "favoriteProjects", projectKey, "$push");
+  }
+
+  /**
+  * Remove a favorite project from an existing user.
+  */
+  @DeleteMapping("/{key}/projects/{projectKey}")
+  public ResponseEntity<String> removeUserFavProject(
+      @PathVariable("key") String key,
+      @PathVariable("projectKey") String projectKey) {
+    log.info("Removing Favorite Project from user");
+    return updateArrayAttr(key, "favoriteProjects", projectKey, "$pull");
+  }
+
+  /**
+  * Add a favorite scene to an existing user.
+  */
+  @PutMapping("/{key}/scenes/{sceneKey}")
+  public ResponseEntity<String> addUserFavScene(
+      @PathVariable("key") String key,
+      @PathVariable("sceneKey") String sceneKey) {
+    log.info("Adding Favorite Scene to user");
+    return updateArrayAttr(key, "favoriteScenes", sceneKey, "$push");
+  }
+
+  /**
+  * Remove a favorite scene from an existing user.
+  */
+  @DeleteMapping("/{key}/scenes/{sceneKey}")
+  public ResponseEntity<String> removeUserFavScene(
+      @PathVariable("key") String key,
+      @PathVariable("sceneKey") String sceneKey) {
+    log.info("Remove Favorite Scene from user");
+    return updateArrayAttr(key, "favoriteScenes", sceneKey, "$pull");
   }
 
   /**
@@ -164,7 +286,9 @@ public class UsersController {
       returnCode = HttpStatus.NOT_FOUND;
     }
     // Return the response
-    returnUser.password = "";
+    for (ApplicationUser user : existingUsers) {
+      user.password = "";
+    }
     return new ResponseEntity<List<ApplicationUser>>(existingUsers, responseHeaders, returnCode);
   }
 

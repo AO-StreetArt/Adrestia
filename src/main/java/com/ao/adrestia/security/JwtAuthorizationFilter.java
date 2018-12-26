@@ -109,6 +109,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
     if (user != null) {
       log.debug("User retrieved from JWT {}", user);
+      log.debug("Validating Request URL: {}", request.getRequestURL().toString());
       // Validate user access
       List<ApplicationUser> requestUsers = this.userRepository.findByUsername(user);
       if (requestUsers.size() > 0) {
@@ -123,8 +124,8 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         // Non-admin users can only acces user endpoints for themselves
         if (!(requestUsers.get(0).getIsAdmin())) {
           if (request.getRequestURI().contains("users")
-              && !(request.getRequestURI().contains(requestUsers.get(0).getId()) 
-              || request.getRequestURI().contains(requestUsers.get(0).getUsername()))) {
+              && !(request.getRequestURI().contains(requestUsers.get(0).getId())
+              || request.getQueryString().contains(requestUsers.get(0).getUsername()))) {
             log.warn("Rejecting access to user endpoint for non-matching user {}", user);
             return null;
           }

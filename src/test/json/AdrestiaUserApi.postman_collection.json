@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "7befeed9-d609-4da3-85e2-1aefbfda0108",
-		"name": "Adrestia User API",
+		"_postman_id": "657f4b9d-e240-448d-9fe2-d586eebe98ce",
+		"name": "AdrestiaUserApi",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -11,11 +11,11 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "505413e1-c8be-4a29-972e-4407c12e13e5",
+						"id": "43d3d973-192a-45d6-a43f-bc1940074054",
 						"type": "text/javascript",
 						"exec": [
-							"pm.test(\"Response time is less than 600ms\", function () {",
-							"    pm.expect(pm.response.responseTime).to.be.below(600);",
+							"pm.test(\"Response time is less than 500ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(500);",
 							"});",
 							"",
 							"pm.test(\"Status code is 200\", function () {",
@@ -69,11 +69,11 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "108c075e-34fc-4d89-af59-04868800b62c",
+						"id": "0b3d77e3-9c0e-45d2-bee4-ca0e4a680df6",
 						"type": "text/javascript",
 						"exec": [
-							"pm.test(\"Response time is less than 600ms\", function () {",
-							"    pm.expect(pm.response.responseTime).to.be.below(600);",
+							"pm.test(\"Response time is less than 500ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(500);",
 							"});",
 							"",
 							"pm.test(\"Status code is 200\", function () {",
@@ -83,7 +83,14 @@
 							"pm.test(\"Content-Type is present\", function () {",
 							"    pm.response.to.have.header(\"Content-Type\");",
 							"});",
-							""
+							"",
+							"var jsonData = pm.response.json();",
+							"",
+							"pm.test(\"User Properties check\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.username).to.equal(\"demo\");",
+							"    pm.expect(jsonData.favoriteProjects.length).to.eql(2);",
+							"});"
 						]
 					}
 				}
@@ -123,22 +130,17 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "2b1cd3a4-3773-4278-bb5f-2b2bcc81d5c1",
+						"id": "31b0b992-6534-46b6-b682-4fa89b818d70",
 						"type": "text/javascript",
 						"exec": [
-							"pm.test(\"Response time is less than 600ms\", function () {",
-							"    pm.expect(pm.response.responseTime).to.be.below(600);",
+							"pm.test(\"Response time is less than 500ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(500);",
 							"});",
 							"",
 							"pm.test(\"Status code is 200\", function () {",
 							"    pm.response.to.have.status(200);",
 							"});",
-							"",
-							"pm.test(\"Content-Type is present\", function () {",
-							"    pm.response.to.have.header(\"Content-Type\");",
-							"});",
-							"",
-							"var jsonData = pm.response.json();"
+							""
 						]
 					}
 				}
@@ -156,7 +158,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"username\": \"demo2\",\n  \"password\": \"demo2\",\n  \"email\": \"test3@test.com\",\n  \"isAdmin\": false,\n  \"isActive\": true,\n  \"favoriteProjects\": [],\n  \"favoriteScenes\": []\n}\n"
+					"raw": "{\n  \"username\": \"demo2\",\n  \"password\": \"demo2\",\n  \"email\": \"test3@test.com\",\n  \"isAdmin\": false,\n  \"isActive\": true\n}\n"
 				},
 				"url": {
 					"raw": "{{AESEL_URL}}/users/{{USER_ID}}",
@@ -172,16 +174,165 @@
 			"response": []
 		},
 		{
-			"name": "Delete User",
+			"name": "Add Favorite Project",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
-						"id": "697f4a18-2465-4c2b-b5f5-b5b4bcf6b6e2",
+						"id": "2140a69d-af82-477f-a8e9-2bc926e25bb4",
 						"type": "text/javascript",
 						"exec": [
-							"pm.test(\"Response time is less than 600ms\", function () {",
-							"    pm.expect(pm.response.responseTime).to.be.below(600);",
+							"pm.test(\"Response time is less than 500ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(500);",
+							"});",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{AESEL_URL}}/users/{{USER_ID}}/projects/12345",
+					"host": [
+						"{{AESEL_URL}}"
+					],
+					"path": [
+						"users",
+						"{{USER_ID}}",
+						"projects",
+						"12345"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Favorite Scene",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "4df08e09-bbc2-48c9-9a20-a84292a752ee",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Response time is less than 500ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(500);",
+							"});",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{AESEL_URL}}/users/{{USER_ID}}/scenes/12345",
+					"host": [
+						"{{AESEL_URL}}"
+					],
+					"path": [
+						"users",
+						"{{USER_ID}}",
+						"scenes",
+						"12345"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get User by Username",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "7515587d-5f0d-4484-afdf-03693e0eae4d",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Response time is less than 500ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(500);",
+							"});",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Content-Type is present\", function () {",
+							"    pm.response.to.have.header(\"Content-Type\");",
+							"});",
+							"",
+							"pm.test(\"User Properties check\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.username).to.equal(\"demo2\");",
+							"    pm.expect(jsonData.favoriteProjects.length).to.eql(2);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"msg_type\": 0,\n  \"objects\":[\n    {\n\t\t\"name\": \"Test Object 123464\",\n\t\t\"type\": \"Curve\",\n\t\t\"subtype\": \"Sphere\",\n\t\t\"owner\": \"456\",\n\t\t\"frame\": 0,\n\t\t\"timestamp\": 123456789,\n\t\t\"translation\": [0, 0, 1],\n\t\t\"quaternion_rotation\": [0, 1, 0, 0],\n\t\t\"euler_rotation\": [0, 0, 0],\n\t\t\"scale\": [1, 1, 2],\n\t\t\"assets\": [\"Asset_5\"],\n\t\t\"translation_handle\":[\n\t\t\t{\"left_type\":\"test\",\"left_x\":0.0,\"left_y\":0.0,\"right_type\":\"\",\"right_x\":0.0,\"right_y\":0.0},\n\t\t\t{\"left_type\":\"\",\"left_x\":0.0,\"left_y\":0.0,\"right_type\":\"\",\"right_x\":0.0,\"right_y\":0.0},\n\t\t\t{\"left_type\":\"\",\"left_x\":0.0,\"left_y\":0.0,\"right_type\":\"\",\"right_x\":0.0,\"right_y\":0.0}],\n\t\t\"rotation_handle\":[\n\t\t\t{\"left_type\":\"test\",\"left_x\":0.0,\"left_y\":0.0,\"right_type\":\"\",\"right_x\":0.0,\"right_y\":0.0},\n\t\t\t{\"left_type\":\"\",\"left_x\":0.0,\"left_y\":0.0,\"right_type\":\"\",\"right_x\":0.0,\"right_y\":0.0},\n\t\t\t{\"left_type\":\"\",\"left_x\":0.0,\"left_y\":0.0,\"right_type\":\"\",\"right_x\":0.0,\"right_y\":0.0},\n\t\t\t{\"left_type\":\"\",\"left_x\":0.0,\"left_y\":0.0,\"right_type\":\"\",\"right_x\":0.0,\"right_y\":0.0}],\n\t\t\"scale_handle\":[\n\t\t\t{\"left_type\":\"test\",\"left_x\":0.0,\"left_y\":0.0,\"right_type\":\"\",\"right_x\":0.0,\"right_y\":0.0},\n\t\t\t{\"left_type\":\"\",\"left_x\":0.0,\"left_y\":0.0,\"right_type\":\"\",\"right_x\":0.0,\"right_y\":0.0},\n\t\t\t{\"left_type\":\"\",\"left_x\":0.0,\"left_y\":0.0,\"right_type\":\"\",\"right_x\":0.0,\"right_y\":0.0}]\n\t}\n  ]\n}\n"
+				},
+				"url": {
+					"raw": "{{AESEL_URL}}/users/?username=demo",
+					"host": [
+						"{{AESEL_URL}}"
+					],
+					"path": [
+						"users",
+						""
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "demo"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Remove Favorite Project",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "5b256638-fb5a-40f4-be57-2eb13e2c6cdf",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Response time is less than 500ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(500);",
 							"});",
 							"",
 							"pm.test(\"Status code is 200\", function () {",
@@ -196,16 +347,100 @@
 					"type": "noauth"
 				},
 				"method": "DELETE",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"disabled": true
-					}
-				],
+				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"msg_type\": 0,\n  \"objects\":[\n    {\n\t\t\"name\": \"Test Object 123464\",\n\t\t\"type\": \"Curve\",\n\t\t\"subtype\": \"Sphere\",\n\t\t\"owner\": \"456\",\n\t\t\"frame\": 0,\n\t\t\"timestamp\": 123456789,\n\t\t\"translation\": [0, 0, 1],\n\t\t\"quaternion_rotation\": [0, 1, 0, 0],\n\t\t\"euler_rotation\": [0, 0, 0],\n\t\t\"scale\": [1, 1, 2],\n\t\t\"assets\": [\"Asset_5\"],\n\t\t\"translation_handle\":[\n\t\t\t{\"left_type\":\"test\",\"left_x\":0.0,\"left_y\":0.0,\"right_type\":\"\",\"right_x\":0.0,\"right_y\":0.0},\n\t\t\t{\"left_type\":\"\",\"left_x\":0.0,\"left_y\":0.0,\"right_type\":\"\",\"right_x\":0.0,\"right_y\":0.0},\n\t\t\t{\"left_type\":\"\",\"left_x\":0.0,\"left_y\":0.0,\"right_type\":\"\",\"right_x\":0.0,\"right_y\":0.0}],\n\t\t\"rotation_handle\":[\n\t\t\t{\"left_type\":\"test\",\"left_x\":0.0,\"left_y\":0.0,\"right_type\":\"\",\"right_x\":0.0,\"right_y\":0.0},\n\t\t\t{\"left_type\":\"\",\"left_x\":0.0,\"left_y\":0.0,\"right_type\":\"\",\"right_x\":0.0,\"right_y\":0.0},\n\t\t\t{\"left_type\":\"\",\"left_x\":0.0,\"left_y\":0.0,\"right_type\":\"\",\"right_x\":0.0,\"right_y\":0.0},\n\t\t\t{\"left_type\":\"\",\"left_x\":0.0,\"left_y\":0.0,\"right_type\":\"\",\"right_x\":0.0,\"right_y\":0.0}],\n\t\t\"scale_handle\":[\n\t\t\t{\"left_type\":\"test\",\"left_x\":0.0,\"left_y\":0.0,\"right_type\":\"\",\"right_x\":0.0,\"right_y\":0.0},\n\t\t\t{\"left_type\":\"\",\"left_x\":0.0,\"left_y\":0.0,\"right_type\":\"\",\"right_x\":0.0,\"right_y\":0.0},\n\t\t\t{\"left_type\":\"\",\"left_x\":0.0,\"left_y\":0.0,\"right_type\":\"\",\"right_x\":0.0,\"right_y\":0.0}]\n\t}\n  ]\n}\n"
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{AESEL_URL}}/users/{{USER_ID}}/projects/12345",
+					"host": [
+						"{{AESEL_URL}}"
+					],
+					"path": [
+						"users",
+						"{{USER_ID}}",
+						"projects",
+						"12345"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Remove Favorite Scene",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f8f0b7bf-3544-4998-bdcf-62fc2767dd03",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Response time is less than 500ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(500);",
+							"});",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{AESEL_URL}}/users/{{USER_ID}}/scenes/12345",
+					"host": [
+						"{{AESEL_URL}}"
+					],
+					"path": [
+						"users",
+						"{{USER_ID}}",
+						"scenes",
+						"12345"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "84ff7657-0847-42d8-9d8b-7af798525ae9",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Response time is less than 500ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(500);",
+							"});",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
 				},
 				"url": {
 					"raw": "{{AESEL_URL}}/users/{{USER_ID}}",

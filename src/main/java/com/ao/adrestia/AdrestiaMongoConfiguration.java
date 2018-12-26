@@ -136,4 +136,10 @@ public class AdrestiaMongoConfiguration extends AbstractMongoConfiguration {
   protected String getDatabaseName() {
     return "_adrestia";
   }
+
+  // Definition for accessing underlying Mongo Driver
+  @Bean
+  public MongoDatabase mongoDatabase() {
+    return mongoDbFactory().getDb();
+  }
 }
