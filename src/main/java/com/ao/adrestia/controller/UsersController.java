@@ -137,7 +137,7 @@ public class UsersController {
   * Update an existing user.
   */
   @PutMapping("/{key}")
-  public ResponseEntity<ApplicationUser> updateUser(
+  public ResponseEntity<String> updateUser(
       @RequestBody ApplicationUser user,
       @PathVariable("key") String key) {
     log.info("Updating Existing User");
@@ -151,12 +151,6 @@ public class UsersController {
     if (user.getEmail() != null && !(user.getEmail().isEmpty())) {
       updateQuery.put("email", user.getEmail());
     }
-    if (user.getIsAdmin() != null) {
-      updateQuery.put("isAdmin", user.getIsAdmin());
-    }
-    if (user.getIsActive() != null) {
-      updateQuery.put("isActive", user.getIsActive());
-    }
 
     UpdateResult result = mongoCollection.updateOne(genIdQuery(key),
         new BasicDBObject("$set", updateQuery), new UpdateOptions());
@@ -165,7 +159,7 @@ public class UsersController {
     HttpStatus returnCode = HttpStatus.OK;
     if (result.getModifiedCount() < 1) {
       returnCode = HttpStatus.REQUESTED_RANGE_NOT_SATISFIABLE;
-      logger.debug("No documents modified for user update");
+      log.debug("No documents modified for user update");
     }
     HttpHeaders responseHeaders = new HttpHeaders();
     return new ResponseEntity<String>("", responseHeaders, returnCode);
