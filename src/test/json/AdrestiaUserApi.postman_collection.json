@@ -287,7 +287,7 @@
 							"pm.test(\"User Properties check\", function () {",
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData[0].username).to.equal(\"demo2\");",
-							"    pm.expect(jsonData[0].favoriteProjects.length).to.eql(2);",
+							"    pm.expect(jsonData[0].favoriteProjects.length).to.eql(1);",
 							"});"
 						]
 					}
