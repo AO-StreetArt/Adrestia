@@ -14,8 +14,8 @@
 						"id": "43d3d973-192a-45d6-a43f-bc1940074054",
 						"type": "text/javascript",
 						"exec": [
-							"pm.test(\"Response time is less than 500ms\", function () {",
-							"    pm.expect(pm.response.responseTime).to.be.below(500);",
+							"pm.test(\"Response time is less than 750ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(750);",
 							"});",
 							"",
 							"pm.test(\"Status code is 200\", function () {",
