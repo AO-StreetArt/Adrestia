@@ -106,27 +106,51 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-xs-5 col-sm-4 col-md-2 col-lg-2">
-          <p>Favorite Projects:</p>
-        </div>
-        <div class="col-xs-7 col-sm-8 col-md-10 col-lg-10" class="tooltip" title="A list of Project ID's the user has marked as favorites.">
-          <input id="favprojectsinp" type="text" class="form-control-plaintext" name="favProjects" placeholder="Favorite Projects"></input>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-xs-5 col-sm-4 col-md-2 col-lg-2">
-          <p>Favorite Scenes:</p>
-        </div>
-        <div class="col-xs-7 col-sm-8 col-md-10 col-lg-10" class="tooltip" title="A list of Scene ID's the user has marked as favorites.">
-          <input id="favscenesinp" type="text" class="form-control-plaintext" name="favScenes" placeholder="Favorite Scenes"></input>
-        </div>
-      </div>
-      <div class="row">
         <div class="col-md-6 col-lg-6" class="tooltip" title="Cancel the changes.">
           <button id="cancel" type="button" class="btn btn-primary">Cancel</button>
         </div>
         <div class="col-md-6 col-lg-6" class="tooltip" title="Save the Scene.">
           <button id="save" type="button" class="btn btn-primary">Save User</button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <h1 style="text-align: center;">Favorite Projects</h1>
+        </div>
+      </div>
+      <div class="alert alert-success" id="proj-success-alert" style="display:none">Favorite Projects Saved!</div>
+      <div style="height:100%;" class="row">
+        <div style="height:100%;" class="col-xs-6 col-sm-6 col-md-8 col-lg-8">
+          <div id="projectsGrid" style="height:100%;" class="ag-theme-balham"></div>
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-4 col-lg-4">
+          <input id="projectkeyinp" type="text" name="ProjectKey" placeholder="Project Key" class="form-control-plaintext"></input>
+          <div class="btn-toolbar" role="toolbar" aria-label="Projects Toolbar" style="justify-content: center;">
+            <div class="btn-group" role="group" aria-label="Projects Toolbar">
+              <button id="addProject" type="button" class="btn btn-primary btn-sm" style="z-index:265"><span style="font-size:larger;">Add Project</span></button>
+              <button id="removeProject" type="button" class="btn btn-primary btn-sm" style="z-index:265"><span style="font-size:larger;">Remove Project</span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <h1 style="text-align: center;">Favorite Scenes</h1>
+        </div>
+      </div>
+      <div class="alert alert-success" id="scn-success-alert" style="display:none">Favorite Scenes Saved!</div>
+      <div style="height:100%;" class="row">
+        <div style="height:100%;" class="col-xs-6 col-sm-6 col-md-8 col-lg-8">
+          <div id="scenesGrid" style="height:100%;" class="ag-theme-balham"></div>
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-4 col-lg-4">
+          <input id="scenekeyinp" type="text" name="SceneKey" placeholder="Scene Key" class="form-control-plaintext"></input>
+          <div class="btn-toolbar" role="toolbar" aria-label="Scenes Toolbar" style="justify-content: center;">
+            <div class="btn-group" role="group" aria-label="Scenes Toolbar">
+              <button id="addScene" type="button" class="btn btn-primary btn-sm" style="z-index:265"><span style="font-size:larger;">Add Scene</span></button>
+              <button id="removeScene" type="button" class="btn btn-primary btn-sm" style="z-index:265"><span style="font-size:larger;">Remove Scene</span></button>
+            </div>
+          </div>
         </div>
       </div>
       <footer class="footer">
@@ -145,6 +169,66 @@
       setTimeout(function() { $("#success-alert").hide(); }, 5000);
     }
 
+    function favProjReturn(data) {
+      console.log(data);
+      $("#proj-success-alert").show();
+      setTimeout(function() { $("#proj-success-alert").hide(); }, 5000);
+    }
+
+    function favScnReturn(data) {
+      console.log(data);
+      $("#scn-success-alert").show();
+      setTimeout(function() { $("#scn-success-alert").hide(); }, 5000);
+    }
+
+    // specify the columns for the favorite projects list
+    var projColumnDefs = [
+      {
+        headerName: "Key",
+        field: "value",
+        filter: "agTextColumnFilter",
+        editable: false
+      }
+    ];
+
+    // specify the columns for the favorite scenes list
+    var scnColumnDefs = [
+      {
+        headerName: "Key",
+        field: "value",
+        filter: "agTextColumnFilter",
+        editable: false
+      }
+    ];
+
+    // specify the favorite project grid options
+    var projGridOptions = {
+      animateRows: true,
+      columnDefs: projColumnDefs,
+      rowData: [],
+      pagination: false,
+      enableFilter: true,
+      rowSelection: 'single'
+    };
+
+    // specify the favorite scene grid options
+    var scnGridOptions = {
+      animateRows: true,
+      columnDefs: scnColumnDefs,
+      rowData: [],
+      pagination: false,
+      enableFilter: true,
+      rowSelection: 'single'
+    };
+
+    // lookup the container we want the Grid to use
+    var projGridDiv = document.querySelector('#projectsGrid');
+    var scnGridDiv = document.querySelector('#scenesGrid');
+
+    // create the grid passing in the div to use together with the columns & data we want to use
+    new agGrid.Grid(projGridDiv, projGridOptions);
+    new agGrid.Grid(scnGridDiv, scnGridOptions);
+
     // Button click logic
     function onButtonClick(event) {
       if (event.target.id == "save") {
@@ -154,16 +238,12 @@
         var newEmail = document.getElementById('emailinp').value;
         var newAdmin = document.getElementById('admininp').value;
         var newActive = document.getElementById('activeinp').value;
-        var newProjectList = document.getElementById('favprojectsinp').value;
-        var newSceneList = document.getElementById('favscenesinp').value;
         userData = {}
         if (newUsername) userData["username"] = newUsername;
         if (newPassword) userData["password"] = newPassword;
         if (newEmail) userData["email"] = newEmail;
         if (newAdmin) userData["isAdmin"] = (newAdmin == "true");
         if (newActive) userData["isActive"] = (newActive == "true");
-        if (newProjectList) userData["favoriteProjects"] = newProjectList.split(",");
-        if (newSceneList) userData["favoriteScenes"] = newSceneList.split(",");
         userMethodType = "POST";
         userUrl = "/users/";
         if (newKey) {
@@ -181,6 +261,32 @@
                 success: userReturn});
       } else if (event.target.id == "cancel") {
         window.location.replace("userBrowser");
+      } else if (event.target.id == "addProject") {
+        var newProjectKey = document.getElementById("projectkeyinp").value;
+        $.ajax({url: "/users/" + userKey + "/projects/" + newProjectKey,
+                type: "PUT",
+                success: favProjReturn});
+      } else if (event.target.id == "removeProject") {
+        var selectedRows = projGridOptions.api.getSelectedNodes();
+        var selectedRow = (selectedRows && selectedRows.length > 0) ? selectedRows[0].data : null;
+        if (selectedRow) {
+          $.ajax({url: "/users/" + userKey + "/projects/" + selectedRow.value,
+                  type: "DELETE",
+                  success: favProjReturn});
+        }
+      } else if (event.target.id == "addScene") {
+        var newSceneKey = document.getElementById("scenekeyinp").value;
+        $.ajax({url: "/users/" + userKey + "/scenes/" + newSceneKey,
+                type: "PUT",
+                success: favScnReturn});
+      } else if (event.target.id == "removeScene") {
+        var selectedRows = scnGridOptions.api.getSelectedNodes();
+        var selectedRow = (selectedRows && selectedRows.length > 0) ? selectedRows[0].data : null;
+        if (selectedRow) {
+          $.ajax({url: "/users/" + userKey + "/scenes/" + selectedRow.value,
+                  type: "DELETE",
+                  success: favScnReturn});
+        }
       }
     }
 
@@ -193,14 +299,27 @@
       document.getElementById('emailinp').value = data.email;
       document.getElementById('admininp').value = data.isAdmin;
       document.getElementById('activeinp').value = data.isActive;
-      document.getElementById('favprojectsinp').value = data.favoriteProjects;
-      document.getElementById('favscenesinp').value = data.favoriteScenes;
+      // document.getElementById('favprojectsinp').value = data.favoriteProjects;
+      // document.getElementById('favscenesinp').value = data.favoriteScenes;
+      var newProjectsData = data.favoriteProjects.map(
+        function(currentValue) {
+          return {"value": currentValue};
+        }
+      );
+      projGridOptions.api.setRowData(newProjectsData);
+      var newScenesData = data.favoriteScenes.map(
+        function(currentValue) {
+          return {"value": currentValue};
+        }
+      );
+      scnGridOptions.api.setRowData(newScenesData);
     }
 
     window.addEventListener('DOMContentLoaded', function(){
       // The User ID is injected here by the server before
       // it returns the page
       var loggedInUser = "${userName}";
+      var loggedInKey = "${userId}";
       console.log(loggedInUser);
       // If the user is an admin, then the server will inject 'true' here,
       // otherwise, it will inject 'false'.
@@ -209,10 +328,8 @@
       if (!adminLoggedIn) {
         // Disable the user browser link in the navbar if the logged in
         // user does not have admin access
-        document.getElementById("userBrowser").setAttribute('class', 'nav-item disabled');
-        document.getElementById("userBrowserLink").click(function() {
-          return false;
-        });
+        document.getElementById("userBrowserLink").href = "/editUser?key=" + loggedInKey;
+        document.getElementById("userBrowserLink").innerHTML = "My Account";
       }
 
       // Setup the button callbacks into the Javascript

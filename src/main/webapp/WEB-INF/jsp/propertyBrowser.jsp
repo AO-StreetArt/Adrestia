@@ -70,7 +70,16 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-md-12">
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+          <div class="btn-toolbar pull-left" role="toolbar" aria-label="Scenes Pagination">
+            <div class="btn-group mr-2" role="group" aria-label="Scene Pagination">
+              <input id="frameinp" type="text" name="Frame" placeholder="frame"></input>
+              <button id="setFrame" type="button" class="btn btn-secondary btn-sm">View Frame</button>
+              <button id="noFrame" type="button" class="btn btn-secondary btn-sm">No Frame</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
           <div class="btn-toolbar pull-right" role="toolbar" aria-label="Asset Toolbar">
             <div class="btn-group" role="group" aria-label="Asset Toolbar">
               <button id="firstPage" type="button" class="btn btn-secondary btn-sm" style="z-index:265">1</button>
@@ -90,6 +99,7 @@
     var objId = "${objKey}";
     // The User ID is injected here by the server before
     var loggedInUser = "${userName}";
+    var loggedInKey = "${userId}";
     // If the user is an admin, then the server will inject 'true' here,
     // otherwise, it will inject 'false'.
     var isUserAdmin = "${isAdmin}";
@@ -158,6 +168,8 @@
         if ("asset_sub_id" in filterModel) {
           query_data["properties"][0]["asset_sub_id"] = filterModel.asset_sub_id.filter;
         }
+        var queryFrame = document.getElementById('frameinp').value;
+        if (queryFrame) query_data["properties"][0]["frame"] = queryFrame;
 
         // Execute an HTTP call to get the available properties
         // and populate them into the list
@@ -237,6 +249,11 @@
         } else if (event.target.id == "editProperty") {
           var selectedRow = gridOptions.api.getSelectedNodes()[0].data;
           window.location.replace("editProperty?scene=" + sceneId + "&property=" + selectedRow.key);
+        } else if (event.target.id == "setFrame") {
+          updateGridData({});
+        } else if (event.target.id == "noFrame") {
+          document.getElementById('frameinp').value = "";
+          updateGridData({});
         }
         updateGridData({});
       }
@@ -249,7 +266,8 @@
       if (!adminLoggedIn) {
         // Disable the user browser link in the navbar if the logged in
         // user does not have admin access
-        document.getElementById("userBrowserLink").href = "#";
+        document.getElementById("userBrowserLink").href = "/editUser?key=" + loggedInKey;
+        document.getElementById("userBrowserLink").innerHTML = "My Account";
       }
 
       updateGridData({});

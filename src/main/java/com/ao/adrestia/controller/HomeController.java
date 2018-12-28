@@ -56,6 +56,7 @@ public class HomeController {
       // Add user information to the page
       List<ApplicationUser> users = userRepository.findByUsername(principal.getName());
       if (users.size() > 0) {
+        model.put("userId", users.get(0).id);
         model.put("userName", users.get(0).username);
         model.put("isAdmin", String.valueOf(users.get(0).isAdmin));
         String projectsString = "";
@@ -64,7 +65,14 @@ public class HomeController {
           if (i > 1) projectsString = projectsString + ",";
           projectsString = projectsString + favProjects.get(i);
         }
-        model.put("projects", projectsString);
+        model.put("projectsString", projectsString);
+        String scnString = "";
+        List<String> favScenes = users.get(0).getFavoriteScenes();
+        for (int i = 0; i < favScenes.size(); i++) {
+          if (i > 1) scnString = scnString + ",";
+          scnString = scnString + favScenes.get(i);
+        }
+        model.put("scenesString", scnString);
       } else {
         logger.warn("No User found for principal");
         return "redirect:/portal/login";

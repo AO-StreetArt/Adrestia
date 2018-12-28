@@ -52,6 +52,7 @@
           <h1 style="text-align: center;">Scenes</h1>
         </div>
       </div>
+      <div class="alert alert-success" id="success-alert" style="display:none">Success!</div>
       <div class="row">
         <div class="col-sm-6 col-md-3 col-lg-3">
           <input id="keyinp" type="text" name="ID" placeholder="ID"></input>
@@ -88,6 +89,7 @@
               <button id="createScene" type="button" class="btn btn-primary"><span style="font-size:larger;">Create Scene</span></button>
               <button id="deleteScene" type="button" class="btn btn-primary"><span style="font-size:larger;">Delete Scene</span></button>
               <button id="viewScnProperties" type="button" class="btn btn-primary"><span style="font-size:larger;">View Scene Properties</span></button>
+              <button id="favoriteScene" type="button" class="btn btn-primary"><span style="font-size:larger;">Add to Favorites</span></button>
             </div>
           </div>
         </div>
@@ -128,6 +130,17 @@
       <div class="row" style="height:50%;">
         <div class="col" style="height:100%;">
           <div id="objGrid" style="height:100%;" class="ag-theme-balham"></div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="btn-toolbar pull-right" role="toolbar" aria-label="Scenes Pagination">
+            <div class="btn-group mr-2" role="group" aria-label="Scene Pagination">
+              <input id="frameinp" type="text" name="Frame" placeholder="frame"></input>
+              <button id="setFrame" type="button" class="btn btn-secondary btn-sm">View Frame</button>
+              <button id="noFrame" type="button" class="btn btn-secondary btn-sm">No Frame</button>
+            </div>
+          </div>
         </div>
       </div>
       <footer class="footer">
@@ -244,27 +257,30 @@
       rowSelection: 'single',
       pagination: true,
       suppressPaginationPanel: true,
-      onRowDoubleClicked: function(event) {
-        console.log("Row Double Clicked:");
-        // Get selected data from list
-        var selectedNodes = scnGridOptions.api.getSelectedNodes()
-        var selectedData = selectedNodes.map( function(node) { return node.data })
-        if (selectedData.length > 0) {
-          var sceneKey = selectedData[0].key;
-
-          // Create the object query data
-          objListData = {num_records: 100, objects: [{key: sceneKey}]}
-
-          // Execute an HTTP call to get the available asset metadata
-          // and populate it into the object list
-          $.ajax({url: "v1/scene/" + sceneKey + "/object/query",
-                  type: 'POST',
-                  data: JSON.stringify(objListData),
-                  contentType: "application/json; charset=utf-8",
-                  success: obj_query_return});
-        }
-      },
+      onRowDoubleClicked: updateObjectGridData,
       onFilterChanged: updateSceneGridData
+    };
+
+    function updateObjectGridData(event) {
+      // Get selected data from list
+      var selectedNodes = scnGridOptions.api.getSelectedNodes()
+      var selectedData = selectedNodes.map( function(node) { return node.data })
+      if (selectedData.length > 0) {
+        var sceneKey = selectedData[0].key;
+
+        // Create the object query data
+        objListData = {num_records: 100, objects: [{scene: sceneKey}]};
+        var queryFrame = document.getElementById('frameinp').value;
+        if (queryFrame) objListData.objects[0].frame = parseInt(queryFrame,10);
+
+        // Execute an HTTP call to get the available asset metadata
+        // and populate it into the object list
+        $.ajax({url: "v1/scene/" + sceneKey + "/object/query",
+                type: 'POST',
+                data: JSON.stringify(objListData),
+                contentType: "application/json; charset=utf-8",
+                success: obj_query_return});
+      }
     };
 
     function updateSceneGridData(event) {
@@ -383,6 +399,16 @@
         var selectedRow = scnGridOptions.api.getSelectedNodes()[0].data;
         window.location.replace("propertyBrowser?scene=" + selectedRow.key);
 
+      } else if (event.target.id == "favoriteScene") {
+        var selectedRow = scnGridOptions.api.getSelectedNodes()[0].data;
+        $.ajax({url: "/users/" + loggedInKey + "/scenes/" + selectedRow.key,
+                type: 'PUT',
+                success: function(data) {
+                  console.log("Saved Favorite Scene");
+                  $("#success-alert").show();
+                  setTimeout(function() { $("#success-alert").hide(); }, 5000);
+                }});
+
       } else if (event.target.id == "createObject") {
         var selectedRow = scnGridOptions.api.getSelectedNodes()[0].data;
         window.location.replace("editObj?sceneKey=" + selectedRow.key);
@@ -402,6 +428,11 @@
         if (r) {
           deleteSelectedObj();
         }
+      } else if (event.target.id == "setFrame") {
+        updateObjectGridData({});
+      } else if (event.target.id == "noFrame") {
+        document.getElementById('frameinp').value = "";
+        updateObjectGridData({});
       }
     }
 
@@ -442,6 +473,7 @@
       // The User ID is injected here by the server before
       // it returns the page
       var loggedInUser = "${userName}";
+      var loggedInKey = "${userId}";
       console.log(loggedInUser);
       // If the user is an admin, then the server will inject 'true' here,
       // otherwise, it will inject 'false'.
@@ -450,7 +482,8 @@
       if (!adminLoggedIn) {
         // Disable the user browser link in the navbar if the logged in
         // user does not have admin access
-        document.getElementById("userBrowserLink").href = "#";
+        document.getElementById("userBrowserLink").href = "/editUser?key=" + loggedInKey;
+        document.getElementById("userBrowserLink").innerHTML = "My Account";
       }
 
       updateSceneGridData({});

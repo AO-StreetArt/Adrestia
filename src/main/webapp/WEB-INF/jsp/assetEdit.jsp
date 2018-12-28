@@ -221,6 +221,7 @@
       // The User ID is injected here by the server before
       // it returns the page
       var loggedInUser = "${userName}";
+      var loggedInKey = "${userId}";
       console.log(loggedInUser);
       // If the user is an admin, then the server will inject 'true' here,
       // otherwise, it will inject 'false'.
@@ -229,7 +230,8 @@
       if (!adminLoggedIn) {
         // Disable the user browser link in the navbar if the logged in
         // user does not have admin access
-        document.getElementById("userBrowserLink").href = "#";
+        document.getElementById("userBrowserLink").href = "/editUser?key=" + loggedInKey;
+        document.getElementById("userBrowserLink").innerHTML = "My Account";
       }
 
       // Setup the cancel button callback
@@ -243,7 +245,7 @@
 
       console.log("Asset Key: " + assetKey)
       if (assetKey) {
-        $.ajax({url: "v1/asset", data: {key: assetKey}, success: query_return});
+        $.ajax({url: "v1/asset/", data: {key: assetKey}, success: query_return});
       }
     });
     </script>

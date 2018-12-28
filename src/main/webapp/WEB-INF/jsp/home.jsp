@@ -104,23 +104,53 @@
     	<div class="row">
     		<div class="col-md-4">
     			<h3 class="text-center" id="project1Header"></h3>
-          <a href="https://aesel.readthedocs.io/en/latest/pages/overview.html">
+          <a id="project1Link" href="https://aesel.readthedocs.io/en/latest/pages/overview.html">
             <img class="img-fluid rounded mx-auto d-block" alt="Aesel Project 1" src="" id="project1Thumbnail"/>
       			<p class="text-center" id="project1Description"></p>
           </a>
     		</div>
         <div class="col-md-4">
     			<h3 class="text-center" id="project2Header"></h3>
-          <a href="https://aesel.readthedocs.io/en/latest/pages/overview.html">
-            <img class="img-fluid rounded mx-auto d-block" alt="Aesel Workflows Animation" src="" id="project2Thumbnail" />
+          <a id="project2Link" href="https://aesel.readthedocs.io/en/latest/pages/overview.html">
+            <img class="img-fluid rounded mx-auto d-block" alt="Aesel Project 2" src="" id="project2Thumbnail" />
       			<p class="text-center" id="project2Description"></p>
           </a>
     		</div>
         <div class="col-md-4">
     			<h3 class="text-center" id="project3Header"></h3>
-          <a href="https://aesel.readthedocs.io/en/latest/pages/overview.html">
-            <img class="img-fluid rounded mx-auto d-block" alt="Aesel Workflows Animation" src="" id="project3Thumbnail" />
+          <a id="project3Link" href="https://aesel.readthedocs.io/en/latest/pages/overview.html">
+            <img class="img-fluid rounded mx-auto d-block" alt="Aesel Project 3" src="" id="project3Thumbnail" />
       			<p class="text-center" id="project3Description"></p>
+          </a>
+    		</div>
+    	</div>
+      <div class="row">
+    		<div class="col-md-12">
+    			<h2 class="text-center">
+    				Favorite Scenes
+    			</h2>
+    		</div>
+    	</div>
+    	<div class="row">
+    		<div class="col-md-4">
+    			<h3 class="text-center" id="scene1Header"></h3>
+          <a id="scene1Link" href="https://aesel.readthedocs.io/en/latest/pages/overview.html">
+            <img class="img-fluid rounded mx-auto d-block" alt="Aesel Scene 1" src="" id="scene1Thumbnail"/>
+      			<p class="text-center" id="scene1Description"></p>
+          </a>
+    		</div>
+        <div class="col-md-4">
+    			<h3 class="text-center" id="scene2Header"></h3>
+          <a id="scene2Link" href="https://aesel.readthedocs.io/en/latest/pages/overview.html">
+            <img class="img-fluid rounded mx-auto d-block" alt="Aesel Scene 2" src="" id="scene2Thumbnail" />
+      			<p class="text-center" id="scene2Description"></p>
+          </a>
+    		</div>
+        <div class="col-md-4">
+    			<h3 class="text-center" id="scene3Header"></h3>
+          <a id="scene3Link" href="https://aesel.readthedocs.io/en/latest/pages/overview.html">
+            <img class="img-fluid rounded mx-auto d-block" alt="Aesel Scene 3" src="" id="scene3Thumbnail" />
+      			<p class="text-center" id="scene3Description"></p>
           </a>
     		</div>
     	</div>
@@ -133,6 +163,7 @@
     window.addEventListener('DOMContentLoaded', function(){
       // The User ID is injected here by the server before
       // it returns the page
+      var loggedInKey = "${userId}";
       var loggedInUser = "${userName}";
       console.log(loggedInUser);
       // If the user is an admin, then the server will inject 'true' here,
@@ -142,9 +173,10 @@
       var adminLoggedIn = (isUserAdmin == 'true');
       console.log(adminLoggedIn);
       if (!adminLoggedIn) {
-        // Disable the user browser link in the navbar if the logged in
-        // user does not have admin access
-        document.getElementById("userBrowserLink").href = "#";
+        // Change user browser link in the navbar to link to account details
+        // if the logged in user does not have admin access
+        document.getElementById("userBrowserLink").href = "/editUser?key=" + loggedInKey;
+        document.getElementById("userBrowserLink").innerHTML = "My Account";
       }
       // The favorite projects list is injected here by the server
       // before it returns the page.
@@ -157,7 +189,8 @@
                   console.log("Project 1 Retrieved");
                   document.getElementById('project1Header').innerHTML = data.name;
                   document.getElementById('project1Description').innerHTML = data.description;
-                  document.getElementById('project1Thumbnail').src = "v1/asset/" + data.thumbnail + "/thumbnail.png";
+                  document.getElementById('project1Thumbnail').src = "/v1/asset/" + data.thumbnail + "/thumbnail.png";
+                  document.getElementById('project1Link').href = "/editProject?key=" + data.id;
                 }});
       }
       if (favProjects.length > 1) {
@@ -168,6 +201,7 @@
                   document.getElementById('project2Header').innerHTML = data.name;
                   document.getElementById('project2Description').innerHTML = data.description;
                   document.getElementById('project2Thumbnail').src = "v1/asset/" + data.thumbnail + "/thumbnail.png";
+                  document.getElementById('project2Link').href = "/editProject?key=" + data.id;
                 }});
       }
       if (favProjects.length > 2) {
@@ -178,6 +212,44 @@
                   document.getElementById('project3Header').innerHTML = data.name;
                   document.getElementById('project3Description').innerHTML = data.description;
                   document.getElementById('project3Thumbnail').src = "v1/asset/" + data.thumbnail + "/thumbnail.png";
+                  document.getElementById('project3Link').href = "/editProject?key=" + data.id;
+                }});
+      }
+      // The favorite scenes list is injected here by the server
+      // before it returns the page.
+      var favoriteScenesList = "${scenesString}";
+      var favScenes = favoriteScenesList.split(",");
+      if (favScenes.length > 0 && favScenes[0] != "") {
+        $.ajax({url: "/v1/scene/" + favScenes[0],
+                type: 'GET',
+                success: function(data) {
+                  console.log("Scene 1 Retrieved");
+                  document.getElementById('scene1Header').innerHTML = data.scenes[0].name;
+                  document.getElementById('scene1Link').href = "/editScene?key=" + data.scenes[0].key;
+                  // document.getElementById('scene1Description').innerHTML = data.description;
+                  // document.getElementById('scene1Thumbnail').src = "v1/asset/" + data.thumbnail + "/thumbnail.png";
+                }});
+      }
+      if (favScenes.length > 1) {
+        $.ajax({url: "/v1/scene/" + favScenes[1],
+                type: 'GET',
+                success: function(data) {
+                  console.log("Scene 2 Retrieved");
+                  document.getElementById('scene2Header').innerHTML = data.name;
+                  document.getElementById('scene2Link').href = "/editScene?key=" + data.scenes[0].key;
+                  // document.getElementById('scene2Description').innerHTML = data.description;
+                  // document.getElementById('scene2Thumbnail').src = "v1/asset/" + data.thumbnail + "/thumbnail.png";
+                }});
+      }
+      if (favScenes.length > 2) {
+        $.ajax({url: "/v1/scene/" + favScenes[2],
+                type: 'GET',
+                success: function(data) {
+                  console.log("Scene 3 Retrieved");
+                  document.getElementById('scene3Header').innerHTML = data.name;
+                  document.getElementById('scene3Link').href = "/editScene?key=" + data.scenes[0].key;
+                  // document.getElementById('scene3Description').innerHTML = data.description;
+                  // document.getElementById('scene3Thumbnail').src = "v1/asset/" + data.thumbnail + "/thumbnail.png";
                 }});
       }
     });

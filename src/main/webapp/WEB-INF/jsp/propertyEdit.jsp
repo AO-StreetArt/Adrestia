@@ -106,6 +106,38 @@
         </div>
       </div>
       <div class="row">
+        <div class="col-xs-5 col-sm-4 col-md-2 col-lg-2">
+          <p>Value 1:</p>
+        </div>
+        <div class="col-xs-7 col-sm-8 col-md-10 col-lg-10" class="tooltip" title="The timestamp of the Object.">
+          <input id="value1inp" type="text" class="form-control-plaintext" name="Value1" placeholder="Value 1"></input>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-5 col-sm-4 col-md-2 col-lg-2">
+          <p>Value 2:</p>
+        </div>
+        <div class="col-xs-7 col-sm-8 col-md-10 col-lg-10" class="tooltip" title="The timestamp of the Object.">
+          <input id="value2inp" type="text" class="form-control-plaintext" name="Value2" placeholder="Value 2"></input>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-5 col-sm-4 col-md-2 col-lg-2">
+          <p>Value 3:</p>
+        </div>
+        <div class="col-xs-7 col-sm-8 col-md-10 col-lg-10" class="tooltip" title="The timestamp of the Object.">
+          <input id="value3inp" type="text" class="form-control-plaintext" name="Value3" placeholder="Value 3"></input>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-5 col-sm-4 col-md-2 col-lg-2">
+          <p>Value 4:</p>
+        </div>
+        <div class="col-xs-7 col-sm-8 col-md-10 col-lg-10" class="tooltip" title="The timestamp of the Object.">
+          <input id="value4inp" type="text" class="form-control-plaintext" name="Value4" placeholder="Value 4"></input>
+        </div>
+      </div>
+      <div class="row">
         <div class="col-md-6" class="tooltip" title="Cancel the changes.">
           <button id="cancel" type="button" class="btn btn-primary"><span style="font-size:larger;">Cancel</span></button>
         </div>
@@ -132,12 +164,22 @@
         var newAssetSubId = document.getElementById('assetsubinp').value;
         var newFrame = document.getElementById('frameinp').value;
         var newTime = document.getElementById('timeinp').value;
+        var newValue1 = document.getElementById('value1inp').value;
+        var newValue2 = document.getElementById('value2inp').value;
+        var newValue3 = document.getElementById('value3inp').value;
+        var newValue4 = document.getElementById('value4inp').value;
         propData = {scene: sceneKey}
         if (newName) propData["name"] = newName;
         if (newParent) propData["parent"] = newParent;
         if (newAssetSubId) propData["assetsubinp"] = newAssetSubId;
         if (newFrame) propData["frame"] = parseInt(newFrame, 10);
         if (newTime) propData["time"] = parseInt(newTime, 10);
+        if (newValue1) {
+          propData["values"] = [{"value": parseFloat(newValue1)}];
+          if (newValue2) propData["values"].push({"value": parseFloat(newValue2)});
+          if (newValue3) propData["values"].push({"value": parseFloat(newValue3)});
+          if (newValue4) propData["values"].push({"value": parseFloat(newValue4)});
+        }
         var objUrl = "v1/scene/" + sceneKey + "/property/";
         if (newKey) {
           p["key"] = newKey;
@@ -178,12 +220,25 @@
       if (data.properties[0].timestamp) {
         document.getElementById('timeinp').value = data.properties[0].timestamp;
       }
+      if (data.properties[0].values.length > 0) {
+        document.getElementById('value1inp').value = data.properties[0].values[0].value;
+      }
+      if (data.properties[0].values.length > 1) {
+        document.getElementById('value2inp').value = data.properties[0].values[1].value;
+      }
+      if (data.properties[0].values.length > 2) {
+        document.getElementById('value3inp').value = data.properties[0].values[2].value;
+      }
+      if (data.properties[0].values.length > 3) {
+        document.getElementById('value4inp').value = data.properties[0].values[3].value;
+      }
     }
 
     window.addEventListener('DOMContentLoaded', function(){
       // The User ID is injected here by the server before
       // it returns the page
       var loggedInUser = "${userName}";
+      var loggedInKey = "${userId}";
       console.log(loggedInUser);
       // If the user is an admin, then the server will inject 'true' here,
       // otherwise, it will inject 'false'.
@@ -192,7 +247,8 @@
       if (!adminLoggedIn) {
         // Disable the user browser link in the navbar if the logged in
         // user does not have admin access
-        document.getElementById("userBrowserLink").href = "#";
+        document.getElementById("userBrowserLink").href = "/editUser?key=" + loggedInKey;
+        document.getElementById("userBrowserLink").innerHTML = "My Account";
       }
 
       // Setup the button callbacks into the Javascript

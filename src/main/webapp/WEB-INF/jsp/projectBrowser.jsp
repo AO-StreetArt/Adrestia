@@ -53,6 +53,7 @@
           <h1 style="text-align: center;">Projects</h1>
         </div>
       </div>
+      <div class="alert alert-success" id="success-alert" style="display:none">Success!</div>
       <div class="row">
     		<div class="col-md-6 col-lg-6">
     			<p id="projectDescription">
@@ -69,6 +70,7 @@
             <div class="btn-group" role="group" aria-label="Project Toolbar">
               <button id="editProj" type="button" class="btn btn-primary" style="z-index:265"><span style="font-size:larger;">Edit Project</span></button>
               <button id="createProj" type="button" class="btn btn-primary" style="z-index:265"><span style="font-size:larger;">Create Project</span></button>
+              <button id="favoriteProj" type="button" class="btn btn-primary" style="z-index:265"><span style="font-size:larger;">Add to Favorites</span></button>
               <button id="delete" type="button" class="btn btn-primary" style="z-index:265"><span style="font-size:larger;">Delete Project</span></button>
             </div>
           </div>
@@ -95,6 +97,11 @@
       </footer>
     </div>
     <script>
+    // The User ID is injected here by the server before
+    // it returns the page
+    var loggedInUser = "${userName}";
+    var loggedInKey = "${userId}";
+
     console.log("Creating Table");
 
     // specify the columns
@@ -190,6 +197,8 @@
                 type: 'DELETE',
                 success: function(data) {
                   console.log("Deleted Project");
+                  $("#success-alert").show();
+                  setTimeout(function() { $("#success-alert").hide(); }, 5000);
                 }});
       }
     }
@@ -217,15 +226,21 @@
         if (r) {
           delete_selected();
         }
+      } else if (event.target.id == "favoriteProj") {
+        var selectedRow = gridOptions.api.getSelectedNodes()[0].data;
+        $.ajax({url: "/users/" + loggedInKey + "/projects/" + selectedRow.id,
+                type: 'PUT',
+                success: function(data) {
+                  console.log("Saved Favorite Project");
+                  $("#success-alert").show();
+                  setTimeout(function() { $("#success-alert").hide(); }, 5000);
+                }});
       }
       updateGridData({});
     }
 
     // Main page, added once DOM is loaded into browser
     window.addEventListener('DOMContentLoaded', function(){
-      // The User ID is injected here by the server before
-      // it returns the page
-      var loggedInUser = "${userName}";
       console.log(loggedInUser);
       // If the user is an admin, then the server will inject 'true' here,
       // otherwise, it will inject 'false'.
@@ -234,7 +249,8 @@
       if (!adminLoggedIn) {
         // Disable the user browser link in the navbar if the logged in
         // user does not have admin access
-        document.getElementById("userBrowserLink").href = "#";
+        document.getElementById("userBrowserLink").href = "/editUser?key=" + loggedInKey;
+        document.getElementById("userBrowserLink").innerHTML = "My Account";
       }
 
       // Execute an HTTP call to get the available asset metadata

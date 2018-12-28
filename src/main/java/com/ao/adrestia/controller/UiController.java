@@ -57,6 +57,7 @@ public class UiController {
       List<ApplicationUser> users = userRepository.findByUsername(principal.getName());
       if (users.size() > 0) {
         model.put("userName", users.get(0).username);
+        model.put("userId", users.get(0).id);
         model.put("isAdmin", String.valueOf(users.get(0).isAdmin));
       }
     }
