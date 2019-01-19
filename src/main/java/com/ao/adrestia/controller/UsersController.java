@@ -165,6 +165,59 @@ public class UsersController {
     return new ResponseEntity<String>("", responseHeaders, returnCode);
   }
 
+  private ResponseEntity<String> updateBoolAttr(String key, String attrName, boolean attrVal) {
+    BasicDBObject updateQuery = new BasicDBObject();
+    updateQuery.put(attrName, attrVal);
+
+    UpdateResult result = mongoCollection.updateOne(genIdQuery(key),
+        new BasicDBObject("$set", updateQuery), new UpdateOptions());
+
+    // Set the http response code
+    HttpStatus returnCode = HttpStatus.OK;
+    if (result.getModifiedCount() < 1) {
+      returnCode = HttpStatus.REQUESTED_RANGE_NOT_SATISFIABLE;
+      log.debug("No documents modified for user update");
+    }
+    HttpHeaders responseHeaders = new HttpHeaders();
+    return new ResponseEntity<String>("", responseHeaders, returnCode);
+  }
+
+  /**
+  * Make an existing user an admin user.
+  */
+  @PutMapping("/{key}/admin")
+  public ResponseEntity<String> grantAdminPerms(@PathVariable("key") String key) {
+    log.info("Granting Admin permissions to user");
+    return updateBoolAttr(key, "isAdmin", true);
+  }
+
+  /**
+  * Make an existing user not an admin user.
+  */
+  @DeleteMapping("/{key}/admin")
+  public ResponseEntity<String> revokeAdminPerms(@PathVariable("key") String key) {
+    log.info("Revoking Admin permissions from user");
+    return updateBoolAttr(key, "isAdmin", false);
+  }
+
+  /**
+  * Activate a user.
+  */
+  @PutMapping("/{key}/active")
+  public ResponseEntity<String> activateUser(@PathVariable("key") String key) {
+    log.info("Activating user");
+    return updateBoolAttr(key, "isActive", true);
+  }
+
+  /**
+  * Deactivate a user.
+  */
+  @DeleteMapping("/{key}/active")
+  public ResponseEntity<String> deactivateUser(@PathVariable("key") String key) {
+    log.info("Deactivating user");
+    return updateBoolAttr(key, "isActive", false);
+  }
+
   private ResponseEntity<String> updateArrayAttr(String userKey,
       String attrKey, String attrVal, String updType) {
     BasicDBObject updateQuery = genUpdateQuery(attrKey, attrVal, updType);
