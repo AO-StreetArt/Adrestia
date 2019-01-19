@@ -74,10 +74,14 @@ public class UiController {
   protected String sceneBrowser(
       final Map<String, Object> model,
       final Principal principal,
-      @RequestParam(value = "keys", defaultValue = "") String sceneKeys) {
+      @RequestParam(value = "keys", defaultValue = "") String sceneKeys,
+      @RequestParam(value = "project", defaultValue = "") String projectKey,
+      @RequestParam(value = "sceneGroup", defaultValue = "") String scnGroupName) {
     logger.info("Request for Scene Browser");
     addUserDetailsToModel(model, principal);
     model.put("sceneKeys", sceneKeys);
+    model.put("projectKey", projectKey);
+    model.put("scnGroupName", scnGroupName);
     return "sceneBrowser";
   }
 
@@ -140,6 +144,28 @@ public class UiController {
     addUserDetailsToModel(model, principal);
     model.put("projKey", projKey);
     return "projectEdit";
+  }
+
+  @RequestMapping(value = "/sceneGroupBrowser", method = RequestMethod.GET)
+  protected String sceneGroupUi(
+      final Map<String, Object> model,
+      final Principal principal,
+      @RequestParam(value = "key", defaultValue = "") String projKey) {
+    logger.info("Request for Scene Group UI");
+    addUserDetailsToModel(model, principal);
+    model.put("projKey", projKey);
+    return "sceneGroupBrowser";
+  }
+
+  @RequestMapping(value = "/projectCollectionBrowser", method = RequestMethod.GET)
+  protected String projectCollectionsUi(
+      final Map<String, Object> model,
+      final Principal principal,
+      @RequestParam(value = "key", defaultValue = "") String projKey) {
+    logger.info("Request for Scene Group UI");
+    addUserDetailsToModel(model, principal);
+    model.put("projKey", projKey);
+    return "projectCollectionBrowser";
   }
 
   @RequestMapping(value = "/editScene", method = RequestMethod.GET)

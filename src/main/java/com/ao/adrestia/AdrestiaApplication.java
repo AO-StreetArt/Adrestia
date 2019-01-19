@@ -111,6 +111,7 @@ public class AdrestiaApplication
       http.authorizeRequests()
           .antMatchers(HttpMethod.GET, "/health").permitAll()
           .antMatchers(HttpMethod.GET, "/css/**").permitAll()
+          .antMatchers(HttpMethod.GET, "/js/**").permitAll()
           .antMatchers(HttpMethod.GET, "/favicon.ico").permitAll()
           .antMatchers(HttpMethod.GET, "/portal/login").permitAll()
           .antMatchers(HttpMethod.POST, "/login").permitAll()

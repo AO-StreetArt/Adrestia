@@ -11,6 +11,7 @@ VOLUME /tmp
 ADD build/libs/adrestia-0.2.0.jar app.jar
 ADD src/main/webapp/WEB-INF/jsp src/main/webapp/WEB-INF/jsp
 ADD src/main/webapp/css src/main/webapp/css
+ADD src/main/webapp/js src/main/webapp/js
 ADD src/main/webapp/images src/main/webapp/images
 ADD src/main/resources src/main/resources
 ENV JAVA_OPTS=""
