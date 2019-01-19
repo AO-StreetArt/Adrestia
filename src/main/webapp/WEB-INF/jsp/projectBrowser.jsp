@@ -14,6 +14,8 @@
 
   <!-- Custom CSS -->
   <link href="/css/aeselBrowserBaseStyle.css" rel="stylesheet">
+  <!-- Custom Javascript -->
+  <script src="/js/aeselBrowserUtils.js"></script>
   <head>
     <meta http-equiv="Content-Type" content="text/html" charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -31,8 +33,8 @@
             <li class="nav-item">
               <a class="nav-link" href="/portal/home">Home</a>
             </li>
-            <li class="nav-item active" id="projectBrowser">
-              <a class="nav-link" href="#">Projects <span class="sr-only">(current)</span></a>
+            <li class="nav-item" id="projectBrowser">
+              <a class="nav-link active" href="#">Projects <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item" id="sceneBrowser">
               <a class="nav-link" href="/sceneBrowser">Scenes</a>
@@ -197,8 +199,7 @@
                 type: 'DELETE',
                 success: function(data) {
                   console.log("Deleted Project");
-                  $("#success-alert").show();
-                  setTimeout(function() { $("#success-alert").hide(); }, 5000);
+                  displayAlert("success-alert");
                 }});
       }
     }
@@ -232,8 +233,7 @@
                 type: 'PUT',
                 success: function(data) {
                   console.log("Saved Favorite Project");
-                  $("#success-alert").show();
-                  setTimeout(function() { $("#success-alert").hide(); }, 5000);
+                  displayAlert("success-alert");
                 }});
       }
       updateGridData({});
@@ -246,22 +246,14 @@
       // otherwise, it will inject 'false'.
       var isUserAdmin = "${isAdmin}";
       var adminLoggedIn = (isUserAdmin == 'true');
-      if (!adminLoggedIn) {
-        // Disable the user browser link in the navbar if the logged in
-        // user does not have admin access
-        document.getElementById("userBrowserLink").href = "/editUser?key=" + loggedInKey;
-        document.getElementById("userBrowserLink").innerHTML = "My Account";
-      }
+      setUsersLink((isUserAdmin == 'true'), "userBrowserLink");
 
       // Execute an HTTP call to get the available asset metadata
       // and populate it into the list
       $.ajax({url: "v1/project", data: {}, success: query_return});
 
       // Setup the button callbacks into the Javascript
-      var buttons = document.getElementsByTagName("button");
-      for (let i = 0; i < buttons.length; i++) {
-        buttons[i].addEventListener("click", onButtonClick, false);
-      };
+      registerButtonCallback(onButtonClick);
     });
     </script>
   </body>

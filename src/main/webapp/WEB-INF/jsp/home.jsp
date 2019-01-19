@@ -17,6 +17,8 @@
 
   <!-- Custom CSS -->
   <link href="/css/aeselBrowserBaseStyle.css" rel="stylesheet">
+  <!-- Custom Javascript -->
+  <script src="/js/aeselBrowserUtils.js"></script>
   <head>
     <meta http-equiv="Content-Type" content="text/html" charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -172,12 +174,7 @@
       console.log(isUserAdmin);
       var adminLoggedIn = (isUserAdmin == 'true');
       console.log(adminLoggedIn);
-      if (!adminLoggedIn) {
-        // Change user browser link in the navbar to link to account details
-        // if the logged in user does not have admin access
-        document.getElementById("userBrowserLink").href = "/editUser?key=" + loggedInKey;
-        document.getElementById("userBrowserLink").innerHTML = "My Account";
-      }
+      setUsersLink((isUserAdmin == 'true'), "userBrowserLink");
       // The favorite projects list is injected here by the server
       // before it returns the page.
       var favoriteProjectsList = "${projectsString}";

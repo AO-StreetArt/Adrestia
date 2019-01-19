@@ -6,6 +6,8 @@
 
   <!-- Custom CSS -->
   <link href="/css/aeselBrowserBaseStyle.css" rel="stylesheet">
+  <!-- Custom Javascript -->
+  <script src="/js/aeselBrowserUtils.js"></script>
   <head>
     <meta http-equiv="Content-Type" content="text/html" charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -25,29 +27,7 @@
   </head>
   <body>
     <div class="container-fluid pre-scrollable" style="height:100%;max-height:100%;">
-      <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <a class="navbar-brand" href="#"></a>
-          <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-              <a class="nav-link" href="/portal/home">Home</a>
-            </li>
-            <li class="nav-item" id="projectBrowser">
-              <a class="nav-link" href="/projectBrowser">Projects</a>
-            </li>
-            <li class="nav-item active" id="sceneBrowser">
-              <a class="nav-link" href="/sceneBrowser">Scenes <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item" id="assetBrowser">
-              <a class="nav-link" href="/assetBrowser">Assets</a>
-            </li>
-            <li class="nav-item" id="userBrowser">
-              <a class="nav-link" href="/userBrowser">Users</a>
-            </li>
-            <li class="nav-item" id="docs">
-              <a class="nav-link" href="https://aesel.readthedocs.io/en/latest/index.html">Documentation</a>
-            </li>
-          </ul>
-      </nav>
+      <%@include  file="aeselBrowserNavbar.jspf" %>
       <div class="row">
         <div class="col-md-12">
           <h1 style="text-align: center;">Properties</h1>
@@ -263,20 +243,12 @@
     window.addEventListener('DOMContentLoaded', function(){
       console.log(loggedInUser);
       var adminLoggedIn = (isUserAdmin == 'true');
-      if (!adminLoggedIn) {
-        // Disable the user browser link in the navbar if the logged in
-        // user does not have admin access
-        document.getElementById("userBrowserLink").href = "/editUser?key=" + loggedInKey;
-        document.getElementById("userBrowserLink").innerHTML = "My Account";
-      }
+      setUsersLink((isUserAdmin == 'true'), "userBrowserLink");
 
       updateGridData({});
 
       // Setup the button callbacks into the Javascript
-      var buttons = document.getElementsByTagName("button");
-      for (let i = 0; i < buttons.length; i++) {
-        buttons[i].addEventListener("click", onButtonClick, false);
-      };
+      registerButtonCallback(onButtonClick);
     });
     </script>
   </body>

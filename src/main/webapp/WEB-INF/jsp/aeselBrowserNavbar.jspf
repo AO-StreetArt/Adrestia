@@ -1,0 +1,23 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <a class="navbar-brand" href="#"></a>
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="/portal/home">Home</a>
+      </li>
+      <li class="nav-item" id="projectBrowser">
+        <a class="nav-link" href="/projectBrowser">Projects</a>
+      </li>
+      <li class="nav-item" id="sceneBrowser">
+        <a class="nav-link" href="/sceneBrowser">Scenes</a>
+      </li>
+      <li class="nav-item" id="assetBrowser">
+        <a class="nav-link" href="/assetBrowser">Assets</a>
+      </li>
+      <li class="nav-item" id="userBrowser">
+        <a class="nav-link" href="/userBrowser" id="userBrowserLink">Users</a>
+      </li>
+      <li class="nav-item" id="docs">
+        <a class="nav-link" href="https://aesel.readthedocs.io/en/latest/index.html">Documentation</a>
+      </li>
+    </ul>
+</nav>

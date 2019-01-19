@@ -17,6 +17,8 @@
 
   <!-- Custom CSS -->
   <link href="/css/aeselBrowserBaseStyle.css" rel="stylesheet">
+  <!-- Custom Javascript -->
+  <script src="/js/aeselBrowserUtils.js"></script>
   <head>
     <meta http-equiv="Content-Type" content="text/html" charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -90,10 +92,7 @@
     window.addEventListener('DOMContentLoaded', function(){
 
       // Setup the button callbacks into the Javascript
-      var buttons = document.getElementsByTagName("button");
-      for (let i = 0; i < buttons.length; i++) {
-        buttons[i].addEventListener("click", onButtonClick, false);
-      };
+      registerButtonCallback(onButtonClick);
 
       // Activate JBox Tooltips
       new jBox('Tooltip', {

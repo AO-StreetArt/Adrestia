@@ -1,0 +1,79 @@
+<div class="row">
+  <div class="col-md-4" onmouseenter='showEditButtons(["viewg1btn", "editg1btn", "deleteg1btn"])' onmouseleave='hideEditButtons(["viewg1btn", "editg1btn", "deleteg1btn"])'>
+    <div class="card">
+      <h5 class="card-header" id="group1Header"></h5>
+      <div class="card-body">
+        <p class="card-text" id="group1Body"></p>
+        <input id="g1BodyInp" type="text" class="form-control-plaintext" name="group1DescriptionInput" placeholder="Description" style="display:none"></input>
+      </div>
+      <div class="card-footer">
+        <p class="card-text" id="group1Category"></p>
+        <input id="g1CategoryInp" type="text" class="form-control-plaintext" name="group1CategoryInput" placeholder="Category" style="display:none"></input>
+      </div>
+    </div>
+    <div class="btn-toolbar pull-right" role="toolbar" aria-label="Asset Toolbar">
+      <div class="btn-group" role="group" aria-label="Asset Toolbar">
+        <button style="display:none" id="viewg1btn" type="button" class="btn btn-secondary btn-sm" style="z-index:265">View</button>
+        <button style="display:none" id="editg1btn" type="button" class="btn btn-secondary btn-sm" style="z-index:265">Edit</button>
+        <button style="display:none" id="deleteg1btn" type="button" class="btn btn-secondary btn-sm" style="z-index:265">Delete</button>
+        <button style="display:none" id="saveg1btn" type="button" class="btn btn-secondary btn-sm" style="z-index:265">Save</button>
+        <button style="display:none" id="cancelg1btn" type="button" class="btn btn-secondary btn-sm" style="z-index:265">Cancel</button>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4" onmouseenter='showEditButtons(["viewg2btn", "editg2btn", "deleteg2btn"])' onmouseleave='hideEditButtons(["viewg2btn", "editg2btn", "deleteg2btn"])'>
+    <div class="card">
+      <h5 class="card-header" id="group2Header"></h5>
+      <div class="card-body">
+        <p class="card-text" id="group2Body"></p>
+        <input id="g2BodyInp" type="text" class="form-control-plaintext" name="group2DescriptionInput" placeholder="Description" style="display:none"></input>
+      </div>
+      <div class="card-footer">
+        <p class="card-text" id="group2Category"></p>
+        <input id="g2CategoryInp" type="text" class="form-control-plaintext" name="group2CategoryInput" placeholder="Category" style="display:none"></input>
+      </div>
+    </div>
+    <div class="btn-toolbar pull-right" role="toolbar" aria-label="Asset Toolbar">
+      <div class="btn-group" role="group" aria-label="Asset Toolbar">
+        <button style="display:none" id="viewg2btn" type="button" class="btn btn-secondary btn-sm" style="z-index:265">View</button>
+        <button style="display:none" id="editg2btn" type="button" class="btn btn-secondary btn-sm" style="z-index:265">Edit</button>
+        <button style="display:none" id="deleteg2btn" type="button" class="btn btn-secondary btn-sm" style="z-index:265">Delete</button>
+        <button style="display:none" id="saveg2btn" type="button" class="btn btn-secondary btn-sm" style="z-index:265">Save</button>
+        <button style="display:none" id="cancelg2btn" type="button" class="btn btn-secondary btn-sm" style="z-index:265">Cancel</button>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4" onmouseenter='showEditButtons(["viewg3btn", "editg3btn", "deleteg3btn"])' onmouseleave='hideEditButtons(["viewg3btn", "editg3btn", "deleteg3btn"])'>
+    <div class="card">
+      <h5 class="card-header" id="group3Header"></h5>
+      <div class="card-body">
+        <p class="card-text" id="group3Body"></p>
+        <input id="g3BodyInp" type="text" class="form-control-plaintext" name="group3DescriptionInput" placeholder="Description" style="display:none"></input>
+      </div>
+      <div class="card-footer">
+        <p class="card-text" id="group3Category"></p>
+        <input id="g3CategoryInp" type="text" class="form-control-plaintext" name="group3CategoryInput" placeholder="Category" style="display:none"></input>
+      </div>
+    </div>
+    <div class="btn-toolbar pull-right" role="toolbar" aria-label="Asset Toolbar">
+      <div class="btn-group" role="group" aria-label="Asset Toolbar">
+        <button style="display:none" id="viewg3btn" type="button" class="btn btn-secondary btn-sm" style="z-index:265">View</button>
+        <button style="display:none" id="editg3btn" type="button" class="btn btn-secondary btn-sm" style="z-index:265">Edit</button>
+        <button style="display:none" id="deleteg3btn" type="button" class="btn btn-secondary btn-sm" style="z-index:265">Delete</button>
+        <button style="display:none" id="saveg3btn" type="button" class="btn btn-secondary btn-sm" style="z-index:265">Save</button>
+        <button style="display:none" id="cancelg3btn" type="button" class="btn btn-secondary btn-sm" style="z-index:265">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <div class="btn-toolbar pull-right" role="toolbar" aria-label="Asset Toolbar">
+      <div class="btn-group" role="group" aria-label="Asset Toolbar">
+        <button id="firstPage" type="button" class="btn btn-secondary btn-sm" style="z-index:265">1</button>
+        <button id="prevPage" type="button" class="btn btn-secondary btn-sm" style="z-index:265"><<</button>
+        <button id="nextPage" type="button" class="btn btn-secondary btn-sm" style="z-index:265">>></button>
+      </div>
+    </div>
+  </div>
+</div>

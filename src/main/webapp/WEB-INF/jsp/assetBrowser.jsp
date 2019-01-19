@@ -14,6 +14,8 @@
 
   <!-- Custom CSS -->
   <link href="/css/aeselBrowserBaseStyle.css" rel="stylesheet">
+  <!-- Custom Javascript -->
+  <script src="/js/aeselBrowserUtils.js"></script>
   <head>
     <meta http-equiv="Content-Type" content="text/html" charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -304,22 +306,14 @@
       // otherwise, it will inject 'false'.
       var isUserAdmin = "${isAdmin}";
       var adminLoggedIn = (isUserAdmin == 'true');
-      if (!adminLoggedIn) {
-        // Disable the user browser link in the navbar if the logged in
-        // user does not have admin access
-        document.getElementById("userBrowserLink").href = "/editUser?key=" + loggedInKey;
-        document.getElementById("userBrowserLink").innerHTML = "My Account";
-      }
+      setUsersLink((isUserAdmin == 'true'), "userBrowserLink")
 
       // Execute an HTTP call to get the available asset metadata
       // and populate it into the list
       updateGridData({});
 
       // Setup the button callbacks into the Javascript
-      var buttons = document.getElementsByTagName("button");
-      for (let i = 0; i < buttons.length; i++) {
-        buttons[i].addEventListener("click", onButtonClick, false);
-      };
+      registerButtonCallback(onButtonClick);
 
       // get the canvas DOM element
       canvas = document.getElementById('renderCanvas');

@@ -14,6 +14,9 @@
 
   <!-- Custom CSS -->
   <link href="/css/aeselBrowserBaseStyle.css" rel="stylesheet">
+  <!-- Custom Javascript -->
+  <script src="/js/aeselBrowserUtils.js"></script>
+  <script src="/js/aeselSceneGridDefinitions.js"></script>
   <head>
     <meta http-equiv="Content-Type" content="text/html" charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -26,6 +29,7 @@
   <body>
     <div class="container-fluid pre-scrollable" style="height:100%;max-height:100%;">
       <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <a class="navbar-brand" href="#"></a>
           <ul class="navbar-nav mr-auto">
             <li class="nav-item">
               <a class="nav-link" href="/portal/home">Home</a>
@@ -33,8 +37,8 @@
             <li class="nav-item" id="projectBrowser">
               <a class="nav-link" href="/projectBrowser">Projects</a>
             </li>
-            <li class="nav-item active" id="sceneBrowser">
-              <a class="nav-link" href="#">Scenes <span class="sr-only">(current)</span></a>
+            <li class="nav-item" id="sceneBrowser">
+              <a class="nav-link active" href="#">Scenes <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item" id="assetBrowser">
               <a class="nav-link" href="/assetBrowser">Assets</a>
@@ -49,7 +53,7 @@
       </nav>
       <div class="row">
         <div class="col-md-12">
-          <h1 style="text-align: center;">Scenes</h1>
+          <h1 id="pageHeader" style="text-align: center;">Scenes</h1>
         </div>
       </div>
       <div class="alert alert-success" id="success-alert" style="display:none">Success!</div>
@@ -84,12 +88,24 @@
       <div class="row">
         <div class="col-md-12">
           <div class="btn-toolbar" role="toolbar" aria-label="Scenes Toolbar" style="justify-content: center;">
-            <div class="btn-group" role="group" aria-label="Scene Pagination">
+            <div class="btn-group" role="group" aria-label="Scene Tools">
               <button id="editScene" type="button" class="btn btn-primary"><span style="font-size:larger;">Edit Scene</span></button>
               <button id="createScene" type="button" class="btn btn-primary"><span style="font-size:larger;">Create Scene</span></button>
               <button id="deleteScene" type="button" class="btn btn-primary"><span style="font-size:larger;">Delete Scene</span></button>
               <button id="viewScnProperties" type="button" class="btn btn-primary"><span style="font-size:larger;">View Scene Properties</span></button>
               <button id="favoriteScene" type="button" class="btn btn-primary"><span style="font-size:larger;">Add to Favorites</span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="btn-toolbar" role="toolbar" aria-label="Scene Group Toolbar" style="justify-content: center;">
+            <div class="btn-group" role="group" aria-label="Scene Group Tools">
+              <button style="display:none" id="viewSceneGroup" type="button" class="btn btn-primary"><span style="font-size:larger;">View Scene Group</span></button>
+              <button style="display:none" id="viewAllScenes" type="button" class="btn btn-primary"><span style="font-size:larger;">View All Scenes</span></button>
+              <button style="display:none" id="addToSceneGroup" type="button" class="btn btn-primary"><span style="font-size:larger;">Add to Scene Group</span></button>
+              <button style="display:none" id="removeFromSceneGroup" type="button" class="btn btn-primary"><span style="font-size:larger;">Remove from Scene Group</span></button>
             </div>
           </div>
         </div>
@@ -148,105 +164,12 @@
       </footer>
     </div>
     <script>
-    // The Scene Key is injected here by the server before
-    // it returns the page
+    // The scene, project, and/or scene group Keys are
+    // injected here by the server before it returns the page
     var sceneKeys = "${sceneKeys}";
-
-    // specify the columns for the scene table
-    var scnColumnDefs = [
-      {
-        headerName: "ID",
-        field: "key",
-        pinned: 'left',
-        filter: "agTextColumnFilter",
-        filterParams: { applyButton: true, clearButton:true, filterOptions:["equals"], suppressAndOrCondition:true, caseSensitive:true },
-        editable: false
-      },
-      {
-        headerName: "Name",
-        field: "name",
-        pinned: 'left',
-        filter: "agTextColumnFilter",
-        filterParams: { applyButton: true, clearButton:true, filterOptions:["equals"], suppressAndOrCondition:true, caseSensitive:true },
-        editable: false
-      },
-      {
-        headerName: "Region",
-        field: "region",
-        filter: "agTextColumnFilter",
-        filterParams: { applyButton: true, clearButton:true, filterOptions:["equals"], suppressAndOrCondition:true, caseSensitive:true },
-        editable: false
-      },
-      {
-        headerName: "Latitude",
-        field: "latitude",
-        filter: "agTextColumnFilter",
-        filterParams: { applyButton: true, clearButton:true, filterOptions:["equals"], suppressAndOrCondition:true, caseSensitive:true },
-        editable: false
-      },
-      {
-        headerName: "Longitude",
-        field: "longitude",
-        filter: "agTextColumnFilter",
-        filterParams: { applyButton: true, clearButton:true, filterOptions:["equals"], suppressAndOrCondition:true, caseSensitive:true },
-        editable: false
-      }
-    ];
-
-    // specify the columns for the object table
-    var objColumnDefs = [
-      {
-        headerName: "ID",
-        field: "key",
-        pinned: 'left',
-        filter: "agTextColumnFilter",
-        filterParams: { applyButton: true, clearButton:true, filterOptions:["equals"], suppressAndOrCondition:true, caseSensitive:true },
-        editable: false
-      },
-      {
-        headerName: "Name",
-        field: "name",
-        pinned: 'left',
-        filter: "agTextColumnFilter",
-        filterParams: { applyButton: true, clearButton:true, filterOptions:["equals"], suppressAndOrCondition:true, caseSensitive:true },
-        editable: false
-      },
-      {
-        headerName: "Parent",
-        field: "parent",
-        filter: "agTextColumnFilter",
-        filterParams: { applyButton: true, clearButton:true, filterOptions:["equals"], suppressAndOrCondition:true, caseSensitive:true },
-        editable: false
-      },
-      {
-        headerName: "Type",
-        field: "type",
-        filter: "agTextColumnFilter",
-        filterParams: { applyButton: true, clearButton:true, filterOptions:["equals"], suppressAndOrCondition:true, caseSensitive:true },
-        editable: false
-      },
-      {
-        headerName: "Subtype",
-        field: "subtype",
-        filter: "agTextColumnFilter",
-        filterParams: { applyButton: true, clearButton:true, filterOptions:["equals"], suppressAndOrCondition:true, caseSensitive:true },
-        editable: false
-      },
-      {
-        headerName: "Owner",
-        field: "owner",
-        filter: "agTextColumnFilter",
-        filterParams: { applyButton: true, clearButton:true, filterOptions:["equals"], suppressAndOrCondition:true, caseSensitive:true },
-        editable: false
-      },
-      {
-        headerName: "Frame",
-        field: "frame",
-        filter: "agTextColumnFilter",
-        filterParams: { applyButton: true, clearButton:true, filterOptions:["equals"], suppressAndOrCondition:true, caseSensitive:true },
-        editable: false
-      }
-    ];
+    var projectKey = "${projectKey}";
+    var scnGroupName = "${scnGroupName}";
+    var scnGroupDisplay = false;
 
     // specify the grid options for the Scene List
     var scnGridOptions = {
@@ -283,10 +206,10 @@
       }
     };
 
-    function updateSceneGridData(event) {
-      console.log("Filter Updated:");
+    // Generate a Scene Query from the varioius input sources
+    function generateFullSceneQuery() {
       var filterModel = scnGridOptions.api.getFilterModel();
-      sceneData = {}
+      var sceneData = {}
       var queryKey = document.getElementById('keyinp').value;
       var queryName = document.getElementById('nameinp').value;
       var queryRegion = document.getElementById('regioninp').value;
@@ -306,19 +229,25 @@
       if ("region" in filterModel) sceneData["region"] = filterModel.region.filter;
       if ("latitude" in filterModel) sceneData["latitude"] = filterModel.latitude.filter;
       if ("longitude" in filterModel) sceneData["longitude"] = filterModel.longitude.filter;
+      return sceneData;
+    }
+
+    function updateSceneGridData(event) {
+      console.log("Filter Updated:");
 
       // Create the scene query data
       sceneListData = {"scenes": []}
       sceneListData["num_records"] = scnGridOptions.api.paginationGetPageSize();
       sceneListData["start_record"] = (scnGridOptions.api.paginationGetCurrentPage() * scnGridOptions.api.paginationGetPageSize());
 
-      if (sceneKeys == "") {
-        sceneListData["scenes"].push(sceneData);
-      } else {
+      if (sceneKeys != "" && scnGroupDisplay) {
         var sceneList = sceneKeys.split(",");
         for (var i = 0; i < sceneList.length; i++) {
           sceneListData["scenes"].push({"key": sceneList[i]});
         }
+      } else {
+        var sceneData = generateFullSceneQuery();
+        sceneListData["scenes"].push(sceneData);
       }
       console.log(sceneListData);
 
@@ -405,8 +334,7 @@
                 type: 'PUT',
                 success: function(data) {
                   console.log("Saved Favorite Scene");
-                  $("#success-alert").show();
-                  setTimeout(function() { $("#success-alert").hide(); }, 5000);
+                  displayAlert("success-alert");
                 }});
 
       } else if (event.target.id == "createObject") {
@@ -433,6 +361,37 @@
       } else if (event.target.id == "noFrame") {
         document.getElementById('frameinp').value = "";
         updateObjectGridData({});
+      } else if (event.target.id == "viewSceneGroup") {
+        scnGroupDisplay = true;
+        updateObjectGridData({});
+      } else if (event.target.id == "viewAllScenes") {
+        scnGroupDisplay = false;
+        updateObjectGridData({});
+      } else if (event.target.id == "addToSceneGroup") {
+        // Add the selected scene to the scene group
+        var selectedRow = scnGridOptions.api.getSelectedNodes()[0].data;
+        var url = "v1/project/" + projectKey + "/groups/" + scnGroupName + "/" + selectedRow.key;
+        $.ajax({
+          url: url,
+          method: 'PUT',
+          success: function(data) {
+            console.log(data);
+            displayAlert("success-alert");
+          }
+        });
+      } else if (event.target.id == "removeFromSceneGroup") {
+        // Remove the selected scene from the scene group
+        // Add the selected scene to the scene group
+        var selectedRow = scnGridOptions.api.getSelectedNodes()[0].data;
+        var url = "v1/project/" + projectKey + "/groups/" + scnGroupName + "/" + selectedRow.key;
+        $.ajax({
+          url: url,
+          method: 'DELETE',
+          success: function(data) {
+            console.log(data);
+            displayAlert("success-alert");
+          }
+        });
       }
     }
 
@@ -478,21 +437,41 @@
       // If the user is an admin, then the server will inject 'true' here,
       // otherwise, it will inject 'false'.
       var isUserAdmin = "${isAdmin}";
-      var adminLoggedIn = (isUserAdmin == 'true');
-      if (!adminLoggedIn) {
-        // Disable the user browser link in the navbar if the logged in
-        // user does not have admin access
-        document.getElementById("userBrowserLink").href = "/editUser?key=" + loggedInKey;
-        document.getElementById("userBrowserLink").innerHTML = "My Account";
+      setUsersLink((isUserAdmin == 'true'), "userBrowserLink");
+
+      // If we have been given a list of scenes
+      // then we want to hide the query inputs
+      if (sceneKeys != "") {
+        hideHtmlElements([
+          "keyinp",
+          "nameinp",
+          "regioninp",
+          "latitudeinp",
+          "longitudeinp",
+          "distanceinp",
+          "taginp",
+          "query"
+        ]);
+        scnGroupDisplay = true;
       }
 
+      // If we have been given a scene group from a project, then
+      // we want to show buttons for editing the scene group
+      if (projectKey != "" && scnGroupName != "") {
+        document.getElementById('pageHeader').innerHTML = scnGroupName;
+        showHtmlElements([
+          "viewSceneGroup",
+          "viewAllScenes",
+          "addToSceneGroup",
+          "removeFromSceneGroup"
+        ]);
+      }
+
+      // Fill the Scene Grid
       updateSceneGridData({});
 
       // Setup the button callbacks
-      var buttons = document.getElementsByTagName("button");
-      for (let i = 0; i < buttons.length; i++) {
-        buttons[i].addEventListener("click", onButtonClick, false);
-      };
+      registerButtonCallback(onButtonClick);
     });
     </script>
   </body>

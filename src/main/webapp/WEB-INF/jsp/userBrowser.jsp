@@ -14,6 +14,8 @@
 
   <!-- Custom CSS -->
   <link href="/css/aeselBrowserBaseStyle.css" rel="stylesheet">
+  <!-- Custom Javascript -->
+  <script src="/js/aeselBrowserUtils.js"></script>
   <head>
     <meta http-equiv="Content-Type" content="text/html" charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -40,8 +42,8 @@
             <li class="nav-item" id="assetBrowser">
               <a class="nav-link" href="/assetBrowser">Assets</a>
             </li>
-            <li class="nav-item active" id="userBrowser">
-              <a class="nav-link" href="#">Users <span class="sr-only">(current)</span></a>
+            <li class="nav-item" id="userBrowser">
+              <a class="nav-link active" href="#" id="userBrowserLink">Users <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item" id="docs">
               <a class="nav-link" href="https://aesel.readthedocs.io/en/latest/index.html">Documentation</a>
@@ -216,10 +218,7 @@
       $.ajax({url: "/users/", data: query_params, success: query_return});
 
       // Setup the button callbacks into the Javascript
-      var buttons = document.getElementsByTagName("button");
-      for (let i = 0; i < buttons.length; i++) {
-        buttons[i].addEventListener("click", onButtonClick, false);
-      };
+      registerButtonCallback(onButtonClick);
     });
     </script>
   </body>
