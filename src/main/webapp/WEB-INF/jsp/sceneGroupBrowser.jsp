@@ -54,7 +54,7 @@
           <input id="newGroupNameInp" type="text" class="form-control-plaintext" name="newGroupNameInput" placeholder="Name"></input>
         </div>
         <div class="col-md-4">
-          <textarea type="text" id="newGroupDescinp" class="md-textarea form-control" rows="4" placeholder="Description"></textarea>
+          <textarea type="text" id="newGroupDescInp" class="md-textarea form-control" rows="4" placeholder="Description"></textarea>
         </div>
         <div class="col-md-4">
           <input id="newGroupCategoryInp" type="text" class="form-control-plaintext" name="newGroupCategoryInput" placeholder="Category"></input>
