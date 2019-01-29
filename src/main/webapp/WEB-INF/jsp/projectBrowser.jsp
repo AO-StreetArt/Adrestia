@@ -246,7 +246,7 @@
       // otherwise, it will inject 'false'.
       var isUserAdmin = "${isAdmin}";
       var adminLoggedIn = (isUserAdmin == 'true');
-      setUsersLink((isUserAdmin == 'true'), "userBrowserLink");
+      setUsersLink((isUserAdmin == 'true'), "userBrowserLink", loggedInKey);
 
       // Execute an HTTP call to get the available asset metadata
       // and populate it into the list

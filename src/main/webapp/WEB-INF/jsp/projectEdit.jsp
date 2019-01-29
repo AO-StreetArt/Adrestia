@@ -267,7 +267,7 @@
     }
 
     window.addEventListener('DOMContentLoaded', function(){
-      setUsersLink((isUserAdmin == 'true'), "userBrowserLink")
+      setUsersLink((isUserAdmin == 'true'), "userBrowserLink", loggedInKey)
 
       // Setup the button callbacks into the Javascript
       registerButtonCallback(onButtonClick);

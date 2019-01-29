@@ -206,7 +206,7 @@
       // otherwise, it will inject 'false'.
       var isUserAdmin = "${isAdmin}";
       var adminLoggedIn = (isUserAdmin == 'true');
-      setUsersLink((isUserAdmin == 'true'), "userBrowserLink");
+      setUsersLink((isUserAdmin == 'true'), "userBrowserLink", loggedInKey);
 
       // Setup the cancel button callback
       var cancelButton = document.getElementById('cancel');

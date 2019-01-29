@@ -243,7 +243,7 @@
     window.addEventListener('DOMContentLoaded', function(){
       console.log(loggedInUser);
       var adminLoggedIn = (isUserAdmin == 'true');
-      setUsersLink((isUserAdmin == 'true'), "userBrowserLink");
+      setUsersLink((isUserAdmin == 'true'), "userBrowserLink", loggedInKey);
 
       updateGridData({});
 

@@ -174,7 +174,7 @@
       console.log(isUserAdmin);
       var adminLoggedIn = (isUserAdmin == 'true');
       console.log(adminLoggedIn);
-      setUsersLink((isUserAdmin == 'true'), "userBrowserLink");
+      setUsersLink((isUserAdmin == 'true'), "userBrowserLink", loggedInKey);
       // The favorite projects list is injected here by the server
       // before it returns the page.
       var favoriteProjectsList = "${projectsString}";

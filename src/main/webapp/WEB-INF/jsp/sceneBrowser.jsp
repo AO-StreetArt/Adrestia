@@ -437,7 +437,7 @@
       // If the user is an admin, then the server will inject 'true' here,
       // otherwise, it will inject 'false'.
       var isUserAdmin = "${isAdmin}";
-      setUsersLink((isUserAdmin == 'true'), "userBrowserLink");
+      setUsersLink((isUserAdmin == 'true'), "userBrowserLink", loggedInKey);
 
       // If we have been given a list of scenes
       // then we want to hide the query inputs

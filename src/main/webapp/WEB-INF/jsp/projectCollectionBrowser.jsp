@@ -236,7 +236,7 @@
       // otherwise, it will inject 'false'.
       var isUserAdmin = "${isAdmin}";
       var adminLoggedIn = (isUserAdmin == 'true');
-      setUsersLink((isUserAdmin == 'true'), "userBrowserLink");
+      setUsersLink((isUserAdmin == 'true'), "userBrowserLink", loggedInKey);
 
       // Setup the button callbacks into the Javascript
       registerButtonCallback(onButtonClick);

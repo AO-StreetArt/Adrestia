@@ -44,7 +44,7 @@ function getFileExtension(filename) {
 
 // Disable the user browser link in the navbar if the
 // logged in user does not have admin access
-function setUsersLink(adminLoggedIn, browserLinkEltId) {
+function setUsersLink(adminLoggedIn, browserLinkEltId, loggedInKey) {
   if (!adminLoggedIn) {
     document.getElementById(browserLinkEltId).href = "/editUser?key=" + loggedInKey;
     document.getElementById(browserLinkEltId).innerHTML = "My Account";
