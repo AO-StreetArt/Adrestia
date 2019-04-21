@@ -148,17 +148,6 @@
           <div id="objGrid" style="height:100%;" class="ag-theme-balham"></div>
         </div>
       </div>
-      <div class="row">
-        <div class="col-md-12">
-          <div class="btn-toolbar pull-right" role="toolbar" aria-label="Scenes Pagination">
-            <div class="btn-group mr-2" role="group" aria-label="Scene Pagination">
-              <input id="frameinp" type="text" name="Frame" placeholder="frame"></input>
-              <button id="setFrame" type="button" class="btn btn-secondary btn-sm">View Frame</button>
-              <button id="noFrame" type="button" class="btn btn-secondary btn-sm">No Frame</button>
-            </div>
-          </div>
-        </div>
-      </div>
       <footer class="footer">
           <p> &copy; 2018 AO Labs</p>
       </footer>
@@ -193,8 +182,6 @@
 
         // Create the object query data
         objListData = {num_records: 100, objects: [{scene: sceneKey}]};
-        var queryFrame = document.getElementById('frameinp').value;
-        if (queryFrame) objListData.objects[0].frame = parseInt(queryFrame,10);
 
         // Execute an HTTP call to get the available asset metadata
         // and populate it into the object list
@@ -356,11 +343,6 @@
         if (r) {
           deleteSelectedObj();
         }
-      } else if (event.target.id == "setFrame") {
-        updateObjectGridData({});
-      } else if (event.target.id == "noFrame") {
-        document.getElementById('frameinp').value = "";
-        updateObjectGridData({});
       } else if (event.target.id == "viewSceneGroup") {
         scnGroupDisplay = true;
         updateObjectGridData({});

@@ -84,12 +84,5 @@ var objColumnDefs = [
     filter: "agTextColumnFilter",
     filterParams: { applyButton: true, clearButton:true, filterOptions:["equals"], suppressAndOrCondition:true, caseSensitive:true },
     editable: false
-  },
-  {
-    headerName: "Frame",
-    field: "frame",
-    filter: "agTextColumnFilter",
-    filterParams: { applyButton: true, clearButton:true, filterOptions:["equals"], suppressAndOrCondition:true, caseSensitive:true },
-    editable: false
   }
 ];
